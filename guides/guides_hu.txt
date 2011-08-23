@@ -1,0 +1,156 @@
+//===== eAthena Script =======================================
+//= Hugel Guides
+//===== By: ==================================================
+//= erKURITA; L0ne_W0lf
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= Guides for the City of Hugel.
+//===== Additional Comments: =================================
+//= 1.0 Started the script. [erKURITA]
+//= 1.1 Removed Duplicates [Silent]
+//= 1.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//============================================================
+// перевод Shadow Smail rater@yandex.ru
+
+hugel,98,56,3	script	Hugel Guide Granny#huge	863,0,0,{
+	mes "[Hugel Guide Granny]";
+	mes "Оооооо, привет, внучок!";
+	mes "Добро пожаловать в Hugel. Я тебе расскажу про нашу замечательную деревню.";
+	mes "Если вы в первые воспользовались услугами гида, почему бы сначала не заглянуть в раздел ''Справка''?";
+	while(1) {
+		next;
+		switch(select("Деревенский путеводитель:Убрать отметки с мини-карты:Справка:Уйти")) {
+		case 1:
+			mes "[Hugel Guide Granny]";
+			mes "Я могу рассказать тебе всё о нашей деревне, ведь я живу тут ооочень давно.";
+			mes "Так куда ты хочешь пойти?";
+			if (.@compass_check == 0) {
+				mes "Отметить";
+				mes "здания на";
+				mes "твоей карте?";
+				next;
+				if (select("Да.:Нет.") == 1) set .@compass_check,1;
+			}
+			set .@loop,1;
+			while(.@loop) {
+				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				else next;
+				switch(select("Церковь:Гостиница:Пивная:Аэропорт:Торговец оружием:Товарная лавка:Магазин провиант:^3131FFМесто смены профессии Hunter'а^000000:^3131FFСвятыня Експедиции^000000:Арена гонок монстров:Комната игры в бинго:Отмена")) {
+				case 1:
+					mes "[Hugel Guide Granny]";
+					mes "Я сама очень часто хожу в церковь. Хотя, так делают все старые люди...";
+					if (.@compass_check)
+						viewpoint 1,156,116,2,0xFF0000;
+					break;
+				case 2:
+					mes "[Hugel Guide Granny]";
+					mes "Не торопись, не торопись!";
+					mes "Перед тем, как осматривать деревню, сначала распакуй свои вещи и отдохни.";
+					mes "Мы с тобой как раз стоим около гостиницы.";
+					if (.@compass_check)
+						viewpoint 1,104,79,3,0xFF00FF;
+					break;
+				case 3:
+					mes "[Hugel Guide Granny]";
+					mes "Ох, нынешняя молодежь уже совсем не та, что раньше...";
+					mes "Раньше все гуляли в парках и аллеях, а теперь сидят в пабах...Кстати, он к востоку отсюда.";
+					if (.@compass_check)
+						viewpoint 1,129,66,4,0x99FFFF;
+					break;
+				case 4:
+					mes "[Hugel Guide Granny]";
+					mes "Однажды к нам в деревню пришли люди из Эйнброча и построили аэропорт...";
+					mes "Сказали, что теперь мы сможем летать на этом...как его называют?..Дирижабле!";
+					if (.@compass_check)
+						viewpoint 1,178,146,5,0x0000FF;
+					break;
+				case 5:
+					mes "[Hugel Guide Granny]";
+					mes "Ах да, у нас же есть оружейный магазин в деревне!";
+					mes "Но я не разбираюсь во всех этих штуках, так что не знаю, сможешь ли ты там что-нибудь найти.";
+					if (.@compass_check)
+						viewpoint 1,70,158,6,0x00FF00;
+					break;
+				case 6:
+					mes "[Hugel Guide Granny]";
+					mes "А знаешь где самы-самые вкусные Red Potions? Конечно у нас, я сама очень их люблю, хо-хо-хо~ ";
+					mes "Tool Shop у нас прямо в центре деревни.";
+					if (.@compass_check)
+						viewpoint 1,93,167,7,0x00FF00;
+					break;
+				case 7:
+					mes "[Hugel Guide Granny]";
+					mes "Магазин с оборудованием для вечеринок ты найдешь почти в самом центре деревни.";
+					mes "Только никогда не пускай феерверки и не взрывай петард около других людей, это опасно!";
+					if (.@compass_check)
+						viewpoint 1,91,105,8,0xFF99FF;
+					break;
+				case 8:
+					mes "[Hugel Guide Granny]";
+					mes "Оооооо, ты хочешь стать Охотником?";
+					mes "Тогда тебе на северо-восток и там, около пляжа, ты найдешь Место смены профессии на Hunter.";
+					if (.@compass_check)
+						viewpoint 1,206,228,9,0xFF9900;
+					break;
+				case 9:
+					mes "[Hugel Guide Granny]";
+					mes "Я слашала какая-то экспедиция остановилась на западе деревни...";
+					mes "Они оставили какое-то объявление в центре деревни, так что я думаю они нанимают людей для чего-то...";
+					mes "Я вообще не понимаю, что они тут делают...Хммммм...";
+					if (.@compass_check)
+						viewpoint 1,52,91,10,0xFFFFFF;
+					break;
+				case 10:
+					mes "[Hugel Guide Granny]";
+					mes "Ой, а я так люблю наблюдать за гонками монстров!";
+					mes "Ты еще не пробовал? Обязательно попробуй, тебе понравится!";
+					if (.@compass_check)
+						viewpoint 1,58,72,11,0xFF9900;
+					break;
+				case 11:
+					mes "[Hugel Guide Granny]";
+					mes "Ты любишь играть в бинго? Если да, то сходи в нашу Комнату для игры в бинго.";
+					if (.@compass_check)
+						viewpoint 1,55,209,12,0x66FFFF;
+					break;
+				case 12:
+					mes "[Hugel Guide Granny]";
+					mes "Если хочешь, чтобы я убрала все отметки с карты,";
+					mes "выбери соответствующий пункт в меню.";
+					set .@loop,0;
+				}
+			}
+			break;
+		case 2:
+			viewpoint 2,156,116,2,0xFF0000;
+			viewpoint 2,104,79,3,0xFF00FF;
+			viewpoint 2,129,66,4,0x99FFFF;
+			viewpoint 2,178,146,5,0x0000FF;
+			viewpoint 2,70,158,6,0x00FF00;
+			viewpoint 2,93,167,7,0x00FF00;
+			viewpoint 2,91,105,8,0xFF99FF;
+			viewpoint 2,206,228,9,0xFF9900;
+			viewpoint 2,52,91,10,0xFFFFFF;
+			viewpoint 2,58,72,11,0xFF9900;
+			viewpoint 2,55,209,12,0x66FFFF;
+			set .@compass_check,0;
+			mes "[Hugel Guide Granny]";
+			mes "Таааааак, всё, убрала. Если они понадобятся опять, дай мне знать.";
+			break;
+		case 3:
+			mes "[Hugel Guide Granny]";
+			mes "Когда ты пользуешься услугами";
+			mes "Гида по городу, он отмечет етебе здания на карте. Она находится в верхнем правом углу экрана.";
+			mes "Если ее там нет, нажми Ctrl+Tab или кнопку Map в твоем Basic Info Window, ладно?";
+			mes "А еще ты можешь приближать и удалять карту, нажимая плюс или минус на ней.";
+			break;
+		case 4:
+			mes "[Hugel Guide Granny]";
+			mes "Работа Гидом такая увлекательная! Хо-хо-хо~";
+			close;
+		}
+	}
+}

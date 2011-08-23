@@ -1,0 +1,125 @@
+//===== eAthena Script ======================================= 
+//= Umbala Guides
+//===== By: ================================================== 
+//= Dizzy, Translated by Celest; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.6
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= Guide for the City of Umbala
+//===== Additional Comments: ================================= 
+//= 1.1 Fixed location command format [Lupus]
+//= 1.2 Optimized, updated common guide names [Lupus]
+//= 1.4 Fitted the many lines into 1 or 2, and corrected some typos [erKURITA]
+//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//= 1.6 Corrected activating ontouch. [L0ne_W0lf]
+//===== Translated into Russian: =============================
+//= перевод Shadow Smail rater@yandex.ru
+//============================================================ 
+
+umbala,128,94,4	script	Adventurer#um	702,{
+	mes "[Adventurer]";
+	mes "Это очень странное место...";
+	mes "Здесь трудно ориентироваться.";
+	mes "Все эти дорожки, подвешенные над землей...";
+	next;
+	mes "[Adventurer]";
+	mes "Тем не менее, так как";
+	mes "я здесь гид, я знаю этот город";
+	mes "как свои пять пальцев.";
+	mes "Если есть какие-то вопросы,";
+	mes "обращайся ко мне,";
+	mes "а то заблудишься.";
+	next;
+	switch(select("Местоположение здания.:Убрать отметки с мини-карты.:Уйти.")) {
+	case 1:
+		mes "[Adventurer]";
+		mes "Ну, куда пойдем?";
+		next;
+		switch(select("Дом Старейшины:Дом Шамана:Оружейный магазин:Товарная лавка:Место прыжков:Отмена")) {
+		case 1:
+			mes "[Adventurer]";
+			mes "Смотри на ^FF3355+^000000";
+			mes "на карте.";
+			next;
+			mes "[Adventurer]";
+			mes "Только градоправитель";
+			mes "знает наш язык.";
+			mes "Так что прежде всего сходи к нему.";
+			viewpoint 1,66,250,2,0xFF3355;
+			break;
+		case 2:
+			mes "[Adventurer]";
+			mes "Смотри на ^CE6300+^000000";
+			mes "на карте.";
+			next;
+			mes "[Adventurer]";
+			mes "Здешний шаман обладает";
+			mes "какой-то магической силой...";
+			mes "Говорят, он может делать магические камни,";
+			mes "а также разбивать";
+			mes "сделанные камни на куски...";
+			viewpoint 1,217,186,3,0xCE6300;
+			break;
+		case 3:
+			mes "[Adventurer]";
+			mes "Смотри на ^55FF33+^000000";
+			mes "на карте.";
+			next;
+			mes "[Adventurer]";
+			mes "Жители Умбалы очень хорошо вооружены.";
+			mes "За границами города обитает много";
+			mes "опасных тварей. Город подвергался нападениям";
+			mes "много раз в прошлом.";
+			viewpoint 1,126,154,4,0x55FF33;
+			break;
+		case 4:
+			mes "[Adventurer]";
+			mes "Смотри на ^3355FF+^000000";
+			mes "на карте.";
+			next;
+			mes "[Adventurer]";
+			mes "Прежде, чем куда-то идти,";
+			mes "лучше запастись зельями и крыльями бабочек.";
+			viewpoint 1,136,127,5,0x3355FF;
+			break;
+		case 5:
+			mes "[Adventurer]";
+			mes "Смотри на ^00FF00+^000000";
+			mes "на карте.";
+			next;
+			mes "[Adventurer]";
+			mes "В Умбале есть уникальное место,";
+			mes "там можно совершить прыжок с тарзанкой.";
+			mes "Если тебе интересно проверить";
+			mes "насколько ты храбр,";
+			mes "почему бы тебе не пойти";
+			mes "и не пройти этот древнейший ритуал?";
+			viewpoint 1,139,198,6,0x00FF00;
+			break;
+		case 6:
+			mes "[Adventurer]";
+			mes "Если хочешь, чтобы я убрала";
+			mes "отметки с твоей карты,";
+			mes "выбери соответствующий пункт в меню.";
+		}
+		break;
+	case 2:
+		viewpoint 2,66,250,2,0xFF3355;
+		viewpoint 2,217,186,3,0xCE6300;
+		viewpoint 2,126,154,4,0x55FF33;
+		viewpoint 2,136,127,5,0x3355FF;
+		viewpoint 2,139,198,6,0x00FF00;
+		mes "[Adventurer]";
+		mes "Я убрала все отметки";
+		mes "с твоей карты. Если они еще понядобятся,";
+		mes "подойди ко мне еще раз.";
+		break;
+	case 3:
+		mes "[Adventurer]";
+		mes "Удачи тебе.";
+		break;
+	}
+	close;
+}

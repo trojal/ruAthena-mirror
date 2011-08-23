@@ -1,0 +1,970 @@
+//===== eAthena Script ======================================= 
+//= Dungeon Teleport Service
+//===== By: ================================================== 
+//= Evera
+//===== Current Version: ===================================== 
+//= 2.4
+//===== Compatible With: ===================================== 
+//= eAthena
+//===== Description: =========================================
+//= Cool Event Corp NPCs vs. Kafra Dungeon Teleport Service and voting system.
+//= This is a special event on official servers where there's a
+//= big competition between Kafra Corp. and Cool Event Corp.
+//= To warp to selected levels of certain dungeons.
+//= Also includes Cool Event Corp HQ NPCs.
+//===== Variables: ===========================================
+//=Server - 	$dtsvote		= Variable for # of votes
+//=					= Positive = Cool Corp winning
+//=					= Negative = Kafra Corp winning
+//=		$dts			= Variable for DTS status
+//=					= (1<<0) Election
+//=					= (1<<1) Cool Corp Enabled
+//=					= (1<<2) Kafra Enabled
+//=					= (1<<3) No winner last election
+//=					= (1<<4) Cool Corp won last election
+//=					= (1<<5) Kafra won last election
+//=		$dtsday			= Week count for dts vote count, used for resetting players' votes
+//=Character -	dtseligible 		= eligibility status, 0 not eligible yet, 1 eligible.
+//=					= $dtsday used when MISC_QUEST|128, and signifies that person already voted.
+//=		MISC_QUEST		= |128 = eligible and voted.
+//=NPC Func. -	arg(0) 			= 0, Cool Event Corp Voting Staff; 1, Kafra Corp Voting Staff
+//=		arg(1)			= Kafra only, Cool Corp script does not use. Changes illus for different sprites.
+//=					= 0 = 4_f_kafra6 (yellow ponytail, classic outfit, spr 112)
+//=					= 1 = 4_f_kafra5 (pink hair, classic outfit, spr 113)
+//=					= 2 = 4_f_kafra4 (orange short hair, classic outfit, spr 114)
+//=					= 3 = 4_f_kafra3 (brown bangs, classic outfit, spr 115)
+//=					= 4 = 4_f_kafra2 (brown ponytale, classic outfit, spr 116)
+//=					= 5 = 4_f_kafra1 (blue hair, classic outfit, spr 117)
+//=					= 6 = 4_f_agentkafra (purp hair, black outfit, spr 859)
+//=					= 7 = 4_f_kafra8 (blue hair, brown outfit, spr 860)
+//=					= 8 = 4_f_kafra9 (red hair, brown outfit, spr 861)
+//=Temporary - 	@dtstemp		= Temporary buffer, used in GM vote-fixing
+//=		@dtstemps$		= Temporary buffer, like above, but a string.
+//=		$@dtstempg		= Temporary buffer, but global
+//===== Additional Comments: ================================= 
+//= Some unofficial translations, some unofficial dungeon warps
+//= Also includes unofficial GM-enabled tweaking for script
+//= Includes NPCs in Cool Event Corp headquarters
+//= If new locations are found of this NPC, please report on forums
+//= http://www.eathena.ws/board/index.php?showforum=106
+//= Base level 60 required to vote
+//===== Version History: ====================================
+//= 1.0	Initial release [Evera]
+//= 1.1	SVN release, removed from major town (found true info after research),
+//=	put more arg(2) parameters, fixed a few bugs [Evera]
+//= 1.2 Mushed some variables together, optimized a bit [Evera]
+//= 1.3 Removed selfconfig [Evera]
+//= 1.4 Changed global variables to read from 3 global variables, updated names,
+//= 	fixed array bug [Evera]
+//= 1.5 Mushed voting varialbes into 1 variable. [Evera]
+//= 1.6 Removed Duplicates [Silent]
+//= 1.7	Fixed bug of DTS_Admin not running by itself [Evera]
+//= 1.8	Changed requirement to lvl 60 [Evera]
+//= 1.9 Removed global eligibility option [Evera]
+//= 2.0 Fixed zeny bug [Evera]
+//= 2.1 Fixed headers with and updated with newer information [Evera]
+//= 2.2 Changed dtseligible 2 to MISC_QUEST|128, to clean up variable usage. [Evera]
+//=	Also added F_ClearGarbage function to the scripts. [Evera]
+//= 2.3	Changed dtseligible to be $dtsday when MISC_QUEST|128
+//=	Added $dtsday for vote session counter
+//=	Fixed bug that involved having both warpers enabled at the same time. [Evera]
+//=	New $dtsday system and bug fix[Evera]
+//= 2.3a fixed 2 bugs with comparision [Lupus]
+//= 2.3b corrected Glast warp coords [Lupus] 2.3c Bailand -> Bayalan
+//= 2.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
+//===== Translated into Russian: =============================
+//= Полный перевод [Vorp] vorp@yandex.ru
+//============================================================ 
+
+//Yuno
+yuno,153,191,4	script	Избирком Клёвых Событий::CoolEventVotingStaff01	874,{
+	callfunc "F_DTS_Warp",0,0;
+}
+yuno,162,191,6	script	Избирком Кафра#01	861,{
+	callfunc "F_DTS_Warp",1,8;
+}
+//Lighthalzen
+lighthalzen,154,60,6	script	Избирком Клёвых Событий::CoolEventVotingStaff02	874,{
+	callfunc "F_DTS_Warp",0,0;
+}
+//Prontera
+prontera,147,125,4	script	Избирком Клёвых Событий::CoolEventVotingStaff03	874,{
+	callfunc "F_DTS_Warp",0,0;
+}
+prontera,164,125,6	script	Избирком Кафра#02	115,{
+	callfunc "F_DTS_Warp",1,3;
+}
+
+//Cool Event Staff Headquarters NPCs
+//Kudiuu (Maintenance Guy)
+lhz_in02,20,274,6	script	Рабочий персонал#dts	851,{
+	mes "[Кудью]";
+	mes "Боже мой!..";
+	mes "Это место будет";
+	mes "когда-либо убранно!?";
+	mes "*Покашливание* Здесь";
+	mes "так много пыли, это же";
+	mes "опасно для здоровья!";
+	close;
+}
+//Cesuna (Zondaman at desk)
+lhz_in02,36,284,1	script	Сотрудник Кл. Событий#01	874,{
+	mes "[Цесуна]";
+	mes "Ачхи! Я полностью";
+	mes "погряз во всей этой";
+	mes "работе! Но я не хочу";
+	mes "ничего этого делать. Вот!";
+	mes "Мне необходим перерыв";
+	next;
+	mes "[Цесуна]";
+	mes "*Вздох...*";
+	mes "Интересно, смотрел ли";
+	mes "Саера что-либо";
+	mes "идущее от меня?";
+	mes "Это было бы хорошо~";
+	close;
+}
+//Jellarin (Event planner)
+lhz_in02,40,279,3	script	Планировщик Событий	833,{
+	mes "[Элларин]";
+	mes "Мне не нравится это.";
+	mes "Но мне не нравится и";
+	mes "другая идея. Что бы сделать";
+	mes "на новое мероприятие, а?";
+	next;
+	mes "[Элларин]";
+	mes "Мне нужно нечто такое,";
+	mes "что действительно";
+	mes "хорошенько встряхнёт мир,";
+	mes "что-то эпохальное, но что?";
+	mes "Эй, есть какие-нибудь идеи?";
+	close;
+}
+//Baoto (Cool Event Manager)
+lhz_in02,110,283,5	script	Менеджер Клёвых Событий	853,{
+	mes "[Баото]";
+	mes "Ммм...";
+	mes "Служащие, кажется, слишком";
+	mes "много развлекаются";
+	mes "в последнее время.";
+	mes "Это не сулит ничего";
+	mes "хорошего им...";
+	next;
+	mes "[Баото]";
+	mes "Похоже, мне просто";
+	mes "придется начать";
+	mes "подстёгивать их чаще";
+	mes "и сильнее.";
+	mes "Ха ха ха ха!";
+	close;
+}
+//Saera (Secretary), contains GM menu
+lhz_in02,36,274,3	script	Сотрудник Кл. Событий#02	831,{
+	callfunc "F_ClearGarbage";				//Clear outdated, unused variables
+	if($dts == 0){
+		set $dts,$dts|(1<<0);				//Sets NPCs to election mode if first time running
+		set $dts,$dts|(1<<3);
+	}
+	if($dts&(1<<1) && $dts&(1<<2) || $dts&(1<<0) && $dts&(1<<1) || $dts&(1<<0) && $dts&(1<<2)){
+		if($dts&(1<<0)) set $dts,$dts&~(1<<0);
+		if($dts&(1<<1)) set $dts,$dts&~(1<<1);
+		if($dts&(1<<2)) set $dts,$dts&~(1<<2);
+		set $dts,$dts|(1<<0);
+	}
+	if($dts&(1<<4) && $dts&(1<<5) || $dts&(1<<3) && $dts&(1<<4) || $dts&(1<<3) && $dts&(1<<5)){
+		if($dts&(1<<3)) set $dts,$dts&~(1<<3);
+		if($dts&(1<<4)) set $dts,$dts&~(1<<4);
+		if($dts&(1<<5)) set $dts,$dts&~(1<<5);
+		set $dts,$dts|(1<<3);
+	}
+	mes "[Саера]";
+	mes "Добро пожаловать";
+	mes "во временный штаб";
+	mes "Корпорации Клёвых Событий,";
+	mes "чем могу Вам помочь?";
+	next;
+	if(getgmlevel()>=40){ 						//Unofficial Text, GM-configurable settings for Event (GM level above 40 required)
+		mes "[Саера]";
+		mes "Ведь я даже не";
+		mes "заметил здесь Вас,";
+		mes strcharinfo(0)+". Что бы вы";
+		mes "хотели сейчас сделать?";
+		next;
+		menu "Установить голосование",Lfixvote,
+		"Установить текущие телепорты",Lsettele,
+		"Установить победителя последних выборов",Lsetlast,
+		"Вручную запустить голосование",Lmanuvotecheck,
+		"Обычное меню, пожалуйста",-;
+		mes "[Саера]";
+		mes "Ok";
+		next;
+	}
+	menu "Временный штаб?",Ltemphead,
+	"Голосования",Lvoting,"Нет, спасибо.",Lnothx;
+
+	Ltemphead:
+		mes "[Саера]";
+		mes "В нашем здании штаба,";
+		mes "сейчас, происходит ремонт,";
+		mes "поэтому мы временно";
+		mes "базируемся в этом месте";
+		close;
+
+	Lvoting:
+		mes "[Саера]";
+		mes "В настоящее время, Корпорация";
+		mes "Кафра и Корп. Клёвых Событий";
+		mes "работают над совместной проектом,";
+		mes "который обеспечит услугу";
+		mes "прямой телепортации в подземелья.";
+		next;
+		mes "[Саера]";
+		mes "Из-за технических проблем,";
+		mes "обе компании не могут обеспечить";
+		mes "услуги телепорта в одни";
+		mes "подземелья. Поэтому, наши";
+		mes "клиенты будут выбирать ту";
+		mes "компанию, которую они хотят.";
+		next;
+		if((dtseligible == 0 || dtseligible == 3) && baselevel >= 60 && MISC_QUEST&128 == 0) set dtseligible,1;
+		//Clear previous var of dtseligible,3 being tried for eligibility already
+		if(dtseligible != $dtsday && baselevel >= 60 && MISC_QUEST&128){
+			set MISC_QUEST,MISC_QUEST&~128;
+			set dtseligible,1;
+		}
+		switch(dtseligible){
+			default:
+				mes "[Саера]";
+				mes "Будет допущенно только";
+				mes "ограниченное число избирателей,";
+				mes "так что вы можете проверить ваше";
+				mes "право голоса в штабах обеих";
+				mes "компаниях участниц.";
+				mes "Благодарим Вас за содействие~";
+				close;
+				break;
+			case 1:
+				mes "[Саера]";
+				mes "Похоже, что у вас есть";
+				mes "право голоса. Поэтому,";
+				mes "пожалуйста, проголосуйте";
+				mes "в любом Избирательном";
+				mes "Штабе компани. Спасибо~";
+				close;
+				break;
+			case 2:
+				mes "[Саера]";
+				mes "У вас есть право голоса,";
+				mes "но вы уже голосвали.";
+				mes "Спасибо за ваше участие";
+				close;
+				break;
+		}
+
+	Lnothx:
+		mes "[Саера]";
+		mes "Спасибо.";
+		mes "Хорошего вам дня.";
+		close;
+									//GM options start
+	Lfixvote:							//Fix Vote
+		mes "[Саера]";
+		mes "Хм, конечно..";
+		if($dtsv > 0) mes "Корп. Клёвых Событий, в настоящее время, побеждает на "+$dtsv+" голос(ов).";
+		if($dtsv < 0) mes "Корпорация Кафра, в настоящее время, побеждает на "+$dtsv*-1+" голос(ов).";
+		if($dtsv == 0) mes "В настоящее время голоса распределены поровну.";
+		mes "Кого Вы хотите поддержать своим голосом?";
+		next;
+		menu "Кафра",-,"Корп. Клёвых Событий",Lfixcool;
+
+	Lfixkafra:							//Fixing vote for Kafra
+		mes "[Саера]";
+		if($dtsv > 0) mes "Корп. Клёвых Событий, в настоящее время, побеждает на "+$dtsv+" голос(ов).";
+		if($dtsv < 0) mes "Корпорация Кафра, в настоящее время, побеждает на "+$dtsv*-1+" голос(ов).";	//multiplied by -1 because var is negative
+		if($dtsv == 0) mes "В настоящее время голоса распределены поровну.";
+		mes "Пожалуйста, введите сумму, которую вы хотите дать Корпорации Кафра";
+		input @dtstemp;					//Set buffer for Kafra vote
+		next;
+		mes "[Саера]";
+		mes "Вы ввели "+@dtstemp+" для Кафра";
+		if($dtsv > 0) mes "Корп. Клёвых Событий, в настоящее время, побеждает на "+$dtsv+" голос(ов).";
+		if($dtsv < 0) mes "Корпорация Кафра, в настоящее время, побеждает на "+$dtsv*-1+" голос(ов).";
+		if($dtsv == 0) mes "В настоящее время голоса распределены поровну.";
+		mes "Вы уверены, что хотели бы";
+		mes "сделать эти изменения?";
+		next;
+		menu "Да",-,"Нет",Lnothx;
+		set $dtsv,$dtsv-@dtstemp;				//Set buffer to Kafra vote
+		mes "[Саера]";
+		mes "Хорошо, установлено голосование";
+		mes "для Корпорации Кафра.";
+		if($dtsv > 0) mes "Корп. Клёвых Событий, в настоящее время, побеждает на "+$dtsv+" голос(ов).";
+		if($dtsv < 0) mes "Корпорация Кафра, в настоящее время, побеждает на "+$dtsv*-1+" голос(ов).";
+		if($dtsv == 0) mes "В настоящее время голоса распределены поровну.";
+		close;
+
+	Lfixcool:						//Fixing vote for cool corp
+		mes "[Саера]";
+		mes "Позвольте мне найти документы...";
+		if($dtsv > 0) mes "Корп. Клёвых Событий, в настоящее время, побеждает на "+$dtsv+" голос(ов).";
+		if($dtsv < 0) mes "Корпорация Кафра, в настоящее время, побеждает на "+$dtsv*-1+" голос(ов).";
+		if($dtsv == 0) mes "В настоящее время голоса распределены поровну.";
+		mes "Введите новое голосование по Корп. Клёвых Событий";
+		input @dtstemp;					//Set buffer for Cool vote
+		next;
+		mes "[Саера]";
+		mes "Вы ввели "+@dtstemp+" для Корп. Клёвых Событий";
+		if($dtsv > 0) mes "Корп. Клёвых Событий, в настоящее время, побеждает на "+$dtsv+" голос(ов).";
+		if($dtsv < 0) mes "Корпорация Кафра, в настоящее время, побеждает на "+$dtsv*-1+" голос(ов).";
+		if($dtsv == 0) mes "В настоящее время голоса распределены поровну.";
+		mes "Вы уверены, что хотели бы";
+		mes "сделать эти изменения?";
+		next;
+		menu "Да",-,"Нет",Lnothx;			//Confirmaiton
+		set $dtsv,@dtsv+@dtstemp;			//Set buffer to Cool vote
+		mes "[Саера]";
+		mes "Хорошо, установлено голосование";
+		mes "для Корп. Клёвых Событий.";
+		if($dtsv > 0) mes "Корп. Клёвых Событий, в настоящее время, побеждает на "+$dtsv+" голос(ов).";
+		if($dtsv < 0) mes "Корпорация Кафра, в настоящее время, побеждает на "+$dtsv*-1+" голос(ов).";
+		if($dtsv == 0) mes "В настоящее время голоса распределены поровну.";
+		close;
+
+	Lsettele:							//Set current DTS tele
+		mes "[Саера]";
+		mes "Наберите Kafra для включенния";
+		mes "порталов Кафра, Cool для включенния";
+		mes "порталов Корп. Клёвых Событий,";
+		mes "Election для режима выбора,";
+		mes "или Cancel для отмены.";
+		if($dts&(1<<0)) mes "Выборы - задействован режим выборов.";
+		if($dts&(1<<1)) mes "Корп. Клёвых Событий - задействованы порталы DTS.";
+		if($dts&(1<<2)) mes "Корпорация Кафра - задействованы порталы DTS.";
+		next;
+		input @dtstemps$;					//Typed in choices to prevent mistakes
+		mes "Позвольте мне найти документы...";
+		next;
+		if(@dtstemps$ == "Election" || @dtstemps$ == "election"){
+			if($dts&(1<<1)){
+				set $dts,$dts&~(1<<1);			//Removes previous winner
+				set $dts,$dts|(1<<0);			//Changes status to election
+			}
+			if($dts&(1<<2)){
+				set $dts,$dts&~(1<<2);
+				set $dts,$dts|(1<<0);
+			}
+			mes "[Саера]";
+			mes "Установлен режим выборов.";
+			close;
+		}
+		if(@dtstemps$ == "Cool" || @dtstemps$ == "cool"){
+			if($dts&(1<<0)){
+				set $dts,$dts&~(1<<0);
+				set $dts,$dts|(1<<1);
+			}
+			if($dts&(1<<2)){
+				set $dts,$dts&~(1<<2);
+				set $dts,$dts|(1<<1);
+			}
+			mes "[Саера]";
+			mes "Корп. Клёвых Событий - теперь в режиме DTS.";
+			close;
+		}
+		if(@dtstemps$ == "Kafra" || @dtstemps$ == "kafra"){
+			if($dts&(1<<1)){
+				set $dts,$dts&~(1<<1);
+				set $dts,$dts|(1<<2);
+			}
+			if($dts&(1<<0)){
+				set $dts,$dts&~(1<<0);
+				set $dts,$dts|(1<<2);
+			}
+			mes "[Саера]";
+			mes "Корпорация Кафра - теперь в режиме DTS.";
+			close;
+		}
+		if(@dtstemps$ == "Cancel" || @dtstemps$ == "cancel") goto Lnothx;
+		mes "[Саера]";
+		mes "Введите правильное название для выборов";
+		next;
+		goto Lsettele;
+
+	Lsetlast:							//Set last winner
+		mes "[Саера]";
+		mes "Наберите Kafra для отчетов по выборам Кафра,";
+		mes "Cool для отчетов по выборам Корп. Клёвых Событий,";
+		mes "None для отчетов по проигравшим,";
+		mes "или Cancel для отмены.";
+		if($dts&(1<<3)) mes "Последнего победителя нет";
+		if($dts&(1<<4)) mes "Последний победитель Корп. Клёвых Событий";
+		if($dts&(1<<5)) mes "Последний победитель Корпорация Кафра";
+		next;
+		input @dtstemps$;
+		mes "[Саера]";
+		mes "Позвольте мне найти документы...";
+		next;
+		if(@dtstemps$ == "None" || @dtstemps$ == "none"){
+			if($dts&(1<<4)){
+				set $dts,$dts&~(1<<4);			//removes last winner
+				set $dts,$dts|(1<<3);			//sets current last winner
+			}
+			if($dts&(1<<5)){
+				set $dts,$dts&~(1<<5);
+				set $dts,$dts|(1<<3);
+			}
+			mes "[Саера]";
+			mes "Установлено, что последнего победителя нет.";
+			close;
+		}
+		if(@dtstemps$ == "Cool" || @dtstemps$ == "cool"){
+			if($dts&(1<<3)){
+				set $dts,$dts&~(1<<3);
+				set $dts,$dts|(1<<4);
+			}
+			if($dts&(1<<5)){
+				set $dts,$dts&~(1<<5);
+				set $dts,$dts|(1<<4);
+			}
+			mes "[Саера]";
+			mes "Корп. Клёвых Событий - последний победитель.";
+			close;
+		}
+		if(@dtstemps$ == "Kafra" || @dtstemps$ == "kafra"){
+			if($dts&(1<<3)){
+				set $dts,$dts&~(1<<3);
+				set $dts,$dts|(1<<5);
+			}
+			if($dts&(1<<4)){
+				set $dts,$dts&~(1<<4);
+				set $dts,$dts|(1<<5);
+			}
+			mes "[Saera]";
+			mes "Корпорация Карфа - последний победитель.";
+			close;
+		}
+		if(@dtstemps$ == "Cancel" || @dtstemps$ == "cancel") goto Lnothx;
+		mes "[Саера]";
+		mes "Пожалйста, введите верное имя";
+		mes "для последнего победителя";
+		next;
+		goto Lsetlast;
+
+	Lmanuvotecheck:
+		mes "[Саера]";
+		mes "Вы уверены, что хотите запустить";
+		mes "голосование еще раз?";
+		next;
+		menu "Да",Lmanuvoteyes,"Нет",Lnothx;
+
+	Lmanuvoteyes:
+		if($dtsday<4 || $dtsday>=100) set $dtsday,4;
+		else set $dtsday,$dtsday+1;
+		if($dts&(1<<1) && $dts&(1<<2) || $dts&(1<<0) && $dts&(1<<1) || $dts&(1<<0) && $dts&(1<<2)){
+			if($dts&(1<<0)) set $dts,$dts&~(1<<0);
+			if($dts&(1<<1)) set $dts,$dts&~(1<<1);
+			if($dts&(1<<2)) set $dts,$dts&~(1<<2);
+			set $dts,$dts|(1<<0);
+		}
+		if($dts&(1<<4) && $dts&(1<<5) || $dts&(1<<3) && $dts&(1<<4) || $dts&(1<<3) && $dts&(1<<5)){
+			if($dts&(1<<3)) set $dts,$dts&~(1<<3);
+			if($dts&(1<<4)) set $dts,$dts&~(1<<4);
+			if($dts&(1<<5)) set $dts,$dts&~(1<<5);
+			set $dts,$dts|(1<<3);
+		}
+		if($dtsv == 0){
+			set $@dtstemp,rand(1,2);
+			if($@dtstemp == 1) set $dtsv,$dtsv+100;
+			else set $dtsv,$dtsv-100;
+		}
+		if($dtsv > 0){
+			if($dts&(1<<3)) set $dts,$dts&~(1<<3);			//removes last winner varialbes
+			if($dts&(1<<4)) set $dts,$dts&~(1<<4);
+			if($dts&(1<<5)) set $dts,$dts&~(1<<5);
+			if($dts&(1<<0)){
+				set $dts,$dts&~(1<<0);				//removes winner variable
+				set $dts,$dts|(1<<3);				//sets last winner varialbe
+				set $dts,$dts|(1<<1);				//sets current winner variable
+			}
+			if($dts&(1<<1)) set $dts,$dts|(1<<4);
+			if($dts&(1<<2)){
+				set $dts,$dts&~(1<<2);
+				set $dts,$dts|(1<<1);
+				set $dts,$dts|(1<<5);
+			}
+			set $dtsv,0;
+		}
+		else{
+			if($dts&(1<<3)) set $dts,$dts&~(1<<3);
+			if($dts&(1<<4)) set $dts,$dts&~(1<<4);
+			if($dts&(1<<5)) set $dts,$dts&~(1<<5);
+			if($dts&(1<<0)){
+				set $dts,$dts&~(1<<0);
+				set $dts,$dts|(1<<2);
+				set $dts,$dts|(1<<3);
+			}
+			if($dts&(1<<1)){
+				set $dts,$dts&~(1<<1);
+				set $dts,$dts|(1<<2);
+				set $dts,$dts|(1<<4);
+			}
+			if($dts&(1<<2)) set $dts,$dts|(1<<5);
+			set $dtsv,0;
+		}
+		mes "[Саера]";
+		mes "Задействован режим контроля голосования.";
+		if($dts&(1<<0)) mes "В настоящее время задействован режим выборов.";
+		if($dts&(1<<1)) mes "Корп. Клёвых Событий - режим порталов DTS.";
+		if($dts&(1<<2)) mes "Корпорация Кафра - режим порталов DTS.";
+		close;
+}
+
+//Function for Voting Staff NPC
+function	script	F_DTS_Warp	{
+	callfunc "F_ClearGarbage"; //Clear outdated, unused variables
+	if($dts == 0){ 						//Sets NPCs to election mode if first time running
+		set $dts,$dts|(1<<0);
+		set $dts,$dts|(1<<3);
+	}
+	if((dtseligible == 0 || dtseligible == 3) && baselevel >= 60 && MISC_QUEST&128 == 0) set dtseligible,1;	//Clear previous var of dtseligible,3 being tried for eligibility already
+	if(dtseligible != $dtsday && baselevel >= 60 && MISC_QUEST&128){
+		set MISC_QUEST,MISC_QUEST&~128;
+		set dtseligible,1;
+	}
+	switch(getarg(0)){
+	case 0:
+		cutin "zonda_01",2;
+		mes "[Избирком Корп. Клёвых Событий]";
+		mes "Здравствуйте! Не забудьте";
+		mes "проголосовать и убедитесь,";
+		mes "что сделали Ваш выбор между";
+		mes "Корп. Клёвых Событий и Кафра,";
+		mes "за контроль над Службой";
+		mes "Телепортов Поздемелий!";
+		break;
+	case 1:
+		switch(getarg(1)){
+		case 0: cutin "kafra_06",2; break;			//Finding arguments to find which illust to use
+		case 1: cutin "kafra_05",2; break;			//Used Red hair "kafra_09" for black outfit kafra
+		case 2: cutin "kafra_04",2; break;			//because I couldn't find a suitable illust
+		case 3: cutin "kafra_03",2; break;
+		case 4: cutin "kafra_02",2; break;
+		case 5: cutin "kafra_01",2; break;
+		case 6: cutin "kafra_09",2; break;
+		case 7: cutin "kafra_08",2; break;
+		case 8: cutin "kafra_09",2; break;
+		default: cutin "kafra_09",2; break;
+		}
+		mes "[Избирком Корпорации Кафра]";
+		mes "Приветствую, странник.";
+		mes "Как вам известно, мы проводим";
+		mes "выборы, чтобы предостовлять";
+		mes "услуги Службы Телепортов";
+		mes "Поздемелий. Как я могу помочь?";
+		break;
+	}
+	next;
+	menu "Причины выборов",Lelection,"Проголосовать",Lvote,
+	"Услуги телепортации",Lteleport,"Отмена",Lcancel;
+
+	Lelection: 							//Reason for election explanation
+		switch(getarg(0)){
+		case 0:
+			mes "[Избирком Корп. Клёвых Событий]";
+			mes "Корп. Клёвых Событий планирует";
+			mes "представить новую услугу";
+			mes "Службы Телепортации Подземелий";
+			mes "своим клиентам, еще не";
+			mes "представленной Корпорацией";
+			mes "Кафра. Однако...";
+			next;
+			mes "[Избирком Корп. Клёвых Событий]";
+			mes "Корпорация Кафра, которая";
+			mes "уже монополизировала рынок";
+			mes "общественной телепортации,";
+			mes "на самом деле, также планирует";
+			mes "предоставить подобную услугу.";
+			next;
+			mes "[Избирком Корп. Клёвых Событий]";
+			mes "Из-за технологических ограничений,";
+			mes "только одна компания может быть";
+			mes "выбрана в качестве поставщика";
+			mes "Службы Телепортов Подземелий.";
+			mes "Отныне, наши клиенты могут";
+			mes "разрешить этот спор через выборы.";
+			next;
+			mes "[Избирком Корп. Клёвых Событий]";
+			mes "Многократные выборы будут";
+			mes "проведены так, чтобы наши клиенты";
+			mes "могли испробывать для себя";
+			mes "специальные услуги каждой компании.";
+			mes "Однако, имейте в виду, что Вы";
+			mes "должны иметь право для голосования.";
+			next;
+			mes "[Избирком Корп. Клёвых Событий]";
+			mes "Для получения права голоса,";
+			mes "пожалуйста, посетите наш";
+			mes "штаб в городе Lighthalzen,";
+			mes "расположенного в Республике";
+			mes "Шварцвальд.";
+			mes "Спасибо за ваше время.";
+			break;
+		case 1:
+			mes "[Избирком Корпорации Кафра]";
+			mes "Корп. Клёвых Событий и";
+			mes "Копрпорация Кафра, планируют";
+			mes "представить всем Службу";
+			mes "Телепортации Подземелий.";
+			next;
+			mes "[Избирком Корпорации Кафра]";
+			mes "Но из-за технических ограничений,";
+			mes "только одна компания может";
+			mes "выступать в качестве поставщика";
+			mes "Службы Телепортов Подземелий";
+			mes "одновременно. И так, обе компании";
+			mes "решили провести специальные выборы";
+			next;
+			mes "[Избирком Корпорации Кафра]";
+			mes "Каждая компания имеет свою";
+			mes "собственную политику и гарантии,";
+			mes "в отношении Службы Телепортации";
+			mes "Подземелий, и на этих выборах,";
+			mes "клиенты в конечном счете решат";
+			mes "и выберут то, что лучше для них.";
+			next;
+			mes "[Избирком Корпорации Кафра]";
+			mes "Сейчас, Служба Телепортации";
+			mes "Подземелий, будет представлена";
+			mes "в череде тестовых периодов. Таким";
+			mes "образом, клиенты смогут увидеть";
+			mes "преимущества обеих компаний,";
+			mes "прежде чем принять общее решение";
+			next;
+			mes "[Избирком Корпорации Кафра]";
+			mes "Если Вы дееспособны,";
+			mes "пожалуйста, примите участие";
+			mes "во всех выборах, чтобы решить,";
+			mes "какая компания достойна";
+			mes "представить услугу на следующий";
+			mes "срок. Спасибо за поддержку~";
+			break;
+		}
+		goto Lend;
+
+	Lvote: //If you clicked you wanted to vote
+		if(dtseligible == 1) goto Leligible; 			//Var check if eligible
+
+	Lnoteligible: 							//Text displayed if wanted to vote, but not eligible/voted
+		switch(getarg(0)){
+		case 0:
+			mes "[Избирком Корп. Клёвых Событий]";
+			mes "Я сожалею, но Вы не можете";
+			mes "голосвать на данном этапе.";
+			mes "Пожалйста, посетите наш штаб";
+			mes "в Lighthalzen для получения";
+			mes "информации о приобретении права";
+			mes "голоса. Спасибо за ваше время.";
+			break;
+		case 1:
+			mes "[Избирком Корпорации Кафра]";
+			mes "Ой, я так сожалею, но в";
+			mes "настоящее время Вы не";
+			mes "дееспособны для голосования.";
+			mes "Для получения избирательного";
+			mes "ценза, пожалуйста, посетите";
+			mes "штаб Кафра в Аль Де Баране.";
+			mes "Спасибо и хорошего дня.";
+			break;
+		}
+		goto Lend;
+
+	Leligible: 							//Text displayed if eligible to vote
+		if(MISC_QUEST&128 && $dtsday == dtseligible) goto Lnoteligible; //Var check if voted
+		switch(getarg(0)){
+		case 0:
+			mes "[Избирком Корп. Клёвых Событий]"; 		//Unofficial text
+			mes "Проверяю ваши полномочия.";
+			mes "Вы можете голосовать за";
+			mes "Службу Телепортации Подземелий.";
+			mes "Кого Вы хотите выбрать?";
+			break;
+		case 1:
+			mes "[Избирком Корпорации Кафра]";
+			mes "Похоже, что вы имеете";
+			mes "прав голосовать за ";
+			mes "Службу Телепортации Подземелий.";
+			mes "Кого Вы хотите выбрать";		//End Unofficial text
+			break;
+		}
+		next;
+		menu "Cool Event Corp.",Lvotecool,"Kafra Corp.",Lvotekafra;
+	
+	Lvotecool:
+		set $dtsv,$dtsv+1;				//Adds 1 to cool count
+		set MISC_QUEST,MISC_QUEST|128;				//Sets var so that you can't vote over and over
+		set dtseligible,$dtsday;
+		switch(getarg(0)){
+		case 0:
+			mes "[Избирком Корп. Клёвых Событий]";
+			mes "Спасибо за Ваш выбор.";
+			mes "Ваш голос будет подсчитан,";
+			mes "и мы высоко оцениваем Ваш";
+			mes "вклад. Спасибо и удачного дня.";
+			break;
+		case 1:
+			mes "[Избирком Корпорации Кафра]";
+			mes "Мы благодарим Вас за ваш";
+			mes "голос. Ваше мнение очень ценно";
+			mes "и будет засчитано за Корп.";
+			mes "Клёвых Событий.";
+			break;
+		}
+		goto Lend;
+
+	Lvotekafra:
+		setd $dtsv,$dtsv-1; 				//Adds 1 to kafra count
+		set MISC_QUEST,MISC_QUEST|128; 			//Sets var to prevent cheating
+		set dtseligible,$dtsday;
+		switch(getarg(0)){
+		case 0:
+			mes "[Избирком Корп. Клёвых Событий]";		//Unofficial Text
+			mes "Спасибо за ваше мнение.";
+			mes "Ваш голос за Корпорацию Кафра";
+			mes "будет засчитан. Спасибо и";
+			mes "удачного дня.";
+			break;
+		case 1:
+			mes "[Избирком Корпорации Кафра]";
+			mes "Ваш голос за нас подсчитан.";
+			mes "Мы благодарим за Ваш вклад,";
+			mes "и надеемся, что будем";
+			mes "соответвовать высоким";
+			mes "стандартам в ваших странствиях";
+			break;
+		}
+		goto Lend;						//End Unofficial text
+
+	Lteleport: 							//Selected Teleport
+		switch(getarg(0)){
+		case 0:
+			if($dts&(1<<0)){
+				mes "[Избирком Корп. Клёвых Событий]";
+				mes "Я извиняюсь, но Служба";
+				mes "Телепортации Подземелий";
+				mes "недоступна в ходе выборов.";
+				mes "Она будет возобновлена после";
+				mes "объявления результатов выбора.";
+				mes "Спасибо и хорошего вам дня.";
+				goto Lend;
+			}
+			if($dts&(1<<1)) goto Lteleenabled;
+			mes "[Избирком Корп. Клёвых Событий]";		//Text if Kafra won DTS elect.
+			mes "Я извиняюсь, но Корп. Клёвых";
+			mes "Событий, в настоящее время не";
+			mes "может предложить Службу Телепортации";
+			mes "Подземелий из-за результатов";
+			mes "последних выборов. Пожалуйста";
+			mes "голосуйте за нас в следующий";
+			mes "раз, хорошо? Хорошего дня~";
+			break;
+		case 1:
+			if($dts&(1<<0)){
+				mes "[Избирком Корпорации Кафра]";
+				mes "К сожалению, но сейчас проходят";
+				mes "выборы по использованию Службы";
+				mes "Телепортации Подземелий.";
+				mes "Мы не можем участвовать в";
+				mes "голосовании до тех пор, пока";
+				mes "результаты не объявлены";
+				goto Lend;
+			}
+			if($dts&(1<<2)) goto Lteleenabled;
+			mes "[Избирком Корпорации Кафра]";
+			mes "Cожалеем, но сейчас, Корпорация";
+			mes "Кафра, не представляет услуги";
+			mes "Службы Телепортации Подземелий";
+			mes "из-за последних результатов";
+			mes "выборов. Пожалуйста, голосуйте";
+			mes "в следующий раз за Кафра~";
+			break;
+		}
+		goto Lend;
+
+	Lteleenabled: 							//Shows DTS tele selections
+	cleararray @dtswarpmap$[0],"",getarraysize(@dtswarpmap$);
+	cleararray @dtswarp$[0],"",getarraysize(@dtswarp$);
+	switch(getarg(0)){
+	case 0:
+		mes "[Избирком Корп. Клёвых Событий]";
+		mes "Пожалуйста, помните, мы не";
+		mes "принимаем билеты на бесплатную";
+		mes "телепортацию и не даем в";
+		mes "награду Специальные Бонусные";
+		mes "Очки за услугу. А теперь,";
+		mes "выберите пункт назначения.";
+		setarray @dtswarpmap$[0],"Byalan, Level 4","Clock Tower, Basement 3";
+		setarray @dtswarp$[0],@dtswarpmap$[0]+" -> 4,000z",
+		@dtswarpmap$[1]+" -> 4,000z","Cancel";
+		if($dts&(1<<4)){ 
+			set @dtswarpmap$[2],"Glastheim Entrance";
+			setarray @dtswarp$[2],@dtswarpmap$[2]+" -> 4,000z","Cancel";
+		}
+		break;
+	case 1:
+		mes "[Избирком Корпорации Кафра]";
+		mes "Благодарим Вас за выбор нашей";
+		mes "Службы Телепортации Подземелий.";
+		mes "Имейте в виду, что билеты";
+		mes "бесплатной телепортации и";
+		mes "Специальные Бонусные Очки Кафра";
+		mes "не расчитанны на эту услугу.";
+		setarray @dtswarpmap$[0],"Toy Factory, Level 2","Clock Tower, Level 3";
+		setarray @dtswarp$[0],@dtswarpmap$[0]+" -> 4,000z",
+		@dtswarpmap$[1]+" -> 4,000z","Cancel";
+		if($dts&(1<<5)){ 
+			set @dtswarpmap$[2],"Lava Dungeon, Level 2";
+			setarray @dtswarp$[2],@dtswarpmap$[2]+" -> 4,000z","Cancel";
+		}
+		break;
+	}
+	next;
+	switch(select(@dtswarp$[0],@dtswarp$[1],@dtswarp$[2],@dtswarp$[3])){
+		case 1:
+			set @num, 0;
+			break;
+		case 2:
+			set @num, 1;
+			break;
+		case 3:
+			set @num, 2;
+			break;
+		case 4:
+			set @num, 3;
+			break;
+	}
+	Lwarp:
+		if (@dtswarp$[@num] == "Cancel") goto Lcancel;
+		if (Zeny<4000) goto Lnomoney;
+		set Zeny, Zeny-4000;
+		if (@dtswarpmap$[@num] == "Toy Factory, Level 2") warp "xmas_dun02",130,123;
+ //Maps to warp to
+		if (@dtswarpmap$[@num] == "Clock Tower, Level 3") warp "alde_dun03",265,22;
+
+		if (@dtswarpmap$[@num] == "Lava Dungeon, Level 2") warp "mag_dun02",47,40;
+
+		if (@dtswarpmap$[@num] == "Byalan, Level 4") warp "iz_dun03",32,63;
+
+		if (@dtswarpmap$[@num] == "Clock Tower, Basement 3") warp "alde_dun03",277,178;
+
+		if (@dtswarpmap$[@num] == "Glastheim Entrance") warp "glast_01",370,304;
+
+		cutin "", 255;
+		end;
+	Lnomoney:
+		switch(getarg(0)){
+		case 0:
+			mes "[Избирком Корп. Клёвых Событий]"; 		//Unofficial Text
+			mes "Ммм, очевидно, у вас нет";
+			mes "достаточно Zeny для выбранной";
+			mes "телепортации. Убедитесь, что Вы";
+			mes "имеете достаточную сумму денег,";
+			mes "и повторите попытку позже.";
+			break;
+		case 1:
+			mes "[Избирком Корпорации Кафра]";
+			mes "Похоже, как будто Вы не";
+			mes "имеете достаточно Zeny на";
+			mes "телепортацию, пожалуйста,";
+			mes "проверьте ваши средства и";
+			mes "попробуйте еще раз.";
+			break;
+		}
+		goto Lend;						//End unofficial text
+
+	Lcancel: 							//Selected Cancel on first menu
+		switch(getarg(0)){
+		case 0:
+			mes "[Избирком Корп. Клёвых Событий]";	
+			mes "Порпорация Клёвых Событий";
+			mes "всегда работает, чтобы знать";
+			mes "что наши клиенты не только";
+			mes "удовлетворены, но и довольны";
+			mes "нашим высоким стандартом качества.";
+			mes "Спасибо и хорошего вам дня.";
+			break;
+		case 1:
+			mes "Мы, в Корпорации Кафра, всегда";
+			mes "стараемся предоставлять лучшие";
+			mes "услуги. И надеемся, наши клиенты";
+			mes "довольны нашим стандартом качества.";
+			break;
+		}
+		goto Lend;
+	Lend:
+		close2;
+		cutin "", 255;
+		end;
+
+}
+
+//Elections administration NPC (hidden)
+-	script	DTS_Admin	-1,{
+	OnSun0100:					//Works only at 1am on sunday
+		if($dtsday<4 || $dtsday>=100) set $dtsday,4;
+		else set $dtsday,$dtsday+1;
+		if($dts == 0){
+			set $dts,$dts|(1<<0);
+			set $dts,$dts|(1<<3);
+		}
+		if($dts&(1<<1) && $dts&(1<<2) || $dts&(1<<0) && $dts&(1<<1) || $dts&(1<<0) && $dts&(1<<2)){
+			if($dts&(1<<0)) set $dts,$dts&~(1<<0);
+			if($dts&(1<<1)) set $dts,$dts&~(1<<1);
+			if($dts&(1<<2)) set $dts,$dts&~(1<<2);
+			set $dts,$dts|(1<<0);
+		}
+		if($dts&(1<<4) && $dts&(1<<5) || $dts&(1<<3) && $dts&(1<<4) || $dts&(1<<3) && $dts&(1<<5)){
+			if($dts&(1<<3)) set $dts,$dts&~(1<<3);
+			if($dts&(1<<4)) set $dts,$dts&~(1<<4);
+			if($dts&(1<<5)) set $dts,$dts&~(1<<5);
+			set $dts,$dts|(1<<3);
+		}
+		if($dtsv == 0){				//If tied, gives random side 100 votes
+			set $@dtstemp,rand(1,2);
+			if($@dtstemp == 1) set $dtsv,$dtsv+100;
+			else set $dtsv,$dtsv-100;
+		}
+		if($dtsv > 0){
+			if($dts&(1<<3)) set $dts,$dts&~(1<<3);
+			if($dts&(1<<4)) set $dts,$dts&~(1<<4);
+			if($dts&(1<<5)) set $dts,$dts&~(1<<5);
+			if($dts&(1<<0)){
+				set $dts,$dts&~(1<<0);
+				set $dts,$dts|(1<<1);
+				set $dts,$dts|(1<<3);
+			}
+			if($dts&(1<<1)) set $dts,$dts|(1<<4);
+			if($dts&(1<<2)){
+				set $dts,$dts&~(1<<2);
+				set $dts,$dts|(1<<1);
+				set $dts,$dts|(1<<5);
+			}
+			set $dtsv,0;
+		}
+		else{
+			if($dts&(1<<3)) set $dts,$dts&~(1<<3);
+			if($dts&(1<<4)) set $dts,$dts&~(1<<4);
+			if($dts&(1<<5)) set $dts,$dts&~(1<<5);
+			if($dts&(1<<0)){
+				set $dts,$dts&~(1<<0);
+				set $dts,$dts|(1<<2);
+				set $dts,$dts|(1<<3);
+			}
+			if($dts&(1<<1)){
+				set $dts,$dts&~(1<<1);
+				set $dts,$dts|(1<<2);
+				set $dts,$dts|(1<<4);
+			}
+			if($dts&(1<<2)) set $dts,$dts|(1<<5);
+			set $dtsv,0;
+		}
+		end;
+}

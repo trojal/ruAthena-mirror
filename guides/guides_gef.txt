@@ -1,0 +1,174 @@
+//===== eAthena Script ======================================= 
+//= Geffen Guides
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.4a
+//===== Compatible With: ===================================== 
+//= eAthena  SVN
+//===== Description: ========================================= 
+//= [Aegis COnversion]
+//= Guides for the City of Geffen
+//===== Additional Comments: ================================= 
+//= Fully working.  Added a guide at every exit.
+//= v1.1 Now using duplicate command.
+//= 1.2 Optimized, updated common guide names [Lupus]
+//= 1.2a Small note that the BS guild moved to Einbroch [Poki#3]
+//= 1.3 Removed Duplicates [Silent]
+//= 1.4a Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//= 1.4 Fixed some errors with the loop[Samuray22]
+//	-Thanks to $ephiroth.
+//===== Translated into Russian: =============================
+//= перевод Shadow Smail rater@yandex.ru
+//============================================================
+
+geffen,203,116,0	script	Guide#gef::GefGuide	705,{
+	cutin "gef_soldier",2;
+	mes "[Geffen Guide]";
+	mes "Добро пожаловать в Геффен,";
+	mes "Город Магии. Если у Вас есть какие-то";
+	mes "вопросы о городе,";
+	mes "Вы всегда можете спросить меня.";
+	mes "Я сделаю все возможное, чтобы помочь Вам. ^FFFFFFcobo^000000";
+	set .@loop1,1;
+	while (.@loop1) {
+		next;
+		switch(select("Городской путеводитель:Убрать отметки с мини-карты:Справка.:Выйти")) {
+		case 1:
+			mes "[Geffen Guide]";
+			mes "Пожалуйста выберите";
+			mes "пункт назначения";
+			mes "в следующем меню.";
+			if (compass_check == 0) {
+				mes "Хотите,";
+				mes "чтобы я отметил";
+				mes "здание на Вашей карте?";
+				next;
+				if (select("Да:Нет") == 1) set .@compass_check,1;
+			}
+			set .@loop2,1;
+			while (.@loop2) {
+				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				else next;
+//				next;
+				switch(select("^FF0000Академия Магии^000000:Кузнечный цех:Оружейный магазин:Товарная лавка:Пивная:Гостиница:Башня Геффена:Отмена")) {
+				case 1:
+					mes "[Geffen Guide]";
+					mes "Академия Магии находится";
+					mes "на северо-западе Геффена.";
+					mes "Там юные Новисы могут стать Магами.";
+					if (.@compass_check)
+						viewpoint 1,61,180,2,0xFF0000;
+					break;
+				case 2:
+					mes "[Geffen Guide]";
+					mes "Кузнечный магазин";
+					mes "находится на юго-востоке";
+					mes "от центра города.";
+					if (.@compass_check)
+						viewpoint 1,182,59,3,0x00FF00;
+					break;
+				case 3:
+					mes "[Geffen Guide]";
+					mes "Оружейный магазин";
+					mes "находится на северо-западе";
+					mes "от центра города.";
+					if (.@compass_check)
+						viewpoint 1,99,140,4,0xFF00FF;
+					break;
+				case 4:
+					mes "[Geffen Guide]";
+					mes "Вы найдете";
+					mes "Tool Shop, если пойдете";
+					mes "на юго-запад от";
+					mes "центра Геффена.";
+					if (.@compass_check)
+						viewpoint 1,44,86,5,0xFF00FF;
+					break;
+				case 5:
+					mes "[Geffen Guide]";
+					mes "Паб вы найдете";
+					mes "на северо-востоке";
+					mes "от Башни Геффена.";
+					if (.@compass_check)
+						viewpoint 1,138,138,6,0xFF00FF;
+					break;
+				case 6:
+					mes "[Geffen Guide]";
+					mes "Гостиница находится";
+					mes "на северо-востоке грода.";
+                                        if (.@compass_check)
+						viewpoint 1,172,174,7,0xFF00FF;
+					break;
+				case 7:
+					mes "[Geffen Guide]";
+					mes "Башня Геффена";
+					mes "стоит в центре города.";
+					mes "Наверху там находится";
+					mes "Гильдия Волшебников,";
+					mes "а под ней находится";
+					mes "таинственное подземелье...";
+					if (.@compass_check)
+						viewpoint 1,120,114,8,0x00FF00;
+					break;
+				case 8:
+					mes "[Geffen Guide]";
+					mes "[Einbech Guide]";
+					mes "Если хотите чтобы я убрал";
+					mes "отметки с Вашей карты,";
+					mes "выберите сооответствующий";
+					mes "пункт в меню.";
+					mes "Удачи.";
+					set .@loop2,0;
+					break;
+				}
+			}
+			break;
+		case 2:
+			viewpoint 2,237,41,2,0xFF0000;
+			viewpoint 2,237,41,3,0x00FF00;
+			viewpoint 2,46,345,4,0xFF00FF;
+			viewpoint 2,175,220,5,0xFF00FF;
+			viewpoint 2,134,221,6,0xFF00FF;
+			viewpoint 2,204,214,7,0xFF00FF;
+			viewpoint 2,204,214,8,0x00FF00;
+			set .@compass_check,0;
+			break;
+		case 3:
+			mes "[Geffen Guide]";
+			mes "Благодаря достижениям";
+			mes "в колдовстве и технологии,";
+			mes "мы улучшили нашу";
+			mes "информационную систему,";
+			mes "что позволяет нам отмечать крестиками";
+			mes "здания на Вашей карте.";
+			next;
+			mes "[Geffen Guide]";
+			mes "Ваша карта расположена";
+			mes "В верхнем правом углу";
+			mes "экрана. Если ее там нет,";
+			mes "жмакайте Ctrl + Tab";
+			mes "или ''Map'' в Вашем Basic Info Window.";
+			next;
+			mes "[Geffen Guide]";
+			mes "Чтобы отдалять и приближать";
+			mes " карту, тыкайте ''+'' and ''-'',";
+			mes "которые находятся на ней.";
+			mes "Я надеюсь Вам понравилось";
+			mes "у нас в городе.";
+			mes "Приезжайте еще!";
+			break;
+		case 4:
+			mes "[Geffen Guide]";
+			mes "Я надеюсь, Вам понравилось";
+			mes "здесь у нас!";
+			mes "Удачи, приезжайте еще!";
+			close2;
+			set .@loop1,0;
+		}
+	}
+	cutin "gef_soldier",255;
+	end;
+}
+
+geffen,118,62,0	duplicate(GefGuide)	Guide#2gef	705

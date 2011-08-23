@@ -1,0 +1,161 @@
+//===== eAthena Script ======================================= 
+//= Alberta Guides
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.5a
+//===== Compatible With: ===================================== 
+//= eAthena  SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Guides for the city of Alberta
+//===== Additional Comments: ================================= 
+//= Fully working
+//= 1.1 Fixed Armory coords, thanks to Freya team
+//= 1.2 Optimized, updated common guide names [Lupus]
+//= 1.3 Updated the guide according to how it is on iRO, thanks [MasterOfMuppets]
+//=     to Muad_Dib
+//= 1.4 Fitted the many lines into 1 or 2, and corrected some typos [erKURITA]
+//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//= 1.5 Fixed some errors with the loop[Samuray22]
+//	-Thanks to $ephiroth.
+//===== Translated into Russian: =============================
+//= Адаптация [Vorp]
+//============================================================ 
+
+alberta,23,238,4	script	Гид#alb::AlbGuide	105,{
+	cutin "prt_soldier",2;
+	mes "[Гид Альберты]";
+	mes "Добро пожаловать в Альберту,";
+	mes "портовый город. Не стесняйтесь";
+	mes "спрашивать, если у вас возникли";
+	mes "затруднения в поиске чего-либо";
+	mes "в этом городе. Или, если вам";
+	mes "нужен рассказ о городе.";
+	set .@loop1,1;
+	while (.@loop1) {
+		next;
+		switch(select("Городской путеводитель:Убрать отметки с мини-карты:Справка:Уйти")) {
+		case 1:
+			mes "[Гид Альберты]";
+			mes "Пожалуйста, выберите";
+			mes "местоположение из";
+			mes "следующего меню.";
+			if (.@compass_check == 0) {
+				mes "Хотите, что бы я";
+				mes "отметил местоположение";
+				mes "на вашей мини-карте?";
+				next;
+				if (select("Да:Нет") == 1) set .@compass_check,1;
+			}
+			set .@loop2,1;
+			while (.@loop2) {
+				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				else next;
+				
+				switch(select("^FF0000Торговая Гильдия^000000:Оружейный магазин:Товарная лавка:Гостиница:Кузница:Отмена")) {
+				case 1:
+					mes "[Гид Альберты]";
+					mes "Торговая Гильдия";
+					mes "место, гда можно";
+					mes "сменить профессию и";
+					mes "стать Торговцем! (Merchant)";
+					mes "Она расположена на";
+					mes "юго-западе Альберты.";
+					if (.@compass_check)
+						viewpoint 1,33,41,2,0xFF0000;
+					break;
+				case 2:
+					mes "[Гид Альберты]";
+					mes "Оружейный магазин";
+					mes "можно найти в южной";
+					mes "части города Альберта.";
+					if (.@compass_check)
+						viewpoint 1,117,37,3,0xFF00FF;
+					break;
+				case 3:
+					mes "[Гид Альберты]";
+					mes "Товарная лавка";
+					mes "находится в близи";
+					mes "центра города";
+					mes "Альбертара. Его";
+					mes "не сложно найти.";
+					if (.@compass_check)
+						viewpoint 1,98,154,4,0xFFFF00FF;
+					break;
+				case 4:
+					mes "[Гид Альберты]";
+					mes "Если хотите отдохнуть,";
+					mes "в северной части";
+					mes "города Альберта";
+					mes "открыта гостиница.";
+					if (.@compass_check)
+						viewpoint 1,65,233,5,0xFF00FF;
+					break;
+				case 5:
+					mes "[Гид Альберты]";
+					mes "Кузница в Альберте";
+					mes "находится в том же здании,";
+					mes "что и Торговая Гильдия.";
+					mes "Это на юго-западе.";
+					if (.@compass_check)
+						viewpoint 1,35,41,6,0xFF00FF;
+					break;
+				case 6:
+					mes "[Гид Альберты]";
+				 	mes "Если вы хотите";
+					mes "''убрать пометки";
+					mes "на мини-карте'',";
+					mes "пожалуйста, скажите";
+					mes "мне об этом.";
+					set .@loop2,0;
+				}
+			}
+			break;
+		case 2:
+			viewpoint 2,237,41,2,0xFF0000;
+			viewpoint 2,237,41,3,0xFF00FF;
+			viewpoint 2,46,345,4,0xFF00FF;
+			viewpoint 2,175,220,5,0xFF00FF;
+			viewpoint 2,175,220,6,0xFF00FF;
+			set .@compass_check,0;
+			break;
+		case 3:
+		 	mes "[Гид Альберты]";
+			mes "Достижения в науке и магии,";
+			mes "позволили улучшить нашу";
+			mes "информационную систему.";
+			mes "Теперь мы можем отметить всё,";
+			mes "что нужно на вашей мини-карте";
+			mes "для удобной навигации.";
+			next;
+			mes "[Гид Альберты]";
+			mes "Ваша мини-карта расположена";
+			mes "в верхнем правом углу экрана.";
+			mes "Если вы не видите её, нажмите";
+			mes "сочетание клавиш Ctrl + Tab или";
+			mes "кнопку ''Карта'' в окне Основной Информации.";
+			next;
+			mes "[Гид Альберты]";
+			mes "На вашей мини-карте,";
+			mes "щелкните на символах ''+''";
+			mes "и ''-'', чтобы изменить";
+			mes "масштаб. Мы надеемся,";
+			mes "что вам понравится";
+			mes "наш город Альберта.";
+			break;
+		case 4: 
+		 	mes "[Гид Альберты]";
+		 	mes "Будьте осторожны, когда";
+			mes "путешествуете и не бойтесь";
+			mes "спросить меня, если у Вас";
+			mes "возникнут вопросы о Альберте.";
+			close2;
+			set .@loop1,0;
+		}
+	}
+	cutin "prt_soldier",255;
+	end;
+}
+
+alberta,120,60,3	duplicate(AlbGuide)	Гид#2alb	105

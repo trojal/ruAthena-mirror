@@ -1,0 +1,166 @@
+//===== eAthena Script ======================================= 
+//= Morroc Guides
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.4a
+//===== Compatible With: ===================================== 
+//= eAthena  SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Guides for the City of Morroc
+//===== Additional Comments: ================================= 
+//= Fully working.  Added a guide at every exit.
+//= v1.1 Now using duplicate command.
+//= 1.2 Optimized, updated common guide names [Lupus]
+//= 1.3 Removed Duplicates [Silent]
+//= 1.4 rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//= 1.4a Fixed some errors with the loop[Samuray22]
+//	-Thanks to $ephiroth.
+//===== Translated into Russian: =============================
+//= перевод Shadow Smail rater@yandex.ru
+//============================================================
+
+morocc,153,286,6	script	Guide#moc::MocGuide	707,{
+	cutin "moc_soldier",2;
+	mes "[Morroc Guide]";
+	mes "Добро пожаловать в Моррок,";
+	mes "пограничный город";
+	mes "Королевства Рун-Мидгард.";
+	mes "Если есть проблемы";
+	mes "с ориентированием в городе,";
+	mes "обращайся ко мне.";
+	set .@loop1,1;
+	while (.@loop1) {
+		next;
+		switch(select("Городской путеводитель:Убрать отметки с карты:Справка:Уйти")) {
+		case 1:
+			mes "[Morroc Guide]";
+			mes "Выбери пункт";
+			mes "назначения из";
+			mes "следующего меню.";
+			if (.@compass_check == 0) {
+				mes "Хочешь, чтобы я отметил";
+				mes "здания на";
+				mes "твоей карте?";
+				next;
+				if (select("Да.:Нет.") == 1) set .@compass_check,1;
+			}
+			set .@loop2,1;
+			while(.@loop2) {
+				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				else next;
+				
+				switch(select("^FF0000Гильдия Воров^000000:Оружейный магазин:Гостиница:Пивная:Гильдия Наемников:Кузница:Уйти")) {
+				case 1:
+					mes "[Morroc Guide]";
+					mes "В Гильдии Воров";
+					mes "ты можешь сменить твою";
+					mes "профессию на вора.";
+					mes "Насколько я знаю,";
+					mes "она находится";
+					mes "в пирамиде около города...";
+					if (.@compass_check)
+						viewpoint 1,24,297,2,0xFF0000;
+					break;
+				case 2:
+					mes "[Morroc Guide]";
+					mes "Оружейный магазин";
+					mes "находится в юго-восточном";
+					mes "конце Моррока.";
+					if (.@compass_check)
+						viewpoint 1,253,56,3,0xFF00FF;
+					break;
+				case 3:
+					mes "[Morroc Guide]";
+					mes "Гостиницы ты сможешь";
+					mes "найти в";
+					mes "юго-восточной и";
+					mes "северо-восточной частях города.";
+					if (.@compass_check) {
+						viewpoint 1,197,66,4,0xFF00FF;
+						viewpoint 1,273,269,5,0xFF00FF;
+					}
+					break;
+				case 4:
+					mes "[Morroc Guide]";
+					mes "Паб находится";
+					mes "на северо-востоке Моррока.";
+					if (.@compass_check)
+						viewpoint 1,52,259,6,0xFF00FF;
+					break;
+				case 5:
+					mes "[Morroc Guide]";
+					mes "Гильдия";
+					mes "наемников располагается";
+					mes "на востоке города.";
+					if (.@compass_check)
+						viewpoint 1,284,171,7,0x00FF00;
+					break;
+				case 6:
+					mes "[Morroc Guide]";
+					mes "Кузницу сможешь найти";
+					mes "в юго-западной";
+					mes "части Моррока.";
+					if (.@compass_check)
+						viewpoint 1,47,47,7,0xFF00FF;
+					break;
+				case 7:
+					mes "[Morroc Guide]";
+					mes "Пожалуйста, попроси меня 'Убрать";
+					mes "отметки с карты', если ты больше";
+					mes "не хочешь, чтобы они";
+					mes "отображались";
+					mes "на твоей карте.";
+					set .@loop2,0;
+				}
+			}
+			break;
+		case 2:
+			viewpoint 2,237,41,2,0x00FF00;
+			viewpoint 2,237,41,3,0x0000FF;
+			viewpoint 2,46,345,4,0x00FF00;
+			viewpoint 2,175,220,5,0xFF0000;
+			viewpoint 2,175,220,6,0xFF0000;
+			viewpoint 2,175,220,7,0xFF0000;
+			set .@compass_check,0;
+			break;
+		case 3:
+			mes "[Morroc Guide]";
+			mes "Достижения в колдовстве и";
+			mes "технологии позволили";
+			mes "нам улучшить нашу информационную";
+			mes "систему. Теперь ты можешь";
+			mes "легко находить здания,";
+			mes "благодаря отметкам на карте.";
+			next;
+			mes "[Morroc Guide]";
+			mes "Твоя карта находится";
+			mes "в правом верхнем углу";
+			mes "экрана. Если ее там нет,";
+			mes "нажми Ctrl+Tab,";
+			mes "или нажми кнопку 'Map' в твоем Basic Info Window.";
+			next;
+			mes "[Morroc Guide]";
+			mes "На твоей карте";
+			mes "Нажимай ''+'' или ''-''";
+			mes "чтобы приближать и удалять.";
+			mes "Я надеюсь, тебе понравится";
+			mes "твое путешествие,";
+			mes "и ты будешь посещать наш город как можно чаще.";
+			break;
+		case 4:
+			mes "[Morroc Guide]";
+			mes "Хорошо, тогда удачи!";
+			mes "И старайся не искать неприятностей,";
+			mes "странник...";
+			mes "Здесь они сами тебя найдут...";
+			close2;
+			set .@loop1,0;
+		}
+	}
+	cutin "moc_soldier",255;
+	end;
+}
+
+morocc,54,97,0	duplicate(MocGuide)	Guide#2moc	707

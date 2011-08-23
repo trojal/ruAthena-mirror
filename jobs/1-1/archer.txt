@@ -1,0 +1,243 @@
+//===== eAthena Script ======================================= 
+//= Archer Job Quest
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.7a
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Job quest for Archer classes
+//===== Additional Comments: ================================= 
+//= Fully working
+//= v1.1 Added instant job change for High Novice [Lupus]
+//= v1.3 Added Baby Class support [Lupus]
+//= v1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
+//= 1.5 Now saves/restores all quest skills [Lupus]
+//= 1.6 Merged back JFunc [Lupus]
+//= 1.7 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
+//=	Arrow reward is now equal to the type sof trunks brought.
+//=	No longer uses function "F_ToHigh"
+//= 1.7a Fixed minor dialogue bug at Grade==25 [Lupus]
+//= 1.8 Fixed mistake in condition check. [L0ne_W0lf]
+//===== Translated into Russian: =============================
+//= Translated to Russian [Jarek]
+//============================================================ 
+
+payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
+	if (Upper == 1) {
+		if (Class == Job_Novice_High && ADVJOB == Job_Sniper || ADVJOB == Job_Clown || ADVJOB == Job_Gypsy) {
+			mes "[Член Гильдии Лучников]";
+			mes "Эй, я кажется знаю Вас.";
+			mes "Вы ведь когда-то уже";
+			mes "приходили ко мне, не так ли?";
+			next;
+			mes "[Член Гильдии Лучников]";
+			mes "Вы, наверное, побывали";
+			mes "в Вальгалле и переродились.";
+			mes "Впечатляет!";
+			next;
+			if (getskilllv("NV_BASIC") < 9) {
+				mes "[Член Гильдии Лучников]";
+				mes "Эммм...";
+				mes "Вам необходимо обучиться всем Основным Умениям,прежде чем стать Archer'ом.";
+				next;
+				mes "[Член Гильдии Лучников]";
+				mes "Ну, до скорого.";
+				close;
+			}
+			mes "[Член Гильдии Лучников]";
+			mes "Хорошо, мне нечего больше";
+			mes "сказать Вам. Я знаю, из";
+			mes "Вас выйдет отличный Archer...";
+			next;
+			skill 143,0,0;
+			jobchange Job_Archer_high;
+			skill 147,1,0;
+			skill 148,1,0;
+			mes "[Член Гильдии Лучников]";
+			mes "Хотя на этот раз, Вам не";
+			mes "предоставляются бонусы, надеюсь, Вы поймёте почему. Берегите себя.";
+			close;
+		}
+		else {
+			mes "[Член Гильдии Лучников]";
+			mes "O...?";
+			mes "Эй, что Вы";
+			mes "здесь делаете...?";
+			next;
+			mes "[Член Гильдии Лучников]";
+			mes "Должен Вам заметить, что Вы не сможете стать Archer'ом. Вам лучше стать тем, кем Вы были до перерождения.";
+			close;
+		}
+	}
+	mes "[Член Гильдии Лучников]";
+	mes "Добрый день. Чем могу Вам помочь?";
+	next;
+	switch(select("Я хочу стать Archer'ом.:Что нужно, чтобы стать Archer'ом.:Ничем, спасибо.")) {
+	case 1:
+		if (BaseJob == Job_Archer) {
+			mes "[Член Гильдии Лучников]";
+			mes "Но Вы уже Archer...";
+			close;
+		}
+		else if (BaseJob != Job_Archer && BaseJob != Job_Novice) {
+			mes "[Член Гильдии Лучников]";
+			mes "Хмм...";
+			mes "Вы совсем не похожи на Novice'а...";
+			next;
+			mes "[Член Гильдии Лучников]";
+			mes "А это означает, что Вы не сможете стать Archer'ом, потому что уже получили другую профессию.";
+			close;
+		}
+		if (job_archer_q == 0) {
+			mes "[Член Гильдии Лучников]";
+			mes "Вы хотите стать Archer'ом?";
+			mes "Если так, то Вам нужно заполнить анкету.";
+			next;
+			if (select("Заполнить.:Уйти") == 1) {
+				set job_archer_q,1;
+				mes "[Член Гильдии Лучников]";
+				mes "Хорошо, подпишитесь вот здесь. Отлично, гм, но это ещё не всё, Вам нужно пройти испытание.";
+				next;
+				mes "[Член Гильдии Лучников]";
+				mes "Если Вы считаете, что готовы, мы можем начать.";
+				mes "Вы готовы?";
+				next;
+				if (select("Да, конечно.:Пока нет.") == 1) {
+					mes "[Член Гильдии Лучников]";
+					mes "Отлично, так...";
+					next;
+				}
+				else {
+					mes "[Член Гильдии Лучников]";
+					mes "Чтож, приходите, когда подготовитесь.";
+					close;
+				}
+			}
+			mes "[Член Гильдии Лучников]";
+			mes "Ну чтож.";
+			mes "Увидимся.";
+			close;
+		}
+		mes "[Член Гильдии Лучников]";
+		mes "Вы..." + strcharinfo(0) + "?";
+		next;
+		if (getskilllv(1) < 9) {
+			mes "[Член Гильдии Лучников]";
+			mes "Так, у Вас неподходящий Уровень Профессии. Проверьте требования к Archer'у.";
+			next;
+			mes "[Член Гильдии Лучников]";
+			mes "Ваш Уровень Профессии должен быть не ниже 10, и не забывайте, что Вы должны полностью Выучить Basic Skill. Вот когда сделаете это, тогда и поговорим.";
+			close;
+		}
+		if (job_archer_q == 1) {
+			set .@archer_item1,countitem(1066) * 5;
+			set .@archer_item2,countitem(1067) * 3;
+			set .@archer_item3,countitem(1068) * 2;
+			set .@archer_item4,countitem(1019);
+			set .@total_archer,.@archer_item1 + .@archer_item2 + .@archer_item3 + .@archer_item4;
+			set .@total_archer2,(((.@archer_item2 + .@archer_item3) * 2) + .@archer_item4);
+			mes "[Член Гильдии Лучников]";
+			mes "Превосходно!";
+			mes "Так посмотрим...";
+			next;
+			mes "[Член Гильдии Лучников]";
+			mes "Сейчас я подсчитаю, сколько Trunk'ов Вы принесли для своего будущего лука.";
+			next;
+			if (countitem(1066) == 0 && countitem(1067) == 0 && countitem(1068) == 0 && countitem(1019) == 0) {
+				mes "[Член Гильдии Лучников]";
+				mes "Гм...";
+				mes "К сожалению, Вы ничего из нужного мне не принесли. Ступайте и принесите мне Trunk'и.";
+				close;
+			}
+			mes "[Член Гильдии Лучников]";
+			if (countitem(1066) != 0) mes " Сорт S : " + countitem(1066) + " шт, очков: " + .@archer_item1 + " . ";
+			if (countitem(1067) != 0) mes " Сорт A : " + countitem(1067) + " шт, очков: " + .@archer_item2 + " . ";
+			if (countitem(1068) != 0) mes " Сорт B : " + countitem(1068) + " шт, очков: " + .@archer_item3 + " . ";
+			if (countitem(1019) != 0) mes " Сорт C : " + countitem(1019) + " шт, очков: " + .@archer_item4 + " . ";
+			if (.@total_archer < 25) {
+				mes "Итого: ^FF0000" + .@total_archer + "^000000 / 40";
+				next;
+				mes "[Член Гильдии Лучников]";
+				mes "Меньше 25!? Вы должны принести по крайней мере 25! Ну же, попытайтесь ещё!";
+				close;
+			}
+			else {
+				mes "Итого: ^0000FF" + .@total_archer + "^000000 / 40";
+				next;
+				mes "[Член Гильдии Лучников]";
+				if (.@total_archer > 40) {
+					mes "Ух ты! Больше 40!";
+					mes "Превосходно! Поздравляю!";
+				}
+				else if (.@total_archer > 30) {
+					mes "Больше 30! Хорошая работа!";
+					mes "Поздравляю!";
+				}
+				else {
+					mes "*Вздох* Чтож, Вы выполнили испытание... Так или иначе, у Вас получилось.";
+				}
+			}
+			next;
+			mes "[Член Гильдии Лучников]";
+			mes "Я передам эти Trunk'и Отделу по Производству Луков. Теперь, когда Вы выполнили все требования, позвольте мне посвятить Вас в Archer'ы!";
+			if (countitem(1066) != 0) delitem 1066,countitem(1066); //Tree_Of_Archer_1
+			if (countitem(1067) != 0) delitem 1067,countitem(1067); //Tree_Of_Archer_2
+			if (countitem(1068) != 0) delitem 1068,countitem(1068); //Tree_Of_Archer_3
+			if (countitem(1019) != 0) delitem 1019,countitem(1019); //Wooden_Block
+		}
+		next;
+		callfunc "Job_Change",Job_Archer;
+		callfunc "F_ClearJobVar";
+		mes "[Член Гильдии Лучников]";
+		mes "Поздравляю!";
+		mes "Вы стали Archer'ом!";
+		next;
+		mes "[Член Гильдии Лучников]";
+		mes "Надеюсь, Вы внесёте достойный вклад в развитие нашей Гильдии.";
+		next;
+		mes "[Член Гильдии Лучников]";
+		mes "Ах, вот и Ваш лук доставили. Вот, держите! Он теперь Ваш~";
+		getitem 1702,1; //Bow_
+		getitem 1750,.@total_archer2; //Arrow
+		next;
+		mes "[Член Гильдии Лучников]";
+		mes "Теперь, ступайте. Охотьтесь с достоинством, зная, что Вас обучал один из лучших!";
+		close;
+	case 2:
+		mes "[Член Гильдии Лучников]";
+		mes "Требования, чтобы стать Archer'ом:";
+		if (BaseJob != Job_Novice) {
+			if (BaseJob == Job_Archer) {
+				next;
+				mes "[Член Гильдии Лучников]";
+				mes "Но...";
+				mes "Вы уже Archer. И Вы об этом должны знать...";
+			}
+			else {
+				next;
+				mes "[Член Гильдии Лучников]";
+				mes "Постойте. Вы ведб выбрали уже другую профессию. Вм это не обязательно знать~";
+			}
+			mes "Эм...Да...не вижу причин рассказывать Вам это...";
+		}
+		next;
+		mes "[Член Гильдии Лучников]";
+		mes "Во-первых, у Вас должен быть 10 Профессиональный Уровень, и Вы должны выучить все основные умения.";
+		next;
+		mes "[Член Гильдии Лучников]";
+		mes "Archer должен быть всегда сконцентрирован и контролировать свои чувства, поэтому мы не принимаем нетерпеливых людей.";
+		next;
+		mes "[Член Гильдии Лучников]";
+		mes "Также Вы должны собрать и принести ^FF0000Trunk'и^000000. Существует 4 различных типа Trunk'ов, отличающихся качеством. Вам будут начисляться очки, в зависимости от качества Trunk'ов.";
+		next;
+		mes "[Член Гильдии Лучников]";
+		mes "Чтобы стать Archer'ом, Вы должны набрать не менее ^0000FF25^000000 очков. Вы можете выбить Trunk'и из 'Willow'. Но будьте осторожны. Они могут оказаться жестокими монстрами.";
+		close;
+	case 3:
+		close;
+	}
+}
+

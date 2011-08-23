@@ -1,0 +1,1290 @@
+//===== eAthena Script ======================================= 
+//= The Airship System Script
+//===== By: ================================================== 
+//= eAthena Dev Team
+//===== Current Version: ===================================== 
+//= 1.1a
+//===== Compatible With: ===================================== 
+//= eAthena SVN 3422+(Requires jA Script System)
+//===== Description: ========================================= 
+//= The Airship System used in the official servers, however this
+//= one is still about 25% custom and is missing some npcs.
+//===== Additional Comments: ================================= 
+//= 0.1 Added first version, it might be a little buggy [MasterOfMuppets]
+//= 0.1a Fixed the Airport Staff#Iz which was [MasterOfMuppets]
+//= 	 warping you to the same location as Airport Staff#Ein
+//= 0.2 Implemented some more airship NPCs, more are to come.
+//= 0.3 Implemented some more NPCs [MasterOfMuppets]
+//= 0.4 Implemented two mini games scripted by Dj-Yhn [MasterOfMuppets]
+//= 0.5 Removed Duplicates [Silent]
+//= 0.5a Fixed a typo [Evera] 
+//= 0.5b Fixed appledice bugs [Lupus]
+//= 0.6 Added Rachel to the international route [Playtester]
+//= 0.7 Implemented Few Missings NPCs like (Pilot, Aanos, etc...).
+//=	Corrected Dialogs from some NPCs.
+//=	Added sistem to work with the "How Does the Airship Work" Quest [Samuray22]
+//= 0.8 Moved Gambling NPC Kaci since it's part of a quest. [SinSloth]
+//= 0.8b Fixed a Little Bug with the "How Does the Airship Work" Quest. [Samuray22]
+//= 0.9 Fixed a incorrect variable changed form "mob_inv" to "mobinv". [Samuray22]
+//= 0.9b Fixed a typo and bad variable use in the Typing Challenge [ultramage]
+//= 1.0 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
+//= 1.1 Touch-ups, and changed references of "Yuno" to "Juno",  [L0ne_W0lf]
+//= 1.1a Small fix to comparison check. [Paradox924X]
+//===== Translated into Russian: =============================
+//= 0.1 Исправлены небольшие ошибки [mad_max] (MistiQ Group © 2007)
+//= Коррекция [Vorp]
+//= 22.11.2008 обновление перевода [mad_max] (MistiQ Group © 2008)
+//============================================================ 
+
+//============================================================ 
+//= The Airship System (Juno -> Hugel -> Einbroch -> Lighthalzen -> repeat)
+//============================================================ 
+
+airplane,243,74,4	script	#AirshipWarp-1	45,2,2,{
+OnTouch:
+	if($@airplanelocation == 1)warp "einbroch",90,275;
+	if($@airplanelocation == 2)warp "yuno",85,265;
+	if($@airplanelocation == 3)warp "lighthalzen",302,75;
+	if($@airplanelocation == 4)warp "hugel",182,150;
+	end;
+
+OnHide:
+	misceffect 16;
+	end;
+OnUnhide:
+	misceffect 215;
+	end;
+}
+
+airplane,243,29,4	script	#AirshipWarp-2	45,2,2,{
+OnTouch:
+	if($@airplanelocation == 1)warp "einbroch",90,275;
+	if($@airplanelocation == 2)warp "yuno",85,265;
+	if($@airplanelocation == 3)warp "lighthalzen",302,75;
+	if($@airplanelocation == 4)warp "hugel",182,150;
+	end;
+
+OnHide:
+	misceffect 16;
+	end;
+OnUnhide:
+	misceffect 215;
+	end;
+}
+
+airplane,1,1,0	script	EinYuno_Airship	-1,{
+OnInit:
+while(1)
+{
+	initnpctimer;
+	setnpctimer 0;
+	set $@airplanelocation,0;
+	donpcevent "#AirshipWarp-1::OnHide";
+	donpcevent "#AirshipWarp-2::OnHide";
+	disablenpc "#AirshipWarp-1";
+	disablenpc "#AirshipWarp-2";
+	mapannounce "airplane","Дирижабль взлетает, следующая остановка город Hugel.",1,0xBA55D3;
+	end;
+OnTimer15000:
+	mapannounce "airplane","Мы направляемся в Hugel.",1,0xBA55D3;
+	end;
+OnTimer30000:
+	mapannounce "airplane","Мы скоро прибудем в Hugel.",1,0xBA55D3;
+	end;
+OnTimer45000:
+	set $@airplanelocation,4;
+	enablenpc "#AirshipWarp-1";
+	enablenpc "#AirshipWarp-2";
+	donpcevent "#AirshipWarp-1::OnUnhide";
+	donpcevent "#AirshipWarp-2::OnUnhide";	
+	mapannounce "airplane","Добро пожаловать в Hugel. Перелет прошел успешно.",1,0xBA55D3;
+	end;
+OnTimer55000:
+	mapannounce "airplane","В настоящее время мы в городе Hugel, но скоро покинем его.",1,0xBA55D3;
+	end;
+OnTimer65000:
+	set $@airplanelocation,0;
+	donpcevent "#AirshipWarp-1::OnHide";
+	donpcevent "#AirshipWarp-2::OnHide";
+	disablenpc "#AirshipWarp-1";
+	disablenpc "#AirshipWarp-2";
+	mapannounce "airplane","Дирижабль взлетает, следующая остановка город Einbroch.",1,0x00FF00;
+	end;
+OnTimer80000:
+	mapannounce "airplane","Мы направляемся в Einbroch.",1,0x00FF00;
+	end;
+OnTimer95000:
+	mapannounce "airplane","Мы скоро прибудем в Einbroch.",1,0x00FF00;
+	end;
+OnTimer110000:
+	set $@airplanelocation,1;
+	enablenpc "#AirshipWarp-1";
+	enablenpc "#AirshipWarp-2";
+	donpcevent "#AirshipWarp-1::OnUnhide";
+	donpcevent "#AirshipWarp-2::OnUnhide";
+	mapannounce "airplane","Добро пожаловать в Einbroch. Перелет прошел успешно.",1,0x00FF00;
+	end;
+OnTimer120000:
+	mapannounce "airplane","В настоящее время мы в городе Einbroch, но скоро покинем его.",1,0x00FF00;
+	end;
+OnTimer130000:
+	set $@airplanelocation,0;
+	donpcevent "#AirshipWarp-1::OnHide";
+	donpcevent "#AirshipWarp-2::OnHide";
+	disablenpc "#AirshipWarp-1";
+	disablenpc "#AirshipWarp-2";
+	mapannounce "airplane","Дирижабль взлетает, следующая остановка город Lighthalzen.",1,0xFF8600;
+	end;
+OnTimer145000:
+	mapannounce "airplane","Мы направляемся в Lighthalzen.",1,0xFF8600;
+	end;
+OnTimer160000:
+	mapannounce "airplane","Мы скоро прибудем в Lighthalzen.",1,0xFF8600;
+	end;
+OnTimer175000:
+	set $@airplanelocation,3;
+	enablenpc "#AirshipWarp-1";
+	enablenpc "#AirshipWarp-2";
+	donpcevent "#AirshipWarp-1::OnUnhide";
+	donpcevent "#AirshipWarp-2::OnUnhide";
+	mapannounce "airplane","Добро пожаловать в Lighthalzen. Перелет прошел успешно.",1,0xFF8600;
+	end;
+OnTimer185000:
+	mapannounce "airplane","В настоящее время мы в городе Lighthalzen, но скоро покинем его.",1,0xFF8600;
+	end;
+OnTimer195000:
+	set $@airplanelocation,0;
+	donpcevent "#AirshipWarp-1::OnHide";
+	donpcevent "#AirshipWarp-2::OnHide";
+	disablenpc "#AirshipWarp-1";
+	disablenpc "#AirshipWarp-2";
+	mapannounce "airplane","Дирижабль взлетает, следующая остановка город Juno.",1,0x70DBDB;
+	end;
+OnTimer210000:
+	mapannounce "airplane","Мы направляемся в Juno.",1,0x70DBDB;
+	end;
+OnTimer225000:
+	mapannounce "airplane","Мы скоро прибудем в Juno.",1,0x70DBDB;
+	end;
+OnTimer240000:
+	set $@airplanelocation,2;
+	enablenpc "#AirshipWarp-1";
+	enablenpc "#AirshipWarp-2";
+	donpcevent "#AirshipWarp-1::OnUnhide";
+	donpcevent "#AirshipWarp-2::OnUnhide";
+	mapannounce "airplane","Добро пожаловать в Juno. Перелет прошел успешно.",1,0x70DBDB;
+	end;
+OnTimer250000:
+	mapannounce "airplane","В настоящее время мы в городе Juno, но скоро покинем его.",1,0x70DBDB;
+	end;
+OnTimer260000:
+	stopnpctimer;
+}
+}
+
+//C4644E
+
+//============================================================ 
+//= Some normal NPCS (airplane)
+//============================================================ 
+
+airplane,240,64,5	script	Выход#01::Exit2	857,{
+	end;
+}
+
+airplane,247,64,5	duplicate(Exit2)	Выход#02	857
+
+airplane,240,39,1	duplicate(Exit2)	Выход#03	857
+
+airplane,247,39,1	duplicate(Exit2)	Выход#04	857
+
+airplane,100,69,2	script	Экипаж Дирижабля#01::Airship Crew	852,{
+	mes "[Экипаж Дирижабля]";
+	mes "Если мы приземлились там";
+	mes "куда вы летели и ";
+	mes "вы хотите покинуть";
+	mes "Дирижабль, пожалуйста";
+	mes "поднимитесь по ступенькам";
+	mes "и зайдите в открывшийся портал.";
+	close;
+}
+
+airplane,250,59,3	script	Персонал Дирижабля::AirshipInfo	67,{
+	mes "[Персонал Дирижабля]";
+	mes "Добро пожаловать";
+	mes "на Дирижабль.";
+	mes "Чем могу помочь?";
+	next;
+	menu "Использование Дирижабля",s_Use,"Капитанский мостик",s_Capt,"Услуги",s_Faci,"Отменить",-;
+
+	mes "[Персонал Дирижабля]";
+	mes "Хорошо, я надеюсь";
+	mes "вам понравятся полеты";
+	mes "на нашем Дирижабле.";
+	mes "Удачного дня вам.";
+	close;
+
+s_Use:
+	mes "[Персонал Дирижабля]";
+	mes "Когда вы видите сообщение,";
+	mes "говорящее о том, что мы прибыли";
+	mes "в место вашего назначения,";
+	mes "то вам нужно воспользоваться";
+	mes "одним из выходов, находящихся в";
+	mes "северной и южной части Дирижабля.";
+	next;
+	mes "[Персонал Дирижабля]";
+	mes "Если вы не успеете выйти,";
+	mes "не волнуйтесь. Дирижабль";
+	mes "постоянно курсирует по маршруту";
+	mes "и у вас снова будет";
+	mes "возможность выйти там,";
+	mes "где вам необходимо.";
+	close;
+
+s_Capt:
+	mes "[Персонал Дирижабля]";
+	mes "Капитанский мостик";
+	mes "находится в головной части";
+	mes "Дирижабля. Там вы можете";
+	mes "встретить капитана и";
+	mes "и пилота Дирижабля.";
+	close;
+
+s_Faci:
+	mes "[Персонал Дирижабля]";
+	mes "Пассажирам Дирижабля";
+	mes "мы предлагаем для";
+	mes "развлеччения различные";
+	mes "мини игры. Вы можете испытать";
+	mes "свои способности и удачу";
+	mes "играя в эти игры.";
+	close;
+
+}
+
+airplane,50,66,4	script	Мельц::AirshipApples	86,{
+
+	mes "[Мельц]";
+	mes "Добро пожаловать в магазин";
+	mes "Мельца. Здесь вы можете";
+	mes "купить яблоки (Apples) или выжать";
+	mes "с них яблочный сок (Apple Juice).";
+	next;
+	menu "Купить яблоки",s_Buy,"Сделать яблочный сок",s_Juice,"Отменить.",-;
+
+s_Cancel:
+	mes "[Мельц]";
+	mes "Спасибо, что заглянули";
+	mes "в мой магазин. Прощайте!";
+	mes "Возвращайтесь в любое время,";
+	mes "если почувствуете что хотите";
+	mes "скушать яблочко~";
+	close;
+
+s_Buy:
+	mes "[Мельц]";
+	mes "Введите количество яблок";
+	mes "которое желаете купить.";
+	mes "Одно яблоко стоит 15 zeny";
+	mes "и за раз вы можете купить не более";
+	mes "500 яблок. Введите";
+	mes "\"0\"для отмены покупки.";
+	next;
+	input @tempapple;
+	if(!@tempapple)goto s_Cancel;
+	if(@tempapple > 0 && @tempapple < 501)goto s_AppleBuy;
+	if(@tempapple < 0)close;
+	mes "[Meltz]";
+	mes "Максимальное количество яблок";
+	mes "которое вы можете купить за раз";
+	mes "500. " + @tempapple + "не более";
+	mes "чем 500.";
+	close;
+
+s_AppleBuy:
+	mes "[Мельц]";
+	mes "Итого ^FF0000" + @tempapple + "^000000 яблок.";
+	mes "Это обойдется вам в ^FF0000" + @tempapple * 15 + "^000000 zeny.";
+	mes "Желаете купить?";
+	next;
+	menu "Да",-,"Нет",s_Cancel;
+
+	if(zeny < (@tempapple * 15))goto s_NEnoughZeny;
+	mes "[Мельц]";
+	mes "Спасибо, что заглянули";
+	mes "в мой магазин. Надеюсь вам";
+	mes "понравится вкус этих яблок!";
+	getitem 512,@tempapple;
+	set zeny,zeny - (@tempapple * 15);
+	close;
+
+s_NEnoughZeny:
+	mes "[Мельц]";
+	mes "Я сожалею, вы не можете купить,";
+	mes "у вас недостаточно zeny.";
+	mes "Возвращайтесь в любое время,";
+	mes "если почувствуете что хотите";
+	mes "скушать яблочко~";
+	close;
+
+s_Juice:
+	mes "[Мельц]";
+	mes "Хоорошо, для этого мне нужно";
+	mes "^FF00003 Apples and 1 Empty Bottle^000000";
+	mes "для того, чтобы сделать 1 яблочный сок для вас.";
+	mes "Хотите продолжить?";
+	next;
+	menu "Да",-,"Нет",s_Cancel;
+
+	if(countitem(512) < 3 || !countitem(713))goto s_Material;
+	mes "[Мельц]";
+	mes "Спасибо,";
+	mes "подождите";
+	mes "немного.";
+	next;
+	mes "*Жмет, жмет*";
+	mes "*Жмет, жмет*";
+	mes "*Лязг...!*";
+	next;
+	mes "[Мельц]";
+	mes "Вот он~";
+	mes "Надеюсь вам понравится!";
+	mes "Заходите еще";
+	mes "за яблочками или соком,";
+	mes "если они вам понадобятся,";
+	mes "в любое время, путешественник~";
+	delitem 512,3;
+	delitem 713,1;
+	getitem 531,1;
+	close;
+
+s_Material:
+	mes "[Мельц]";
+	mes "Я сожалею, но у вас не хватает";
+	mes "нужных компонентов для";
+	mes "создания яблочного сока.";
+	mes "Запомните, мне нужно 3 яблока (Apples)";
+	mes "и 1 пустая бутылка (Empty Bottle).";
+	close;
+
+}
+
+airplane,80,71,4	script	Зерта	834,{
+	mes "[Зерта]";
+	mes "Ох, привет путешественник.";
+	mes "Я путешествую по континенту";
+	mes "Rune-Midgard, для молитв";
+	mes "и служений на этой";
+	mes "прекрасной земле.";
+	close;
+}
+
+airplane,65,63,4	script	Маелин	714,{
+	mes "[Маелин]";
+	mes "А, этот Дирижабль летит";
+	mes "в Lutie, не правда ли?";
+	mes "Я ждала так долго,";
+	mes "но так и не слышала сообщений";
+	mes "о прибытии в Lutie.";
+	close;
+}
+
+airplane,72,34,2	script	Анос	702,{
+	mes "[Анос]";
+	mes "Ваааауууу~";
+	mes "Невероятно,";
+	mes "но от сюда небо";
+	mes "выглядит совсем другим!";
+	close;
+}
+
+airplane,32,61,4	script	Нилс::TypingContest	49,{
+	callfunc "F_ClearGarbage"; //Clear outdated, unused variables
+loopback:
+	mes "[Нилс]";
+	mes "Добро пожаловать в игру";
+	mes "^FF0000RO Кто быстрей^000000.";
+	mes "Хотите поиграть и посоревноваться";
+	mes "в скорости набора текста?";
+	next;
+	menu "Играть в игру ^FF0000RO Кто быстрей^000000",s_Play,"Информация",s_Info,"Список лучших",s_Record,"Отменить",-;
+
+	mes "[Нилс]";
+	mes "Расслабтесь играя";
+	mes "в игру *Кто быстрей*";
+	mes "Я буду рядом.";
+	close;
+
+s_Play:
+	mes "[Нилс]";
+	mes "Отлично, у нас";
+	mes "новый претендент!";
+	mes "Введите следующий текст";
+	mes "как можно быстрее не допуская";
+	mes "никаких ошибок.";
+	mes "Ну что, начнем!";
+	next;
+	//below arrays are for simplified entering of new lines ;P
+
+	//first lines array
+	setarray $@textstringsa$[0],
+	"^00FFFFthkelfkskeldmsiejdlsle^0000FFhfndkelsheidl",
+	"^993366hfjdkeldjsieldjs^663366hfjdjeiskdlefvbd",
+	"^00FFFFCoboman no chikara-yumei na",
+	"^993366belief love luck grimace sweat rush",
+	"^00FFFFcallipygian salacious lascivious",
+	"^663366uNflAPPaBLe LoVaBLe SeCreTs AnD",
+	"^00CCFFburrdingdingdilidingdingphoohudaamb",
+	"^FF33CCbarapaphurarlandreamduranbatuhi^990066wooi",
+	"^FF33CCLiGhTsPeEd RiGhT SPEed leFT TURn",
+	"^00CCFFI'm the King of all Weirdos! Now",
+	"^00CCFFBy the power of^000000",
+	"^00CCFF...silence. quiet benevolence...";
+
+	//second lines array
+	setarray $@textstringsb$[0],"skemd",
+	"",
+	"chikara-dalookii na chikara da ze!",
+	"folktale rodimus optimus bumblebee",
+	"licentious prurient concupiscent",
+	"BoWLiNg aGaINST tHe KarMA of YoUtH",
+	"andoora^0000FFbambarambambamburanbamding",
+	"kabamturubamdingding",
+	"RiGhT BuRn OrIGInAL GaNgSteR SmACk",
+	"you know of my true power. Obey~!",
+	"p-po-poi-po-poi-poin-poing",
+	"soul mate... wonder. enigma...";
+	//for the few 3-liners... =X
+
+	setarray $@textstringsc$[0],"",
+	"",
+	"COBO ON!",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"GOD-POING. I NEVER LOSE!",
+	"cloud.";
+
+	//comparisation strings
+	setarray $@compstring$[0],
+	"thkelfkskeldmsiejdlslehfndkelsheidlskemd",
+	"hfjdkeldjsieldjshfjdjeiskdlefvbd",
+	"Coboman no chikara-yumei na chikara-dalookii na chikara da ze! COBO ON!",
+	"belief love luck grimace sweat rush folktale rodimus optimus bumblebee",
+	"callipygian salacious lascivious licentious prurient concupiscent",
+	"uNflAPPaBLe LoVaBLe SeCreTs AnD BoWLiNg aGaINST tHe KarMA of YoUtH",
+	"burrdindingdilidingdingphoohudaambandoorabambarambambamburanbamding",
+	"barapaphurarlandreamduranbatuhiwooikabamturubamdingding",
+	"LiGhTsPeEd RiGhT SPEed leFT TURn RiGhT BuRn OrIGInAL GaNgSteR SmACk",
+	"I'm the King of all Weirdos! Now you know of my true power. Obey~!",
+	"By the power of p-po-poi-po-poi-poin-poing GOD-POING. I NEVER LOSE!",
+	"...silence. quiet benevolence... soul mate... wonder. enigma... cloud";
+
+	//lengths
+	setarray $@lengths[0],20,32,73,73,65,66,67,55,67,66,67,69;
+
+	//	initnpctimer;
+	// pick 2 distinct phrases and initialize related variables
+	set @index,rand(1,getarraysize($@textstringsa$))-1;
+	set @string1a$,$@textstringsa$[@index];
+	set @string1b$,$@textstringsb$[@index];
+	set @string1c$,$@textstringsc$[@index];
+	set @typingstring1$,$@compstring$[@index];
+
+	set @index2,rand(1,getarraysize($@textstringsa$))-1;
+	while (@index2 == @index) {
+		set @index2,rand(1,getarraysize($@textstringsa$))-1;
+	}
+	set @string2a$,$@textstringsa$[@index2];
+	set @string2b$,$@textstringsb$[@index2];
+	set @string2c$,$@textstringsc$[@index2];
+	set @typingstring2$,$@compstring$[@index2];
+
+	set @typingkeys,$@lengths[@index]+$@lengths[@index2];
+	set @start,gettime(3)*60*60+gettime(2)*60+gettime(1);
+
+	mes "[Нилс]";
+	mes @string1a$;
+	if(@string1b$ != "")mes @string1b$;
+	if(@string1c$ != "")mes @string1c$;
+	input @comparisonvar$[1];
+	next;
+	mes "^000000[Нилс]";
+	mes @string2a$;
+	if(@string2b$ != "")mes @string2b$;
+	if(@string2c$ != "")mes @string2c$;
+	input @comparisonvar$[2];
+	next;
+	if(@comparisonvar$[1] != @typingstring1$ || @comparisonvar$[2] != @typingstring2$) goto s_Fail;
+	set @time,(gettime(3)*60*60+gettime(2)*60+gettime(1))-@start; //seconds taken
+	set @mypoints,(@typingkeys * 100) / @time;
+	mes "[Нилс]";
+	mes "Ваше время";
+	mes "было ^FF0000" + @time + "секунд^000000";
+	mes "и ваш счет будет";
+	mes "^0000FF" + @mypoints + "^000000 очков.";
+	next;
+	if(@mypoints <= $TypingRecord)goto loopback;
+	mes "[Нилс]";
+	mes "Поздравляю!";
+	mes "Это новый рекорд.";
+	mes "Я впишу вас в список";
+	mes "лучших немедленно.";
+	set $TypingRecord,@mypoints;
+	set $TypingRecord$,strcharinfo(0);
+	close;
+
+s_Fail:
+	mes "^000000[Нилс]";
+	mes "Я сожалею, но вы ввели текс";
+	mes "не совсем верно.";
+	mes "Помните, практика";
+	mes "позволяет совершенствоваться!";
+	close;
+
+s_Info:
+	mes "[Нилс]";
+	mes "Игра *Кто быстрей*";
+	mes "является игрой в которой нужно";
+	mes "вводить текст как можно быстрее.";
+	mes "Имя наибыстрейшего игрока будет";
+	mes "сохранено в списке лучших.";
+	mes "Хотите прославится, это ваш шанс!";
+	next;
+	mes "[Нилс]";
+	mes "Хочу чтобы вы знали,";
+	mes "что текст нужно вводить";
+	mes "в одну строку данную вам.";
+	mes "Ни в коем случае не нажимайте";
+	mes "клавишу Enter.";
+	mes "нажимать нужно 'ОК'.";
+	close;
+
+s_Record:
+	mes "[Нилс]";
+	mes "^0000FF" + $TypingRecord$ + "^000000";
+	mes "текущий";
+	mes "рекордсмен";
+	mes "с рекордом ^0000FF" + $TypingRecord + "^000000";
+	mes "очков. Попробуйте побить";
+	mes "этот рекорд.";
+	close;
+
+}
+
+airplane_01,221,158,6	script	Пилот#air-0::Pilot	852,{
+	set @pilot, rand(1,4);
+	if (@pilot == 1) {
+		mes "[Пилот]";
+		mes "Долгота, 131 градус к востоку.";
+		mes "Широта, 37 градусов к северу.";
+		mes "Мы идем верным курсом, капитан.";
+		close;
+	} else if(@aa == 2) {
+		mes "[Пилот]";
+		mes "Сегодня облачный";
+		mes "день. Всегда трудно";
+		mes "управлять, когда небо";
+		mes "не ясное. Знаете, нам";
+		mes "нужен мощный радар.";
+		close;
+	} else if(@aa == 3) {
+		mes "[Пилот]";
+		mes "Капитан - хороший человек.";
+		mes "И я не могу представить";
+		mes "более лучшего командира";
+		mes "корабля чем он. Тем не менее";
+		mes "он требователен и вспыльчив.";
+		next;
+		mes "[^ff0000Tarlock^000000]";
+		mes "^ff0000Эй...!^000000";
+		mes "^ff0000Кончай трепаться^000000";
+		mes "^ff0000давай работай!^000000";
+		next;
+		mes "[Пилот]";
+		mes "Так точно, сер!";
+		mes "(Видите что я имел ввиду?)";
+		close;
+	}
+		mes "[Пилот]";
+		mes "Его униформа";
+		mes "выхоленна, но";
+		mes "он никогда не ходит";
+		mes "в ней по Дирижаблю.";
+		next;
+		mes "[Пилот]";
+		mes "...";
+		mes "......";
+		mes "Никто никогда не ходит";
+		mes "в его комнату, так как он";
+		mes "вожак Северных Оленей.";
+		mes "Даже я его очень боюсь.";
+		next;
+		//Emotion "Pilot#airplane_01" ET_HUK
+		mes "[Пилот]";
+		mes "Ой...! Здравствуйте!";
+		mes "Н-н-наслаждаетесь полетеом?!";
+		close;
+}
+
+//============================================================ 
+//= The Airship System (Izlude -> Juno -> Rachel -> Repeat)
+//============================================================ 
+
+airplane_01,243,74,4	script	#AirshipWarp-3	45,2,2,{
+OnTouch:
+	if($@airplanelocation2 == 1)warp "izlude",202,56;
+	if($@airplanelocation2 == 2)warp "yuno",20,265;
+	if($@airplanelocation2 == 3)warp "ra_fild12",292,204;
+	end;
+
+OnHide:
+	misceffect 16;
+	end;
+OnUnhide:
+	misceffect 215;
+	end;
+}
+
+airplane_01,243,29,4	script	#AirshipWarp-4	45,2,2,{
+OnTouch:
+	if($@airplanelocation2 == 1)warp "izlude",202,56;
+	if($@airplanelocation2 == 2)warp "yuno",20,265;
+	if($@airplanelocation2 == 3)warp "ra_fild12",292,204;
+	end;
+
+OnHide:
+	misceffect 16;
+	end;
+OnUnhide:
+	misceffect 215;
+	end;
+}
+
+airplane_01,1,1,0	script	YunoIzl_Airship	-1,{
+OnInit:
+while(1)
+{
+	disablenpc "Quest_Izl";
+	initnpctimer;
+	setnpctimer 0;
+	set $@airplanelocation2,0;
+	donpcevent "#AirshipWarp-3::OnHide";
+	donpcevent "#AirshipWarp-4::OnHide";
+	disablenpc "#AirshipWarp-3";
+	disablenpc "#AirshipWarp-4";
+	mapannounce "airplane_01","Дирижабль взлетает, следующая остановка город Izlude.",1,0x00FF00;
+	end;
+OnTimer15000:
+	set $@mobinv, $@mobinv+1;
+	set $@mobrand, rand(1,3);
+	if($@mobinv >= 9 && $@mobrand == 3) {
+		stopnpctimer;
+		enablenpc "Quest_Izl";
+		donpcevent "Quest_Izl::OnInvasion";
+	}
+	mapannounce "airplane_01","Мы направляемся в Izlude.",1,0x00FF00;
+	end;
+OnTimer30000:
+	mapannounce "airplane_01","Мы скоро прибудем в Izlude.",1,0x00FF00;
+	end;
+OnTimer45000:
+	set $@airplanelocation2,1;
+	enablenpc "#AirshipWarp-3";
+	enablenpc "#AirshipWarp-4";
+	donpcevent "#AirshipWarp-3::OnUnhide";
+	donpcevent "#AirshipWarp-4::OnUnhide";	
+	mapannounce "airplane_01","Добро пожаловать в Izlude. Перелет прошел успешно.",1,0x00FF00;
+	end;
+OnTimer55000:
+	mapannounce "airplane_01","В настоящее время мы в городе Izlude, но скоро покинем его.",1,0x00FF00;
+	end;
+OnTimer65000:
+	set $@airplanelocation2,0;
+	donpcevent "#AirshipWarp-3::OnHide";
+	donpcevent "#AirshipWarp-4::OnHide";
+	disablenpc "#AirshipWarp-3";
+	disablenpc "#AirshipWarp-4";
+	mapannounce "airplane_01","Дирижабль взлетает, следующая остановка город Juno.",1,0x70DBDB;
+	end;
+OnTimer80000:
+	mapannounce "airplane_01","Мы направляемся в Juno.",1,0x70DBDB;
+	end;
+OnTimer95000:
+	mapannounce "airplane_01","Мы скоро прибудем в Juno.",1,0x70DBDB;
+	end;
+OnTimer110000:
+	set $@airplanelocation2,2;
+	enablenpc "#AirshipWarp-3";
+	enablenpc "#AirshipWarp-4";
+	donpcevent "#AirshipWarp-3::OnUnhide";
+	donpcevent "#AirshipWarp-4::OnUnhide";
+	mapannounce "airplane_01","Добро пожаловать в Juno. Перелет прошел успешно.",1,0x70DBDB;
+	end;
+OnTimer120000:
+	mapannounce "airplane_01","В настоящее время мы в городе Juno, но скоро покинем его.",1,0x70DBDB;
+	end;
+OnTimer130000:
+	set $@airplanelocation2,0;
+	donpcevent "#AirshipWarp-3::OnHide";
+	donpcevent "#AirshipWarp-4::OnHide";
+	disablenpc "#AirshipWarp-3";
+	disablenpc "#AirshipWarp-4";
+	mapannounce "airplane_01","Дирижабль взлетает, следующая остановка город Rachel.",1,0xFF8600;
+	end;
+OnTimer145000:
+	mapannounce "airplane_01","Мы направляемся в Rachel.",1,0xFF8600;
+	end;
+OnTimer160000:
+	mapannounce "airplane_01","Мы скоро прибудем в Rachel.",1,0xFF8600;
+	end;
+OnTimer175000:
+	set $@airplanelocation2,3;
+	enablenpc "#AirshipWarp-3";
+	enablenpc "#AirshipWarp-4";
+	donpcevent "#AirshipWarp-3::OnUnhide";
+	donpcevent "#AirshipWarp-4::OnUnhide";
+	mapannounce "airplane_01","Добро пожаловать в Rachel. Перелет прошел успешно.",1,0xFF8600;
+	end;
+OnTimer185000:
+	mapannounce "airplane_01","В настоящее время мы в городе Rachel, но скоро покинем его.",1,0xFF8600;
+	end;
+OnTimer195000:
+ 	stopnpctimer;
+}
+OnReturn:
+	killmonsterall "airplane_01";
+	set $@mobinv, 0;
+	mapannounce "airplane_01","Угрозы нападения монстров нет. Дирижабль переходит в нормальный режим.",1,0x00FF00;
+	startnpctimer;
+	end;
+}
+
+//============================================================ 
+//= Some normal NPCS (airplane_01)
+//============================================================ 
+
+airplane_01,240,64,5	duplicate(Exit2)	Выход#05	857
+
+airplane_01,247,64,5	duplicate(Exit2)	Выход#06	857
+
+airplane_01,240,39,1	duplicate(Exit2)	Выход#07	857
+
+airplane_01,247,39,1	duplicate(Exit2)	Выход#08	857
+
+airplane_01,100,69,2	duplicate(Airship Crew)	Экипаж Дирижабля#02	852
+
+airplane_01,250,59,3	duplicate(AirshipInfo)	Персонал Дирижабля#info	67
+
+airplane_01,50,66,4	duplicate(AirshipApples)	Мельц	86
+
+airplane_01,32,61,4	duplicate(TypingContest)	Нилс	49	
+
+airplane_01,221,158,6	duplicate(Pilot)	Пилот#air-1	852
+
+
+airplane_01,83,61,2	script	Диана	72,{
+	mes "[Диана]";
+	mes "Это невероятно!";
+	mes "Когда я шла к";
+	mes "капитану Дирижабля";
+	mes "то видел странного";
+	mes "северного Оленя! Да!";
+	mes "Невероятно, правда...";
+	close;
+OnTouch:
+	Emotion 28, "Dianne";
+	end;
+}
+
+airplane_01,69,63,2	script	Пожилой человек#06	55,{
+	mes "[Мендель]";
+	mes "Как я и думал, эта";
+	mes "полетная еда тянет на 3";
+	mes "звезды в лучшем случае.";
+	mes "^111111*Фуууххх*^000000 Нужно было";
+	mes "взять своего шев-повара";
+	mes "и наслаждаться нормально пищей.";
+	close;
+}
+
+airplane_01,33,68,4	script	Кларис	74,{
+	mes "[Кларис]";
+	mes "Привет, я Clarice~";
+	mes "Не хочешь сыграть";
+	mes "на несколько яблок";
+	mes "в Кости?";
+	next;
+	callfunc "applegamble","Clarice";
+	end;
+}
+
+airplane_01,71,31,6	script	Мечник Шимизу	106,{
+	mes "[Мечник Шимизу]";
+	mes "Наконец,";
+	mes "после 5 лет ожидания...";
+	mes "Я смогу отомстить!";
+	next;
+	mes "[Мечник Шимизу]";
+	mes "Я просто...";
+	mes "Хочу быть уверен";
+	mes "что не пропущу свю остановку.";
+	mes "И тогда, скоро, очень скоро,";
+	mes "я отомщу!!!";
+	close;
+}
+
+//============================================================ 
+//= The Izlude Airship Staff
+//============================================================
+
+izlude,201,54,3	script	Персонал Дирижабля#izl	91,{
+	mes "[Персонал Дирижабля]";
+	mes "Добро пожаловать на Международный Дирижабль.";
+	mes "Чем могу вам помочь?";
+	next;
+	if (select("Лететь на Дирижабле:Отменить") == 1) {
+		mes "[Персонал Дирижабля : Airship Staff]";
+		mes "Полет на Дирижабле стоит";
+		mes "1,200 zeny, но если у вас есть";
+		mes "Бесплатный Билет на Дирижабль"; 
+		mes "то платить не нужно. Полетите";
+		mes "на Дирижабле?";
+		next;
+		if (select("Да:Нет") == 1) {
+			if(countitem(7311) > 0) {
+				delitem 7311,1;
+				warp "airplane_01",224,64;
+				close;
+			}
+			if(Zeny > 1200) {
+				set Zeny, Zeny - 1200;
+				warp "airplane_01",224,64;
+				close;
+			}
+			mes "[Персонал Дирижабля - Airship Staff]";
+			mes "У вас недостаточно zeny.";
+			close;
+		}
+	}
+	mes "[Персонал Дирижабля]";
+	mes "Спасибо и приятного";
+	mes "вам дня.";
+	close;
+}
+
+//============================================================ 
+//= The Hugel Airship Staff
+//============================================================
+
+hugel,182,150,3	script	Персонал Дирижабля#hu	91,{
+	mes "[Персонал Дирижабля]";
+	mes "Добро пожаловать на Дирижабль Республики Schwarzwald.";
+	mes "Чем могу вам помочь?";
+	next;
+	if (select("Лететь на Дирижабле:Отменить") == 1) {
+		mes "[Персонал Дирижабля : Airship Staff]";
+		mes "Полет на Дирижабле стоит";
+		mes "1,200 zeny, но если у вас есть";
+		mes "Бесплатный Билет на Дирижабль"; 
+		mes "то платить не нужно. Полетите";
+		mes "на Дирижабле?";
+		next;
+		if (select("Да:Нет") == 1) {
+			if(countitem(7311) > 0) {
+				delitem 7311,1;
+				warp "airplane",224,64;
+				close;
+			}
+			if(Zeny > 1200) {
+				set Zeny, Zeny - 1200;
+				warp "airplane",224,64;
+				close;
+			}
+			mes "[Персонал Дирижабля : Airship Staff]";
+			mes "У вас недостаточно zeny.";
+			close;
+		}
+	}
+	mes "[Персонал Дирижабля]";
+	mes "Спасибо и приятного";
+	mes "вам дня.";
+	close;
+}
+
+//============================================================ 
+//= The Rachel Airship Staff
+//============================================================
+
+ra_fild12,295,208,3	script	Персонал Дирижабля#ra	45,1,1,{
+OnTouch:
+	mes "Полет на Дирижабле стоит";
+	mes "1,200 zeny, но если у вас есть Бесплатный Билет на Дирижабль";
+	mes "то платить не нужно. Полетите на Дирижабле?";
+	next;
+	if (select("Да:Нет") == 1) {
+		if (countitem(7311) > 0) {
+			delitem 7311,1;
+			warp "airplane_01",224,64;
+			close;
+		}
+		if (Zeny >= 1200) {
+			set Zeny, Zeny - 1200;
+			warp "airplane_01",224,64;
+			close;
+		}
+		mes "У вас недостаточно zeny.";
+		close;
+	}
+	mes "Спасибо вам, обращайтесь ещё.";
+	close;
+}
+
+//============================================================ 
+//= Juno Airport NPCs
+//============================================================
+
+y_airport,144,63,4	script	Персонал аэропорта#Ein	91,{
+	mes "[Персонал аэропорта]";
+	mes "Добрый день!";
+	mes "Хотите полететь";
+	mes "в ^FF0000Einbroch^000000,^FF0000Hugel^000000 или";
+	mes "^FF0000Lighthalzen^000000?";
+	next;
+	if (select("Да.:Нет.") == 1) {
+		mes "[Персонал Дирижабля : Airship Staff]";
+		mes "Спасибо и приятного";
+		mes "вам дня.";
+		close2;
+		warp "yuno",57,240;
+		end;
+	}
+	mes "[Персонал аэропорта]";
+	mes "Спасибо и приятного";
+	mes "вам дня.";
+	close;
+}
+	
+y_airport,141,63,4	script	Персонал аэропорта#Izl	91,{
+	mes "[Персонал аэропорта]";
+	mes "Добрый день!";
+	mes "Хотите полететь";
+	mes "в ^FF0000Izlude^000000 или ^FF0000Rachel^000000?";
+	next;
+	if (select("Да.:Нет.") == 1) {
+		mes "[Персонал Дирижабля : Airship Staff]";
+		mes "Спасибо и приятного";
+		mes "вам дня.";
+		close2;
+		warp "yuno",50,240;
+		end;
+	}
+	mes "[Персонал аэропорта]";
+	mes "Спасибо и приятного";
+	mes "вам дня.";
+	close;
+}
+
+yuno,14,262,3	script	Персонал#yuno01::Airship Staff	91,{
+	mes "[Персонал Дирижабля]";
+	mes "Добро пожаловать в аэропорт Juno.";
+	mes "Пожалуйста пройдите в эту дверь";
+	mes "для посадки на Дирижабль,";
+	mes "следующий в город Izlude";
+	mes "Королевства Rune-Midgart.";
+	next;
+	mes "[Персонал Дирижабля]";
+	mes "В противном случае, если Juno";
+	mes "пункт вашего назначения,";
+	mes "спуститесь вниз по лестнице";
+	mes "и попросите Встречающий Персонал";
+	mes "проводить вас к главному терминалу.";
+	mes "Спасибо вам, наслаждайтесь путешествиями.";
+	close;
+}
+
+yuno,88,263,5	duplicate(Airship Staff)	Airship Staff#yuno02	91
+
+//============================================================ 
+//= Apple Gambling Function
+//============================================================
+
+function	script	applegamble	{
+
+	switch(select("Играть в игру:Узнать правила игры:Отменить")){
+	case 3:
+		mes "["+getarg(0)+"]";
+		mes "Я готов играть в";
+		mes "Кости где угодно.";
+		mes "Просто поговорите";
+		mes "со мной, если захотите";
+		mes "поиграть, ок?";
+		close;
+	case 2:
+		mes "["+getarg(0)+"]";
+		mes "Правила игры Кости";
+		mes "очень просты. Сначала нужно";
+		mes "заключить пари на яблоки.";
+		mes "Максимальная ставка 50";
+		mes "яблок за раз. Чтоб все было";
+		mes "легально, я играю только на яблоки.";
+		next;
+		mes "["+getarg(0)+"]";
+		mes "Если zeny жгут вам дырку";
+		mes "в кармане, то у";
+		mes "Fruitz вы можете обменять";
+		mes "их на нужное вам";
+		mes "количество яблок.";
+		next;
+		mes "["+getarg(0)+"]";
+		mes "Теперь мы будем кидать кости";
+		mes "с 6-ю сторонами на них.";
+		mes "Когда будет ваш ход вы";
+		mes "бросите 2 кости. После чего";
+		mes "при необходимости можно";
+		mes "будет бросить 3-ю кость.";
+		next;
+		mes "["+getarg(0)+"]";
+		mes "А теперь очень важное.";
+		mes "Если ваш общий счас очков будет";
+		mes "больше 12, то вы проиграли.";
+		mes "В противном случае выиграет";
+		mes "тот, у кого больше очков.";
+		mes "Ну что, начнем?";
+		next;
+		mes "["+getarg(0)+"]";
+		mes "Теперь вы решаете";
+		mes "бросите ли 3-ю кость или нет.";
+		mes "И в зависимости от вашего";
+		mes "результата, я подумаю,";
+		mes "бросить кость... или нет.";
+		next;
+		mes "["+getarg(0)+"]";
+		mes "Если вы выигрываете,";
+		mes "то получаете в 2 раза";
+		mes "больше яблок от вашей ставки.";
+		mes "Если у нас будет попровну,";
+		mes "то вы получите те яблоки";
+		mes "что ставили. Честно, правда?";
+		close;
+	case 1:
+		break;
+	}
+	mes "["+getarg(0)+"]";
+	mes "Что, хотите играть";
+	mes "со мной? Отлично! Сколько";
+	mes "яблок поставите?";
+	mes "Помните, ставка может быть";
+	mes "не более 50 яблок. Если";
+	mes "хотите отменить, введите '0'.";
+	next;
+L_Input:
+	input @amount;
+	if(@amount == 0) {
+		mes "["+getarg(0)+"]";
+		mes "Изменили решение?";
+		mes "Понятно, надеюсь";
+		mes "сыграем в другой раз.";
+		close;
+	}
+	if(@amount > 50) set @amount,50;
+	mes "["+getarg(0)+"]";
+	mes "И так, ваша";
+	mes "ставка ^FF0000"+@amount+"^000000 Яблок.";
+	mes "Верно?";
+	next;
+	if(select("Да:Нет")==2){
+		mes "["+getarg(0)+"]";
+		mes "Мм.., ошиблись?";
+		mes "Хорошо, введите количество";
+		mes "Яблок, на которое хотите";
+		mes "играть.";
+		next;
+		goto L_Input;
+	}
+	if(countitem(512)<@amount){
+		//more apples then in inventory
+		//-Improvised-
+		mes "["+getarg(0)+"]";
+		mes "Ох...";
+		mes "У вас нет такого";
+		mes "количества яблок";
+		mes "которое вы хотите поставить.";
+		close;
+	}
+	delitem 512,@amount;
+	mes "["+getarg(0)+"]";
+	mes "Хорошо!";
+	mes "Теперь мы можем";
+	mes "начать игру! Я кидаю первый...";
+	next;
+	mes "^0000FF*Кидает кости*";
+	set @table1,rand(1,6);
+	set @table2,rand(1,6);
+	set @tablesub,@table1+@table2;
+	next;
+	mes "У меня "+@table1+" и "+@table2+",";
+	mes "в итого получается "+@tablesub+".";
+	mes "Теперь ваша очередь,";
+	mes strcharinfo(0)+".";
+	next;
+	menu "Кинуть кости.",-;
+
+	mes "^0000FF*Кидает кости*";
+	set @player1,rand(1,6);
+	set @player2,rand(1,6);
+	set @playersub,@player1+@player2;
+	next;
+	mes "["+getarg(0)+"]";
+	mes strcharinfo(0)+",";
+	mes "У вас "+@player1+" и "+@player2+",";
+	mes "В итого получается ^FF0000"+@playersub+"^000000.";
+	next;
+	mes "["+getarg(0)+"]";
+	if(@playersub == @tablesub) {
+		mes "Хорошо, хорошо.";
+		mes "У вас ";
+		mes "сейчас "+@playersub+"Будете";
+		mes "кидать ";
+		mes "3-ю кость ";
+		mes strcharinfo(0)+"?";
+	} else if(@playersub > @tablesub) {
+		mes "Мой счет составляет ^0000FF"+@tablesub+"^000000,";
+		mes "и вы обошли меня с ";
+		mes "вашим счетом в ^FF0000"+@playersub+"^000000. Хотите";
+		mes "сделать еще бросок?";
+		mes "Поните, что проиграете, если";
+		mes "наберете больше 12 в сумме.";
+	} else if(@tablesub > @playersub) {
+		mes "Мой счет составляет ^0000FF"+@tablesub+"^000000,";
+		mes "и я обошел вас с";
+		mes "с вашим счетом в ^FF0000"+@playersub+"^000000. Хотите";
+		mes "сделать еще бросок?";
+		mes "Поните, что проиграете, если";
+		mes "наберете больше 12 в сумме.";
+	}
+	next;
+	if(select("Бросить еще кость.:Не бросать.")==2){
+		mes "["+getarg(0)+"]";
+		mes "Не хотите бросать?";
+		if(@tablesub == @playersub) {
+			mes "Вы надеятесь, что я";
+			mes "кину слишком много и";
+			mes "проиграю, нет я обязательно";
+			mes "выиграю! Ну, что, делать нечего...";
+			next;
+			goto L_Table3;
+		} else if(@tablesub < @playersub) {
+			next;
+			mes "["+getarg(0)+"]";
+			mes "Хорошо, я вижу что вы";
+			mes "не хотите рисковать набрать";
+			mes "больше 12 и проиграть.";
+			mes "Тогда я продолжу и брошу кость.";
+			next;
+			goto L_Table3;
+		} else if(@tablesub > @playersub) {
+		//you have a lower sub total then table, and do not roll 3th -Improvised-
+			mes "["+getarg(0)+"]";
+			mes "Не хотите бросать?";
+			mes "Ну что ж,";
+			mes "я то же не стану.";
+			next;
+			mes "["+getarg(0)+"]";
+			mes "Это значит что у меня";
+			mes "в общей сложности ^0000FF"+@tablesub+"^000000";
+			mes "против ваших ^FF0000"+@playersub+"^000000.";
+			mes "Я сожалею, но вы";
+			mes "this game, "+strcharinfo(0)+". Желаю";
+			mes "выиграть в следующий раз.";
+		}
+		close;
+	}
+	mes "^0000FF*Кидает кости*";
+	set @player3,rand(1,6);
+	set @playersub,@playersub+@player3;
+	if(@playersub > 12) {
+	//player bust --Improvised--
+		next;
+		mes "["+getarg(0)+"]";
+		mes "И так... У вас выпало ^FF000"+@player3+"^000000,";
+		mes "итого у вас ^FF0000"+@playersub+"^000000.";
+		mes "Это больше 12,";
+		mes "простите но вы";
+		mes "проиграли."+strcharinfo(0)+".";
+		close;
+	}
+	next;
+	mes "["+getarg(0)+"]";
+	mes "И так! У вас выпало";
+	if(@playersub >= @tablesub) {
+		mes " ^FF0000"+@player3+"^000000, и в сумме";
+		mes "у вас ^FF0000"+@playersub+"^000000. Теперь, если я";
+		mes "не брошу, то несомненно проиграю!";
+		mes "Я это сделаю..";
+		next;
+		goto L_Table3;
+	} else if(@playersub < @tablesub) {
+		//player's sub together with 3th die is still too low
+		//--Improvised--
+		mes " ^FF0000"+@player3+"^000000, и в итоге";
+		mes "у вас ^FF0000"+@playersub+"^000000.";
+		mes "Но этого не достаточно, чтобы";
+		mes "побить мой результат ^0000FF"+@tablesub+"^000000.";
+		mes "Простите, но вы ";
+		mes " "+strcharinfo(0)+"проиграли.";
+		mes "Я пологаю, это все...";
+		close;
+	}
+L_Table3:
+	mes "^0000FF*Кидает кости*";
+	set @table3,rand(1,6);
+	set @tablesub,@tablesub+@table3;
+	next;
+	if(@tablesub > 12) {
+		mes "["+getarg(0)+"]";
+		mes "Ну? У меня выпало ^0000FF"+@table3+"^000000, и в сумме";
+		mes "у меня ^0000FF"+@tablesub+"^000000. Ненавижу";
+		mes "говорить это, но я проиграл.";
+		mes "Уходи с победой пока я";
+		mes "не расплакался, "+strcharinfo(0)+"~!";
+		close2;
+		getitem 512,@amount*2;
+		end;
+	}
+	mes "["+getarg(0)+"]";
+	if(@tablesub < @playersub) {
+		mes "У меня выпало ^0000FF"+@table3+"^000000, что";
+		mes "дает мне в сумме ^0000FF"+@tablesub+"^000000.";
+		mes "Но... Этого недостаточно";
+		mes "чтобы побить ваши ^FF0000"+@playersub+"^000000. Похоже";
+		mes "я не могу конкурировать";
+		mes "с вами, "+strcharinfo(0)+"...";
+		close2;
+		getitem 512,@amount*2;
+		end;
+	} else if(@tablesub > @playersub) {
+	mes "У меня выпало ^0000FF"+@table3+"^000000, что";
+	mes "дает мне в сумме ^0000FF"+@tablesub+"^000000, и ";
+	mes "больше ваших ^FF0000"+@playersub+"^000000.";
+	mes "Простите, но вы ";
+	mes " "+strcharinfo(0)+"проиграли.";
+	mes "Я пологаю, это все...";
+	close;
+	} else if(@tablesub == @playersub) {
+		//Result = tie, --Improvised--
+		mes "У меня выпало ^0000FF"+@table3+"^000000, что";
+		mes "дает мне в сумме ^0000FF"+@tablesub+"^000000, и";
+		mes "равно вашему результату.";
+		mes "И так, в этой игре нет ни победителя,";
+		mes "ни проигравшего, "+strcharinfo(0)+".";
+		close2;
+		getitem 512,@amount;
+		end;
+	}
+}

@@ -1,0 +1,650 @@
+//===== eAthena Script ======================================= 
+//= Soul Linker Job Quest
+//===== By: ================================================== 
+//= Celestria & Samuray22
+//===== Current Version: ===================================== 
+//= 1.4
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Job quest for Soul Linker class.
+//= [Vars Used]
+//= SOUL_Q = Job Change Phase. (Max 4)
+//===== Additional Comments: ================================= 
+//= 1.2 Rescripted to Aegis 10.3 standards. [Samuray22]
+//= 1.3 Slight updates and fixes to the script. [L0ne_W0lf]
+//=	Removes the use of labels, and corrects other errors.
+//=	Removed the GM-use only NPC from the sec_in map. 
+//=	No longer used a global var, uses an NPC var instead.
+//= 1.3a Deleted Empty Color Tag. (bugreport:1572) [Samuray22]
+//= 1.4 Replaced effect numerics with constants. [L0ne_W0lf]
+//============================================================ 
+
+morocc_in,174,30,6	script	Kid#link1	716,{
+	if (Class == Job_Soul_Linker) {
+		mes "[Майа]";
+		mes "Желаю удачи в Ваших";
+		mes "путешествиях. Чем больше";
+		mes "Вы выучите умений, тем";
+		mes "тем больше духов Вы";
+		mes "сможете призвать, чем";
+		mes "поможете своим союзникам...";
+		close;
+	}
+	if (Class == Job_Star_Gladiator) {
+		mes "[Ребенок]";
+		if (Sex == 1) {
+			mes "Разве Вы не воин";
+			mes "солнца? Я знакома";
+		}
+		else {
+			mes "Разве Вы не воин";
+			mes "луны? Я знакома";
+		}
+		mes "с Вашей профессией. В";
+		mes "конце концов Вы раньше";
+		mes "занимались Taekwon Do,";
+		mes "верно?";
+		close;
+	}
+	if (Class != Job_Taekwon) {
+		mes "[Ребенок]";
+		mes "Мм? Мне нечего Вам";
+		mes "предложить. Но если Вы";
+		mes "знакомы с хорошо-обученным";
+		mes "Taekwon'ом, скажите ему";
+		mes "что у меня есть дело";
+		mes "к нему.";
+		close;
+	}
+	if (JobLevel < 40) {
+		mes "[Ребенок]";
+		mes "Вижу, что Вы изучаете";
+		mes "Taekwon Do. Это хорошо,";
+		mes "очень хорошо. Продолжайте";
+		mes "упорно тренироваться";
+		mes "и набираться опыта.";
+		close;
+	}
+	else if (JobLevel > 39) {
+		if (SOUL_Q == 0) {
+			mes "[Ребенок]";
+			mes "...";
+			mes "Эй, Вы.";
+			next;
+			mes "["+ strcharinfo(0) +"]";
+			mes "Это Вы мне?";
+			next;
+			mes "[Ребенок]";
+			mes "Да, это я Вам.";
+			mes "Не заставляйте меня";
+			mes "повышать голос и просто";
+			mes "подойдите ко мне.";
+			next;
+			if (select("Для ребёнка, Вы слишком грубы!:Проигнорировать.") == 1) {
+				mes "[Ребенок]";
+				mes "Вам повезло, что";
+				mes "Вы меня заинтересовали!";
+				mes "Я может и выгляжу как";
+				mes "ребёнок, но мне уже";
+				mes "больше трёхсот лет!";
+				emotion e_pif;
+				next;
+				mes "[Ребенок]";
+				mes "Послушайте...";
+				mes "Я знаю, что Вы";
+				mes "изучаете Taekwon Do.";
+				mes "Это хорошее искусство,";
+				mes "но у меня есть для Вас";
+				mes "предложение.";
+				emotion e_heh;
+				next;
+				mes "[Ребенок]";
+				mes "Я гляжу на Вас и могу";
+				mes "сказать, что в Вас скрыта";
+				mes "большая духовная сила. У Вас";
+				mes "есть потенциал, и я не хотела";
+				mes "бы, что бы он пропал впустую.";
+				mes "Почему бы Вам не стать 'Soul-Linker'ом?";
+				next;
+				if (select("Ха, глупый ребёнок~:Soul Linker?") == 1) {
+					mes "[Ребенок]";
+					mes "Вы... Вы не верите";
+					mes "мне? Я на полном";
+					mes "серьезе. Разве";
+					mes "Вы можете утверждать";
+					mes "что я ребёнок по одному";
+					mes "внешнему виду? *Грр*... Молодежь.";
+					close;
+				}
+				mes "[Ребенок]";
+				mes "Soul Linker'ы связываются";
+				mes "с духами павших воинов,";
+				mes "которые все ещё хотят сражаться.";
+				mes "И благодаря Soul Linker'ам";
+				mes "эти духи могут наделять";
+				mes "чьё-либо тело дополнительной силой.";
+				next;
+				mes "[Ребенок]";
+				mes "Так вот, если Вы наделены";
+				mes "большой духовной силой, то";
+				mes "то духи войнов почувствуют Вас.";
+				mes "При длительной тренировке";
+				mes "Вы сможете на время вселить духа в своего союзника.";
+				next;
+				mes "[Ребенок]";
+				mes "В тоже время Вы не можете";
+				mes "вселить духа в себя. Но";
+				mes "в этом Вам может помочь";
+				mes "другой Soul Linker.";
+				next;
+				mes "[Ребенок]";
+				mes "Вам предстоит войти";
+				mes "в совершенно другой мир,";
+				mes "чтобы стать Soul Linker'ом,";
+				mes "но я знаю, что у Вас все";
+				mes "получится. Ваш выбор?";
+				next;
+				if (select("Нет. Достаточно...:Я ясогласен. Что нужно делать?") == 1) {
+					mes "[Ребенок]";
+					mes "Хорошо. Чтож,";
+					mes "если Вы все таки решите";
+					mes "стать Soul Linker'ом,";
+					mes "возвращайтесь ко мне,";
+					mes "я буду ждать Вас.";
+					close;
+				}
+				set SOUL_Q,1;
+				mes "[Ребенок]";
+				mes "Вы хотите стать";
+				mes "Soul Linker'ом? Отлично!";
+				mes "Для начала, Вы должны";
+				mes "принести мне несколько предметов.";
+				mes "Не беспокойтесь, я объясню Вам";
+				mes "для чего они Вам понадобятся.";
+				next;
+				mes "[Ребенок]";
+				mes "Итак, принесите мне:";
+				mes "^0000FF1 3 Carat Diamond^000000,";
+				mes "^0000FF1 Immortal Heart^000000 и";
+				mes "^0000FF1 Witherless Rose^000000.";
+				mes "И постарайтесь не заставлять";
+				mes "меня ждать Вас слишком долго.";
+				close;
+			}
+			mes "[Ребенок]";
+			mes "Что...?";
+			mes "Постойте, куда Вы?";
+			mes "Я же...";
+			mes "Я не все Вам сказала!";
+			close;
+		}
+		else if (SOUL_Q == 1) {
+			if (Class == Job_Taekwon) {
+				mes "[Ребенок]";
+				mes "Вы вернулись, да?";
+				mes "Вы должны были принести";
+				mes "^0000FF1 3 Carat Diamond^000000,";
+				mes "^0000FF1 Immortal Heart^000000 и";
+				mes "^0000FF1 Witherless Rose^000000.";
+				mes "Вы принесли их?";
+				next;
+				if (select("Вот, держите.:Пока нет...") == 1) {
+					if (countitem(732) > 0 && countitem(929) > 0 && countitem(748) > 0) {
+						delitem 732,1; //Crystal_Jewel__
+						delitem 929,1; //Immortal_Heart
+						delitem 748,1; //Witherless_Rose
+						set SOUL_Q,2;
+						mes "[Ребенок]";
+						mes "Замечательно, вижу Вы все";
+						mes "мне принесли. Но прежде,";
+						mes "чем мы начнем, позвольте";
+						mes "представиться. Меня зовут";
+						mes "Майа, и мне уже больше чем 300 лет.";
+						next;
+						mes "[Майа]";
+						mes "Без веских причин я была";
+						mes "обвинена, и в качестве наказания должна";
+						mes "находить и вребовать Soul Linker'ов.";
+						mes "А тело мне дали неподходящее.";
+						next;
+						mes "[Майа]";
+						mes "В любом случае я должна";
+						mes "закончить приготовление вещей,";
+						mes "которые Вы принесли. Почему бы";
+						mes "Вам не прийти попозже?";
+						mes "Тогда и продолжим наш разговор.";
+						close;
+					}
+					mes "[Ребенок]";
+					mes "Мм...?";
+					mes "Эй. Вы забыли";
+					mes "принести мне то,";
+					mes "что я просила.";
+					mes "Ступайте и приходите";
+					mes "поскорее, хорошо?";
+					emotion e_pif;
+					next;
+					mes "[Ребенок]";
+					mes "Хотя я уже говорила,";
+					mes "но повторю еще раз.";
+					mes "Вам нужно принести:";
+					mes "^0000FF1 3 Carat Diamond^000000,";
+					mes "^0000FF1 Immortal Heart^000000 и";
+					mes "^0000FF1 Witherless Rose^000000.";
+					close;
+				}
+				mes "[Ребенок]";
+				mes "Мм. Чудесно.";
+				mes "Хотя мне некуда";
+				mes "торопиться, но я";
+				mes "не люблю слишком";
+				mes "долго ждать.";
+				close;
+			}
+			set SOUL_Q,0;
+			mes "[Ребенок]";
+			mes "Вы стали Star";
+			mes "Gladiator'ом?";
+			mes "Чтож я не знаю,";
+			mes "подходящая ли это";
+			mes "для вас провессия.";
+			close;
+		}
+		else if (SOUL_Q == 2) {
+			if (SkillPoint) {
+				mes "[Майа]";
+				mes "У Вас еще остались";
+				mes "лишние очки умений.";
+				mes "Потратьте их на изучение";
+				mes "приемов Taekwon Do, а затем";
+				mes "возвращайтесь ко мне.";
+				close;
+			}
+			if (.SoulLinkerTest == 1) {
+				mes "[Майа]";
+				mes "В настоящее время";
+				mes "церемонию посвящения";
+				mes "проходит другой человек.";
+				mes "Вы не подождете пока он";
+				mes "закончит? Если я освобожусь";
+				mes "я скажу Вам.";
+				close;
+			}
+			donpcevent "Timer#link3::OnEnable";
+			set .SoulLinkerTest,1;
+			mes "[Майа]";
+			mes "Замечательно, я закончила";
+			mes "приготовления.";
+			mes "Сейчас мы отправимся";
+			mes "на место проведения";
+			mes "церемонии. Закройте";
+			mes "глаза...";
+			close2;
+			warp "job_soul",30,30;
+			end;
+		}
+		else if (SOUL_Q > 2) {
+			mes "[Майа]";
+			mes "Вы готовы снова";
+			mes "погрузиться в глубины";
+			mes "своего сознания?";
+			next;
+			if (select("Нет:Да") == 1) {
+				mes "[Майа]";
+				mes "Чтож, приходите";
+				mes "когда будете готовы.";
+				mes "Я буду ждать Вас";
+				mes "на этом месте.";
+				close;
+			}
+			if (.SoulLinkerTest == 1) {
+				mes "[Майа]";
+				mes "В настоящее время";
+				mes "церемонию посвящения";
+				mes "проходит другой человек.";
+				mes "Вы не подождете пока он";
+				mes "закончит? Если я освобожусь,";
+				mes "то скажу Вам.";
+				close;
+			}
+			donpcevent "Timer#link3::OnEnable";
+			set .SoulLinkerTest,1;
+			mes "[Майа]";
+			mes "Хорошо, закройте";
+			mes "глаза и расслабьтесь.";
+			mes "Мы возвращаемся в глубины";
+			mes "Вашего сознания.";
+			close2;
+			warp "job_soul",30,30;
+			end;
+		}
+	}
+
+OnInit:
+	set .SoulLinkerTest,0;
+	end;
+}
+
+job_soul,30,31,0	script	Maia#link2::SLTester	-1,3,3,{
+OnTouch:
+	if (Class == Job_Taekwon) {
+		if (JobLevel < 40) {
+			set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+			mes "[Майа]";
+			mes "Мм? Как Вы попали";
+			mes "сюда? Вы недостаточно";
+			mes "подготовлены, чтобы пройти церемонию. Пойдемте, я отведу Вас в Morroc...";
+			close2;
+			warp "morocc",157,47;
+			end;
+		}
+		if (SOUL_Q == 2) {
+			mes "[Майа]";
+			mes "Вы узнаете это место?";
+			mes "Мы находимся внутри";
+			mes "Вашего сознания. Духи";
+			mes "воинов после смерти";
+			mes "витают здесь, ожидая";
+			mes "Вашего зова.";
+			next;
+			mes "[Майа]";
+			mes "Сейчас Вы видите только";
+			mes "нескольких из них, но";
+			mes "если Вы продолжите тренировку,";
+			mes "то Вы сможете призывать ещё";
+			mes "больше духов.";
+			next;
+			set SOUL_Q,3;
+			mes "[Майа]";
+			mes "Мы можем остаться здесь";
+			mes "только на 3 минуты.";
+			mes "Надеюсь, Вы успеете поговорить";
+			mes "с духами, пока имеете такую";
+			mes "возможность.";
+			close;
+		}
+		else if (SOUL_Q == 3) {
+			mes "[Майа]";
+			mes "Вслушайтесь в то,";
+			mes "что говорят Вам духи.";
+			mes "Есть причины, по которым";
+			mes "они не в состоянии";
+			mes "отправиться в лучший мир.";
+			close;
+		}
+		else if (SOUL_Q == 4) {
+			mes "[Майа]";
+			mes "Кажется сейчас Вы";
+			mes "готовы стать";
+			mes "Soul Linker'ом.";
+			mes "Однако, елси хотите,";
+			mes "то можете еще поговорить";
+			mes "с духами.";
+			next;
+			if (select("Поговорить с духами ещё:Стать Soul Linker'ом") == 1) {
+				mes "[Майа]";
+				mes "Хорошо, только";
+				mes "поторапливайтесь,";
+				mes "пока мы ещё можем находится";
+				mes "в Вашем сознании. Хотя";
+				mes "потом мы можем вернуться,";
+				mes "если захотите...";
+				close;
+			}
+			mes "[Майа]";
+			mes "Позвольте мне начать";
+			mes "церемонию. Эти предметы";
+			mes "помогут Вам использовать";
+			mes "силу духов и наделять";
+			mes "ею своих друзей во время";
+			mes "Ваших сражений.";
+			next;
+			mes "[Майа]";
+			mes "Эта Witherless Rose будет";
+			mes "увядать вместо Вас...";
+			donpcevent "Maia#link2::Oneff";
+			next;
+			mes "[Майа]";
+			mes "Эта Witherless Rose будет";
+			mes "увядать вместо Вас...";
+			mes "Это Immortal Heart будет";
+			mes "использовано духами вместо Вашего. ";
+			next;
+			mes "[Майа]";
+			mes "Эта Witherless Rose будет";
+			mes "увядать вместо Вас...";
+			mes "Это Immortal Heart будет";
+			mes "использовано духами вместо Вашего. Этот Diamond будет очищать";
+			mes "Ваше тело.";
+			next;
+			mes "[Майа]";
+			mes "Духи, которые желают";
+			mes "продолжить сражения...";
+			mes "Будут сражаться за Вас!";
+			mes "Испотльзуйте свою силу Soul Linker'а";
+			mes "мудро и во благо другим.";
+			next;
+			callfunc "Job_Change",Job_Soul_Linker;
+			callfunc "F_ClearJobVar";		// clears all job variables for the current player
+			set SOUL_Q,0;
+			mes "[Майа]";
+			mes "Я желаю Вам удачи в";
+			mes "Вашей жизни. Окружите";
+			mes "себя хорошими друзьями,";
+			mes "а духи защитят вас, и";
+			mes "помогут в сражениях. Прощайте, мой друг.";
+			close2;
+			set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+			donpcevent "Timer#link3::OnDisable";
+			warp "morocc",157,47;
+			end;
+		}
+		set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+		mes "[Майа]";
+		mes "Хмм...?";
+		mes "Вам больше нельзя";
+		mes "здесь оставаться.";
+		mes "Нам нужно вернйться";
+		mes "в Morroc...";
+		close2;
+		warp "morocc",157,47;
+		end;
+	}
+	set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+	if (Class == Job_Soul_Linker) {
+		mes "[Майа]";
+		mes "Пришло время пойти";
+		mes "навстречу приключениям!";
+		mes "Soul Linker'ы очень";
+		mes "востребованы. Они помогают другим сражаться со злом...";
+	}
+	else {
+		mes "[Майа]";
+		mes "Странно...";
+		mes "Вы не можете быть";
+		mes "здесь. Позвольте";
+		mes "мне отвести Вас в Morroc...";
+	}
+	close2;
+	warp "morocc",157,47;
+	end;
+
+Oneff:
+	specialeffect EF_MAPPILLAR2;
+	end;
+}
+
+job_soul,35,30,6	duplicate(SLTester)	Maia#link6	716
+
+job_soul,30,35,6	script	Monk Spirit#link4	827,{
+	if (SOUL_Q == 2) {
+		mes "[Дух Monk'а]";
+		mes "Кто я...?";
+		mes "Думаю... Думаю";
+		mes "будет лучше, если Вы";
+		mes "сначала поговрите с Майей...";
+		mes "Кто я и чем являюсь";
+		mes "требует объяснений...";
+		close;
+	}
+	else if (SOUL_Q > 2) {
+		mes "[Дух Monk'а]";
+		mes "Мои собратья говоирили,";
+		mes "что я еще достигну высот";
+		mes "мастерства Monk'а. Однако..";
+		mes "Однако я не удовлетворен";
+		mes "качеством своих способностей.";
+		next;
+		mes "[Дух Monk'а]";
+		mes "После смерти, я жалею";
+		mes "о том, что не смог постичь";
+		mes "всех умений Monk'а.";
+		mes "Отдача своей силы другим";
+		mes "это единственный шанс";
+		mes "хоть как то сгладить это.";
+		next;
+		set SOUL_Q,4;
+		mes "[Дух Monk'а]";
+		mes "Я прошу Вас...";
+		mes "Мне нужна Ваша помощь,";
+		mes "чтобы я смог снова";
+		mes "почувствовать истинную";
+		mes "силу Monk'а.";
+		close;
+	}
+	mes "[Дух Monk'а]";
+	mes "...";
+	close;
+}
+
+job_soul,30,25,7	script	Sage Spirit#link5	754,{
+	if (SOUL_Q == 2) {
+		mes "[Дух Sage'а]";
+		mes "Поговорите с Майей.";
+		mes "Боюсь, что могу";
+		mes "смутить Вас, пока";
+		mes "Майа не объяснила,";
+		mes "кто я такой...";
+		close;
+	}
+	else if (SOUL_Q > 2) {
+		mes "[Дух Sage'а]";
+		mes "Мои знания дали";
+		mes "мне небывалую силу";
+		mes "при жизни, я мог";
+		mes "уничтожить все, что захотел.";
+		mes "Не все Sage'и способны достичь моего уровня...";
+		next;
+		mes "[Дух Sage'а]";
+		mes "Я умер, но я не смогу";
+		mes "попасть в лучший мир.";
+		mes "Я еще хочу использовать";
+		mes "свои способности, чтобы созидать";
+		mes "или разрушать то, что я хочу.";
+		next;
+		mes "[Дух Sage'а]";
+		mes "Достаточно будет даже";
+		mes "если я передам свои знания";
+		mes "другому Sage'у, который";
+		mes "будет достоин получить их.";
+		mes "Но чтобы сделать это, мне нужна";
+		mes "Ваша помощь. Умоляю, позвольте мне стать Вашим духом союзником.";
+		set SOUL_Q,4;
+		next;
+		mes "[Дух Sage'а]";
+		mes "Я думаю, что Вы";
+		mes "единственный, кто";
+		mes "может принести покой";
+		mes "моей душе...";
+		close;
+	}
+	mes "[Дух Sage'а]";
+	mes "...";
+	close;
+}
+
+job_soul,25,30,5	script	Alchemist Spirit#link7	744,{
+	if (SOUL_Q == 2) {
+		mes "[Alchemist Spirit]";
+		mes "О! Мне хотелось бы поговорить";
+		mes "с Вами, но будет лучше,";
+		mes "если сначала Майа объяснит";
+		mes "Вам, кто я такая.";
+		mes "Мне очень нужна Ваша";
+		mes "помощь.";
+		close;
+	}
+	else if (SOUL_Q > 2) {
+		mes "[Alchemist Spirit]";
+		mes "Без сомнений, я была";
+		mes "самым лучшим Alchemist'ом";
+		mes "в своё время. А может даже";
+		mes "и сейчас. Но я стала";
+		mes "высокомерной и закончила";
+		mes "жизнь самоубийством.";
+		next;
+		mes "[Alchemist Spirit]";
+		mes "Но смерть не убила";
+		mes "мои умения. Могу смело";
+		mes "сказать, что они даже";
+		mes "улучшились. Я не могу";
+		mes "уйти в лучший мир, пока";
+		mes "не передам кому-нибудь свою технику...";
+		set SOUL_Q,4;
+		next;
+		mes "[Alchemist Spirit]";
+		mes "Я беспомощна, как дух,";
+		mes "но с Вашей помощью я";
+		mes "могу помочь Alchemist'ам";
+		mes "улучшить их навыки. Я";
+		mes "умоляю Вас, дайте мне";
+		mes "этот шанс...";
+		close;
+	}
+	mes "[Alchemist Spirit]";
+	mes "...";
+	close;
+}
+
+job_soul,1,5,0	script	Timer#link3	111,{
+	end;
+
+OnEnable:
+	initnpctimer;
+	end;
+
+OnDisable:
+	stopnpctimer;
+	set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+	end;
+
+OnTimer60000:
+OnTimer120000:
+	if (getmapusers("job_soul") == 0) {
+		stopnpctimer;
+		set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+	}
+	end;
+
+OnTimer180000:
+OnTimer181000:
+OnTimer182000:
+	mapwarp "job_soul","morocc",157,47;
+	end;
+
+OnTimer183000:
+	mapwarp "job_soul","morocc",157,47;
+	set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+	stopnpctimer;
+}
+
+//============================================================ 
+// Old changelog
+//============================================================ 
+//= A temp Soul Linker Job Changer based on the kRO quest.
+//= Quest info from RagnaInfo. Sprites from kRO screenshots
+//= 1.0	Optimized and updated [Lupus]
+//= 1.1 Fixed NPC names according to iRO [Lupus]
+//============================================================ 

@@ -1,0 +1,118 @@
+//===== eAthena Script ======================================= 
+//= Rachel Guide
+//===== By: ================================================== 
+//= L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.2b
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Rachel City guide
+//===== Additional Comments: ================================= 
+//= 1.0 First version. [L0ne_W0lf]
+//= 1.1 Change the while loops a bit. [L0ne_W0lf]
+//= 1.2 Deleted an Unnecessary "next;" [Samuray22]
+//	-Thanks to $ephiroth.
+//= 1.2a Fixed some errors with the loop[Samuray22]
+//	-Thanks to $ephiroth.
+//= 1.2b Deleted a unnecessary "end". [Samuray22]
+//===== Translated into Russian: =============================
+//= перевод Shadow Smail rater@yandex.ru
+//============================================================ 
+
+rachel,138,146,5	script	Rachel Guide	934,{
+	mes "[Rachel Guide]";
+	mes "Добро пожаловать в столицу";
+	mes "Arunafeltz, Rachel, где веет";
+	mes "теплое дыхание богини Фрейи.";
+	mes "Если ты в первый раз";
+	mes "пользуешься услугами гида,";
+	mes "зайди сначала в меню 'Заметки'.";
+	set .@loop1,1;
+	while(.@loop1) {
+		next;
+		switch(select("Деревенский путеводитель:Убрать отметки с карты:Справка:Уйти")) {
+		case 1:
+			mes "[Rachel Guide]";
+			mes "Я могу показать тебе любое здание в Rachel.";
+			mes "Куда хочешь пойти?";
+			if (.@compass_check == 0) {
+				mes "Ах да, и хочешь,";
+				mes "отметить здания";
+				mes "на твоей карте?";
+				next;
+				if (select("Да:Нет") == 1) set .@compass_check,1;
+			}
+			set .@loop2,1;
+			while(.@loop2) {
+				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				else next;
+
+				switch(select("Cheshrumnir:Гостиница:Оружейный магазин:Товарная лавка:Аэропорт:Отмена")) {
+				case 1:
+					mes "[Rachel Guide]";
+					mes "Cheshrumnir это святая земля, где папа, воплощение фрейи на земле, обитает.";
+					mes "иди на север и ты найдешь его.";
+					if (.@compass_check == 1) viewpoint 1,150,249,1,0xFF0000;
+					break;
+				case 2:
+					mes "[Rachel Guide]";
+					mes "Хочешь отдохнуть с дороги? Тогда тебе надо в гостиницу.";
+					mes "Здание слева от меня - и есть она.";
+					if (.@compass_check == 1) viewpoint 1,115,149,2,0xFF00FF;
+					break;
+				case 3:
+					mes "[Rachel Guide]";
+					mes "Хочешь купить оружие?";
+					mes "Оружейный магазин находится около западных ворот города.";
+					if (.@compass_check == 1) viewpoint 1,42,87,3,0x99FFFF;
+					break;
+				case 4:
+					mes "[Rachel Guide]";
+					mes "В нашем Tool Shop продаются самые качественные зелья.";
+					mes "Ты найдешь его около западных ворот.";
+					if (.@compass_check == 1) viewpoint 1,83,78,4,0x0000FF;
+					break;
+				case 5:
+					mes "[Rachel Guide]";
+					mes "Аэропорт расположен за восточными воротами.";
+					if (.@compass_check == 1) viewpoint 1,273,125,5,0x00FF00;
+					break;
+				case 6:
+					mes "[Rachel Guide]";
+					mes "Если хочешь убрать отметки с карты,";
+					mes "просто попроси меня об этом.";
+					set .@loop2,0;
+					break;
+				}
+			}
+			break;
+
+		case 2:
+			viewpoint 2,150,249,1,0xFF0000;
+			viewpoint 2,115,149,2,0xFF00FF;
+			viewpoint 2,42,87,3,0x99FFFF;
+			viewpoint 2,83,78,4,0x0000FF;
+			viewpoint 2,273,125,5,0x00FF00;
+			mes "[Rachel Guide]";
+			mes "Так, теперь их нет. Но если понядобятся снова - спрашивай.";
+			break;
+		case 3:
+			mes "[Rachel Guide]";
+			mes "Когда пользуешься услугами гида,";
+			mes "убедись, что твоя карта открыта.";
+			mes "Она висит в верхнем правом углу экрана. Если не висит, нажми ctrl+tab или кнопку Map в Basic Info Window.";
+			mes "Еще ты можешь приближать и удалять карту. Нажимай плюс и минус на ней, чтобы сделать это.";
+			break;
+		case 4:
+			mes "[Rachel Guide]";
+			mes "Приятного путешествия по";
+			mes "Arunafeltz.";
+			close2;
+			set .@loop1,0;
+			break;
+		}
+	}
+	close;
+}

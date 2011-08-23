@@ -1,0 +1,394 @@
+//===== eAthena Script ======================================= 
+//= Valkyrie Realm
+//===== By: ==================================================
+//= Nana, fixes by Poki
+//= finished, optimized and tested by Lupus
+//= L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 2.9b
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Quest to become a Tranceded Class. (Advanced/Rebirthed)
+//===== Additional Comments: ================================= 
+//= 1.1 Made all into functions,additional checks,quest skills,now Valhallana can return you back. She also makes reborn process only when you got no Zeny/items (as in kRO) [Lupus]
+//= 1.2 now alternative classes can use their 1-1 job NPC to become Advanced 1st Class [Lupus]
+//= 1.4 added Baby Class support [Lupus]
+//= 1.5 Fixed loads of gramatical errors. [Mass Zero]
+//= 1.6 Added a func which prevent advanced classes passing 2nd Job Quests again. It also guides adv classes where to go. [Lupus]
+//= 1.7 On reborn reset some Job Quest Vars and Reset Girls Counter [Lupus]
+//= 1.8 Added Taekwondo classes check [Lupus]
+//= 1.9 Added support for Job NPC Fase pics, sorrected one dialogue stuff [Lupus]
+//= 2.0 Removed callfunc Is_####_Class in favor of baseClass [Silentdragon]
+//= 2.1 Changed all numbers into constants. [Vicious]
+//= 2.2 Now ALL quests skills are saved/restored [Lupus]
+//= 2.3 Removed Duplicates [Silent]
+//= 2.4 Fixed typos, optimized [Lupus]
+//= 2.5 Fixed a stuck bug [Lupus]
+//= 2.6a Adding proper dialogues [Lupus]
+//= 2.7 Rescripted to Aegis 10.3 standards. [L0ne_W0;f]
+//=	Removed all functions as they are no longer required.
+//=	Correct job level requirements for 1-1 -> 2-x.
+//= 2.7a Added Function "F_BlockHigh" back in until rewriteing of the 2-x [L0ne_W0lf]
+//=	scripts are comepleted.
+//= 2.7b Removed function "F_BlockHigh" as it's no longer used. [L0ne_W0lf]
+//= 2.8 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
+//= 2.9 Corrected Valkyrie case spicifying where to warp after rebirthing. [L0ne_W0lf]
+//= 2.9b Fixed Verdandi typo, fixed resetting vars [Lupus]
+//============================================================ 
+
+valkyrie,48,86,4	script	Валькирия#	811,{
+	if (ADVJOB != 0 || Upper == 1) {
+		mes "[Валькирия]";
+		mes "Добро пожаловать";
+		mes "в Вальгаллу,";
+		mes "Зал Славы.";
+		next;
+		mes "[Валькирия]";
+		mes "Располагайтесь";
+		mes "и чувствуйте";
+		mes "себя как дома.";
+		mes "Хвала воинам!";
+		close;
+	}
+	else if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+		mes "[Валькирия]";
+		mes "Добро пожаловать";
+		mes "в Вальгаллу,";
+		mes "Зал Славы.";
+		next;
+		mes "[Валькирия]";
+		mes "Ваша текущая жизнь";
+		mes "подходит к концу и";
+		mes "скоро Вы начнете";
+		mes "полностью новую жизнь.";
+		mes "Хвала воинам!";
+		next;
+		if (Weight > 0 || Zeny > 0 || checkcart() != 0 || checkfalcon() != 0 || checkriding() != 0) {
+			mes "[Валькирия]";
+			mes "Перед тем, как мы начнем, Вы";
+			mes "должны сделать пару вещей. Вы";
+			mes "должны очистить свой разум и тело.";
+			mes "Честь придет только когда Вы";
+			mes "избавитесь от эгоистичных желаний...";
+			next;
+			mes "[Валькирия]";
+			mes "Вы не должны ничего брать с собой в новую жизнь. Ваши вещи, деньги, питомцы, тележка, все это должно быть оставлено в прошлой жизни.";
+			next;
+			mes "[Валькирия]";
+			mes "Когда будете готовы";
+			mes "возвращайтесь ко мне,";
+			mes "храбрый путешественник.";
+			close2;
+			warp "yuno_in02",93,205;
+			end;
+		}
+		else {
+			mes "[Валькирия]";
+			mes "Я вижу, что Вы освободились";
+			mes "от всех лишних грузов,";
+			mes ""+ strcharinfo(0) +".";
+			next;
+			mes "[Валькирия]";
+			mes "Это замечательное призвание для таких, как Вы путешественников. Честь прибудет только с теми, кто отвергнет все свои личные желания ради человечества.";
+			next;
+			if (SkillPoint) {
+				mes "[Валькирия]";
+				mes "Хмм... Я чувствую в Вас что-то";
+				mes "лишнее, или в этой жизни";
+				mes "у Вас отались незавершенные";
+				mes "дела. Решите все свои дела,";
+				mes "и только потом Вы сможите закончить эту жизнь.";
+				close2;
+				warp "yuno_in02",93,205;
+				end;
+			}
+			mes "[Валькирия]";
+			mes "Итак, позвольте мне очистить";
+			mes "Ваш разум от всех воспоминаний...";
+			mes "Однако, Вы не забудете";
+			mes "самые благородные свои";
+			mes "поступки.";
+			next;
+			mes "[Валькирия]";
+			mes "На счет раз,";
+			mes "я попрошу богиню";
+			mes "Юрд очистить";
+			mes "все ваши";
+			mes "воспоминания.";
+			next;
+			mes "[Валькирия]";
+			mes "На счет два,";
+			mes "я попрошу богиню";
+			mes "Верданди сохранить";
+			mes "в Вашей памяти все Ваши благородные поступки.";
+			next;
+			mes "[Валькирия]";
+			mes "На счет три,";
+			mes "я попрошу богиню";
+			mes "Скулд направлять";
+			mes "Вас в Вашей следущей";
+			mes "жизни.";
+			next;
+			mes "[Валькирия]";
+			mes "Раз...";
+			callfunc "F_ClearJobVar";
+			next;
+			mes "[Валькирия]";
+			mes "Раз...";
+			mes "Два......";
+			//callfunc("F_SaveQuestSkills"); //now not used
+			next;
+			mes "[Валькирия]";
+			mes "Раз...";
+			mes "Два......";
+			mes "И три.";
+			set ADVJOB, Class+Job_Novice_High; //memo the target 3rd Job ID
+			if(ADVJOB == Job_Lord_Knight2) set ADVJOB,Job_Lord_Knight;
+			if(ADVJOB == Job_Paladin2) set ADVJOB,Job_Paladin;
+			jobchange Job_Novice_High;
+			resetlvl(1);
+			set MISC_QUEST,MISC_QUEST | 1024; //<-reset Skill Reset Event
+			skill 142,1,0;
+			skill 143,1,0;
+			next;
+			mes "[Валькирия]";
+			mes "Поздравляю.";
+			mes "Вы родились заново.";
+			mes "Пожалуйста, возьмите этот скромный дар,";
+			mes "это поможет Вам в Ваших новых приключениях.";
+			getitem 1202,1; //Knife_
+			getitem 2302,1; //Cotton_Shirt_
+			next;
+			mes "[Валькирия]";
+			mes "Да благославит Вас богиня Юрд. Надеюсь богиня Верданди оставила Вам воспоминания о Вашей доблести.";
+			next;
+			mes "[Валькирия]";
+			mes "И я буду молиться, чтобы Ваша новая жизнь, в которой Вас поведет богиня Скулд, стала наполнена более доблестными подвигами.";
+			close2;
+			switch (ADVJOB) {
+			case 4008:
+			case 4015:
+				warp "izlude",94,103; break;
+			case 4009:
+			case 4016:
+				warp "prontera",273,354; break;
+			case 4010:
+			case 4017:
+				warp "geffen",120,60; break;
+			case 4011:
+			case 4019:
+				warp "alberta",116,57; break;
+			case 4012:
+			case 4020:
+			case 4021:
+				warp "payon",69,100; break;
+			case 4013:
+			case 4018:
+				warp "morocc",154,50; break;
+			default:
+				warp "yuno_in02",93,205; break;
+			}
+			end;
+		}
+	}
+	else {
+		mes "[Валькирия]";
+		mes "Добро пожаловать";
+		mes "в Вальгаллу,";
+		mes "Зал Славы.";
+		next;
+		mes "[Валькирия]";
+		mes "К сожелению, Вы не должны находиться здесь. Я попрошу Вас немедленно покинуть это место. Хвала воинам!";
+		close2;
+		warp "yuno_in02",93,205;
+		end;
+	}
+}
+
+yuno_in02,88,164,5	script	Метиус Силф#Library	742,{
+	if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+		if (valkyrie_Q == 0) {
+			mes "[Метиус Силф]";
+			mes "Добро пожаловать в Библиотеку Шварцвальдской Академии Магии.";
+			mes "Я полагаю, что Вы прибыли сюда,";
+			mes "чтобы прочесть 'Книгу Имира'.";
+			next;
+			mes "[Метиус Силф]";
+			mes "К сожалению, оригинал книги был поврежден. В настоящее время мы можем предоставить только ее копию.";
+			next;
+			mes "[Метиус Силф]";
+			mes "К тому же, чтобы отреставрировать оригинал 'Книги Имира', мы вынуждены взымать пожертвования с тех, кто хочет проичтать её.";
+			next;
+			mes "[Метиус Силф]";
+			mes "Величина пожертвования";
+			mes "составляет";
+			mes "1,285,000 Зени.";
+			next;
+			if (select("Пожертвовать.:Уйти.") == 1) {
+				if (Zeny > 1284449) {
+					set zeny,zeny-1285000;
+					set valkyrie_Q,1;
+					mes "[Метиус Силф]";
+					mes "Спасибо, Ваши деньги будут использованы во благо книги.";
+					mes "Сейчас Вы можете пройти и прочитать её.";
+					close;
+				}
+				mes "[Метиус Силф]";
+				mes "К сожелению, Вы не в состоянии заплатить столько. Приходите, когда накопите нужную сумму.";
+				close;
+			}
+			mes "[Метиус Силф]";
+			mes "Расслабтесь и наслаждайтесь";
+			mes "своими путешествиями.";
+			close;
+		}
+		mes "[Метиус Силф]";
+		mes "Еще раз благодарю Вас за Ваше щедрое пожертвование. Не стесняйтесь прочитать на досуге нашу точную копию 'Книги Имира'.";
+		close;
+	}
+	mes "[Метиус Силф]";
+	mes "Добро пожаловать в Библиотеку Шварцвальдской Академии Магии.";
+	mes "Сдесь у нас бесчисленное количество книг. Вы можете не торопясь посмотреть их все.";
+	close;
+}
+
+yuno_in02,93,207,1	script	Книга Имира	111,{
+	if (ADVJOB != 0 || Upper == 1) {
+		mes "[Книга Имира]";
+		mes "...Вход в Зал Славы открыт для любого, кто уже начал новую жизнь. Здесь героям помогут решить, по какому пути им идти дальше, отсюда можно попасть в любое место мира.";
+		next;
+		mes "[Книга Имира]";
+		mes "В Зале Славы все подготовлено для героев. Ходят слухи, что желания, которые Вы не смогли выполнить в своей жизни, могут выполниться в Зале Славы.";
+		next;
+		if (select("Окончить чтение.:Продолжить чтение.") == 1) {
+			mes "[Книга Имира]";
+			mes ".....";
+			close;
+		}
+		mes "[Книга Имира]";
+		mes "Существует давно забытый путь, ведущий в Зал Славы, самое близкое к небесам место. Не каждый сможет найти Зал Славы...";
+		close2;
+		warp "valkyrie",48,8;
+		end;
+	}
+	else if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+		if (valkyrie_Q != 0) {
+			mes "[Книга Имира]";
+			mes "...Поэтому, древние герои";
+			mes "испытывали мучения, зная то,";
+			mes "что они простые смертные и";
+			mes "в конце концов канут в небытие...";
+			next;
+			mes "[Книга Имира]";
+			mes "Нет никаких документов,";
+			mes "песен, какого-либо другого фольклора, в котором бы описывалась жизнь после смерти. Однако, я недавно расшифровал древний свиток,";
+			mes "в котором говорилось о Валькирии...";
+			next;
+			mes "[Книга Имира]";
+			mes "Валькирия...";
+			mes "Легендарная";
+			mes "ангел-хранитель.";
+			mes "Ангел Рагнарока.";
+			next;
+			mes "[Книга Имира]";
+			mes "Сильные и храбрые искатели";
+			mes "приключений были приведены";
+			mes "Валькирией в Вальгаллу,";
+			mes "в Зал Славы. Туда, где им";
+			mes "была дарована новая жизнь.";
+			next;
+			mes "[Книга Имира]";
+			mes "Перерожденые, они смогут";
+			mes "совершать новые подвиги и";
+			mes "прославлять этот мир.";
+			mes "Истощенные тела будут";
+			mes "наполнены новой энергией...";
+			next;
+			mes "[Книга Имира]";
+			mes "Сердце Имира даст им новые способности. Однако, сердце Имира было полность разрушено и резвеяно по всему миру после великой битвы за королевство Рун-Мидгард.";
+			next;
+			mes "[Книга Имира]";
+			mes "В течении долгого времени";
+			mes "мне удалось собрать несколько";
+			mes "частей сердца Имира. Но я не";
+			mes "смог подтвердить историю о Валькирии";
+			mes "и Вальгалле путем научных";
+			mes "исследований.";
+			next;
+			mes "[Книга Имира]";
+			mes "Итак, я заканичаю свой рассказ с надеждой, что кто-то в будущем";
+			mes "сможет подтвердить, что Валькирия и Вальгалла существуют...";
+			next;
+			set valkyrie_Q,2;
+			mes "[Книга Имира]";
+			mes "Позволим же героям прожить";
+			mes "их новые жизни, чтобы они смогли";
+			mes "защитить этот мир от опасностей.";
+			mes "А затем...";
+			close;
+		}
+		mes "[Книга Имира]";
+		mes "...";
+		close;
+	}
+	mes "[Книга Имира]";
+	mes "...";
+	close;
+}
+
+yuno_in05,49,43,1	script	Сердце Имира	111,{
+	if (Baselevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
+		if (valkyrie_Q == 2) warp "valkyrie",48,8;
+	}
+	end;
+}
+
+valkyrie,44,33,5	script	Телепортер	124,{
+	if (Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Телепортер]";
+			mes "Поздравляю.";
+			mes "Хвала воинам!";
+			close;
+		}
+		mes "[Телепортер]";
+		mes "Пожалуйста,";
+		mes "не трогайте";
+		mes "ничего руками";
+		mes "..........";
+		close;
+	}
+	else {
+		mes "[Телепортер]";
+		mes "Приветствую, герой,";
+		mes "куда Вы хотите отправиться?";
+		next;
+		switch(select("Prontera:Morroc:Payon:Geffen:Alberta:Izlude:Al De Baran:Comodo:Juno")) {
+		case 1: callsub S_Warpchar,"prontera",116,72;
+		case 2: callsub S_Warpchar,"morocc",156,46;
+		case 3: callsub S_Warpchar,"payon",69,100;
+		case 4: callsub S_Warpchar,"geffen",120,39;
+		case 5: callsub S_Warpchar,"alberta",117,56;
+		case 6: callsub S_Warpchar,"izlude",94,103;
+		case 7: callsub S_Warpchar,"aldebaran",91,105;
+		case 8: callsub S_Warpchar,"comodo",209,143;
+		case 9: callsub S_Warpchar,"yuno",328,101;
+		}
+	}
+S_WarpChar:
+	mes "[Teleporter]";
+	mes "Приятного путешествия.";
+	close2;
+	savepoint getarg(0),getarg(1),getarg(2);
+	warp getarg(0),getarg(1),getarg(2);
+	end;
+}
+
+// Warps
+//============================================================ 
+valkyrie,48,73,0	warp	valk01#1	1,1,valkyrie,48,64
+valkyrie,48,66,0	warp	valk01#2	1,1,valkyrie,48,75
+

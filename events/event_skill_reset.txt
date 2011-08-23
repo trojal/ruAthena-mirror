@@ -1,0 +1,111 @@
+//===== eAthena Script ======================================= 
+//= Official Skill Resetter Event in Yuno (kRO & idRO)
+//===== By: ================================================== 
+//= $ephiroth
+//===== Current Version: ===================================== 
+//= 1.02
+//===== Compatible With: ===================================== 
+//= eAthena 1.0
+//===== Description: ========================================= 
+//= 2006 - Edition Skill Reset NPC
+//= 2006/11/16: 1.0 Release and fully working. [$ephiroth]
+//= 1.01 Checked, fixed typos, now uses MISC_QUEST var [Lupus]
+//= 1.02 Added missing message,comment,etc. [$ephiroth]
+//===== Additional Comments: =================================
+//= Skill Reset with payment, minimum BaseLv.60 to reset skill.
+//= Each 1 BaseLv need 20.000 Zeny, so be careful to use skill.
+//===== Translated into Russian: =============================
+//= 21.01.2008 Коррекция перевода [Vorp]
+//============================================================
+yuno,138,187,4	script	Учитель Гипноза	124,{
+	set @npcname$,"[^D5A500Гипнотизер^000000]";
+	mes @npcname$;
+
+	if(MISC_QUEST & 1024){
+		mes "Я уже сообщал Вам, что Вы можете сделать это только однажды.";
+		close;
+	}
+	if(BaseLevel < 60) {
+		mes "Пожалуйста, возвращайтесь когда Вы достигаете базовый уровень 60 или выше.";
+		close;
+	}
+	if(SkillPoint != 0) {
+		mes "Вам понадобится использовать все ваши профессиональные умения если Вы хотите, чтобы я продолжил.";
+		mes "Приходите опять, пожалуйста!";
+		close;
+	}
+	if(Weight || checkfalcon() || checkcart() || checkriding()) {
+		mes "Вы хотите востановить ваши умения?";
+		mes "Вы уж простите, но...";
+		next;
+		mes @npcname$;
+		if(Weight) {
+			mes "Вы этого не можете сделать";
+			mes "пока у вас есть";
+			mes "кое что.";
+		} else if(checkcart())
+			mes "Пожалуйста, оставьте тележку, что бы продолжить.";
+		else if(checkfalcon())
+			mes "Пожалуйста, отпутите Сокола (Falcon) и мы продолжим.";
+		else if(checkriding())
+			mes "Пожалуйста, отпустите ПекоПеко (PecoPeco) и мы продолжим.";
+		next;
+		mes @npcname$;
+		mes "Приходите сново!";
+		close;
+	}
+	mes "Привет, я умею востонавливать умения.";
+	mes "Вас зовут ^0080FF"+strcharinfo(0)+"^000000.";
+	mes "Чем я могу вам помочь?";
+	next;
+	menu "^009500Информация о востоновлении умений.^000000",L_Info,"^00B6FFВостоновить умения.^000000",L_Reset,"^000088Ничего^000000",-;
+
+	mes @npcname$;
+	mes "Вы знаете где меня найти,";
+	mes "если вы решите исправит умения!!"; 
+	close;
+
+L_Info:	
+	mes @npcname$;
+	mes "Востоновление умения НЕ БЕСПЛАТНО!!";
+	mes "Расчёт востоновления таков: ^D5A50020000 Zeny x базовый уровень^000000.";
+	mes "Да ...на один базовый уровень требуется 20000 Zeny для востоновления.";
+	next;
+	mes @npcname$;
+	mes "Ох да, еще одна вещь!";
+	mes "Любые повозки, Сокол или Пеко, чуто у вас есть,";
+	mes "необходимо убрать, если Вы хотите восстановить умения.";
+	next;
+	mes @npcname$;
+	mes "Просто необходимо быть уверенным в том,";
+	mes "что умения востоновятся полностью.";	
+	close;
+	
+L_Reset:
+	mes @npcname$;
+	mes "Перед тем как начнем сеанс востоновляния,";
+	mes "Вы должны сначала сказать какой у вам базовый уровень."; 
+	next;
+	mes "^D5A500[" + strcharinfo(0) + "]^000000";
+	mes "Мой базовый уровень равен ^AA00AA" + BaseLevel + "BaseLv.^000000"; 
+	next;
+	set @zeny,BaseLevel*20000;
+	mes @npcname$;
+	mes "Всего понадобится ^529DFF" + @zeny + "Zeny^000000 для сеанся вотонавления ваших умений.";
+	next;
+	if(Zeny < @zeny) {
+		mes @npcname$;
+		mes "Мне кажется, что у Вас не достаточно денег.";
+		mes "Я подожду, когда вы наберете нужную сумму.";
+		emotion e_hmm;
+		close;
+	}
+	set Zeny, Zeny-@zeny;
+	set MISC_QUEST,MISC_QUEST | 1024;
+	resetskill;
+	mes @npcname$;
+	mes "Спасибо.";
+	emotion e_thx;
+	logmes "СОБЫТИЕ ВОСТОНАВЛЕНИЕ УМЕНИЙ";
+	close;
+}

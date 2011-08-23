@@ -1,0 +1,103 @@
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//===== Translated into Russian by MistiQ Group ============== 
+//= 0.1 Перевод с Английского. [Faust]
+//= 0.2 Корректировка. [mad_max]
+//===== eAthena Script ======================================= 
+
+valkyrie,44,58,5	script	Assassin Cross#Valkyrie	725,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Assassin Cross]";
+			mes "Мои поздравления...";
+			next;
+			mes "[Assassin Cross]";
+			mes "...";
+			next;
+			mes "[Assassin Cross]";
+			mes "...";
+			mes "......";
+			next;
+			mes "[Assassin Cross]";
+			mes "...";
+			mes "......";
+			mes "Храбрый";
+			mes "воин.";
+			close;
+		}
+		mes "[Assassin Cross]";
+		mes "Мы воины пустыни.";
+		mes "Никто не смеет";
+		mes "смотреть на нас с высока.";
+		mes "Никто...";
+		close;
+	}
+	else if (ADVJOB == Job_Assassin_Cross && Class == Job_Thief_High && JobLevel > 39) {
+		mes "[Assassin Cross]";
+		mes "Время пришло.";
+		mes "Мир нуждается в тебе...";
+		mes "Больше чем когда либо.";
+		next;
+		mes "[Assassin Cross]";
+		mes "Я прошу тебя продолжить жить в тени, но уже как умелого Убийцу с новыми возможностями.";
+		next;
+		mes "[Assassin Cross]";
+		mes "Ты пришел, чтобы стать";
+		mes "Assassin Cross?";
+		next;
+		if (select("Да.:Нет.") == 1) {
+			mes "[Assassin Cross]";
+			mes "Возвращайся,";
+			mes "когда будешь готов.";
+			next;
+			mes "[Assassin Cross]";
+			mes "Отважный";
+			mes "воин.";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Assassin Cross]";
+			mes "Ты все еще";
+			mes "не выучил все,";
+			mes "что мог.";
+			next;
+			mes "[Assassin Cross]";
+			mes "Используй все свои";
+			mes "Очки умений";
+			mes "и тогда приходи снова.";
+			close;
+		}
+		jobchange Job_Assassin_Cross;
+		set ADVJOB,0;
+		mes "[Assassin Cross]";
+		mes "Мои поздравления.";
+		mes "Теперь будучи Assassin Cross,";
+		mes "я надеюсь ты будешь бороться за светлоее будущее в окружающей нас тьме.";
+		close;
+	}
+	mes "[Assassin Cross]";
+	mes "Добро пожаловать";
+	mes "в Valhalla,";
+	mes "в Зал Славы.";
+	next;
+	mes "[Assassin Cross]";
+	mes "Пожалуйста";
+	mes "чувствуйте себя комфортно";
+	mes "пока находитесь здесь.";
+	mes "Храбрый воин.";
+	close;
+}

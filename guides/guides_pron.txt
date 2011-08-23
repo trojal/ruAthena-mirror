@@ -1,0 +1,240 @@
+//===== eAthena Script ======================================= 
+//= Prontera Guides
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.6a
+//===== Compatible With: ===================================== 
+//= eAthena  SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Guides for the City of Prontera
+//===== Additional Comments: ================================= 
+//= Fully working
+//= v1.1 Now using duplicate command.
+//= 1.2 Optimized, updated common guide names [Lupus]
+//= 1.3 Updated the guide according to how it is on iRO, thanks [MasterOfMuppets]
+//=     to Muad_Dib
+//= 1.4 Fitted the many lines into 1 or 2, and corrected some typos [erKURITA]
+//= 1.5 Removed Duplicates [Silent]
+//= 1.6 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//= 1.6a Fixed some errors with the loop. [Samuray22]
+//	-Thanks to $ephiroth.
+//= 1.6b Fixed a Problem with Unnecesary RGB Values. [Samuray22]
+//	-Thanks to Brainstorm.
+//===== Translated into Russian: =============================
+//= Адаптация [Vorp]
+//============================================================
+
+prontera,154,187,4	script	Guide#prt::PrtGuide	105,{
+	cutin "prt_soldier",2;
+	mes "[Гид Пронтеры]";
+	mes "Добро пожаловать в Пронтеру,";
+	mes "прекрасную столицу";
+	mes "Королевства Рун-Мидгард. Если";
+	mes "у Вас есть вопросы или нужна^FFFFFF33333^000000 помощь в поиске^FFFFFFco^000000 по городу, не стесняйтесь спрашивать.";
+	set .@loop1,1;
+	while (.@loop1) {
+		next;
+		switch(select("Городской путеводитель.:Убрать отметки с мини-карты:Справка:Отмена")) {
+		case 1:
+			mes "[Гид Пронтеры]";
+			mes "Пожалуйста";
+			mes "выберите чтобы Вы";
+			mes "хотели найти.";
+			if (.@compass_check == 0) {
+				mes "Может Вы хотите";
+				mes "отсавить метки";
+				mes "на вашей мини-карте?";
+				next;
+				if (select("Да:Нет") == 1) set .@compass_check,1;
+			}
+			set .@loop2,1;
+			while (.@loop2) {
+				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				else next;
+
+				switch(select("Ассоциация мечников:^0000FFЦерковь^000000:Рыцари Пронтеры:Оружейный магазин:Товарная лавка:Гостиница:Торговая биржа:Пивная:Библиотеки:Биржа Труда:Замок Пронтеры:Ратуша:Отмена")) {
+				case 1:
+					mes "[Гид Пронтеры]";
+					mes "В Ассоциация мечников,";
+					mes "можно получить профессию ";
+					mes "мечника , но Ассоциация";
+					mes "переехала в Излюд. Это здание";
+					mes "сейчас пустует.";
+					if (.@compass_check)
+						viewpoint 1,237,41,4,0x00FF00;
+					break;
+				case 2:
+					mes "[Гид Пронтеры]";
+					mes "В церкви Пронтеры";
+					mes "можно получить профессию";
+					mes "послушника и священника,";
+					mes "она находитса в северо-восточном";
+					mes "углу Пронтеры.";
+					if (.@compass_check)
+						viewpoint 1,236,316,5,0xFF0000;
+					break;
+				case 3:
+					mes "[Гид Пронтеры]";
+					mes "Гильдия рыцарей,";
+					mes "отвечает за безопасность";
+					mes "нашей столицы, находитса она";
+					mes "в северо-западном углу города.";
+					if (.@compass_check)
+						viewpoint 1,46,345,6,0x00FF00;
+					break;
+				case 4:
+					mes "[Гид Пронтеры]";
+					mes "Оружейный магазин";
+					mes "расположен на северо-востоке";
+					mes "от фонтана в центре города.";
+					if (.@compass_check)
+						viewpoint 1,175,220,7,0xFF00FF;
+					break;
+				case 5:
+					mes "[Гид Пронтеры]";
+					mes "Универсам";
+					mes "расположен на северо-западе";
+					mes "от фонтана в центре города.";
+					if (.@compass_check)
+						viewpoint 1,134,221,8,0xFF00FF;
+					break;
+				case 6:
+					mes "[Гид Пронтеры]";
+					mes "Гостиницы Пронтеры";
+					mes "расположены на западе";
+					mes "и востоке от фонтана";
+					mes "в центре города.";
+					if (.@compass_check) {
+						viewpoint 1,204,191,9,0xFF00FF;
+						viewpoint 1,107,192,10,0xFF00FF;
+					}
+					break;
+				case 7:
+					mes "[Гид Пронтеры]";
+					mes "Факторию";
+					mes "можно найти на юго-востоке";
+					mes "от фонтана в центре города.";
+					if (.@compass_check)
+						viewpoint 1,179,184,11,0x00FF00;
+					break;
+				case 8:
+					mes "[Гид Пронтеры]";
+					mes "Пивнушка расположена";
+					mes "на юго-востоке от фонтана,";
+					mes "сразу за Факторией.";
+					if (.@compass_check)
+						viewpoint 1,208,154,12,0x00FF00;
+					break;
+				case 9:
+					mes "[Гид Пронтеры]";
+					mes "Библиотеки чуть севернее";
+					mes "фонтана, находятса";
+					mes "по обе стороны дороги";
+					if (.@compass_check) {
+						viewpoint 1,120,267,13,0x00FF00;
+						viewpoint 1,192,267,14,0x00FF00;
+					}
+					break;
+				case 10:
+					mes "[Гид Пронтеры]";
+					mes "Банк находитса";
+					mes "на юго-западе";
+					mes "от фонтана в центре города.";
+					if (.@compass_check)
+						viewpoint 1,133,183,15,0x00FF00;
+					break;
+				case 11:
+					mes "[Гид Пронтеры]";
+					mes "Замок Пронтеры";
+					mes "находитса в северной части города.";
+					mes "Если тебе надо попасть";
+					mes "на локации севернее столицы,";
+					mes "то просто пройди";
+					mes "через замок.";
+					if (.@compass_check)
+						viewpoint 1,156,360,16,0x00FF00;
+					break;
+				case 12:
+					mes "[Гид Пронтеры]";
+					mes "Мэрия";
+					mes "расположена в";
+					mes "юго-западном углу";
+					mes "города Пронтера.";
+					if (.@compass_check)
+						viewpoint 1,75,91,17,0x01FF01;
+					break;
+				case 13:
+					mes "[Гид Пронтеры]";
+					mes "Можешь выбрать ''Убрать";
+					mes "метки с мини-карты'' если";
+					mes "они тебе больше не нужны.";
+					set .@loop2,0;
+					break;
+				}
+			}
+			break;
+		case 2:
+			viewpoint 2,237,41,4,0x00FF00;
+			viewpoint 2,237,41,5,0x0000FF;
+			viewpoint 2,46,345,6,0x00FF00;
+			viewpoint 2,175,220,7,0xFF0000;
+			viewpoint 2,134,221,8,0xFF0000;
+			viewpoint 2,204,191,9,0xFF0000;
+			viewpoint 2,107,192,10,0xFF0000;
+			viewpoint 2,179,184,11,0x00FF00;
+			viewpoint 2,208,154,12,0x00FF00;
+			viewpoint 2,120,267,13,0x00FF00;
+			viewpoint 2,192,267,14,0x00FF00;
+			viewpoint 2,133,183,15,0x00FF00;
+			viewpoint 2,156,360,16,0x00FF00;
+			viewpoint 2,75,91,17,0x00FF00;
+			set .@compass_check,0;
+			break;
+		case 3:
+			mes "[Гид Пронтеры]";
+			mes "Достижения в науке и магии,";
+			mes "позволили улучшить нашу";
+			mes "информационную систему.";
+			mes "Теперь мы можем отмечать";
+			mes "на вашей мини-карте всё,";
+			mes "для удобной навигации.";
+			next;
+			mes "[Гид Пронтеры]";
+			mes "Ваша мини-карта расположена";
+			mes "в верхнем правом углу экрана.";
+			mes "Если вы не видите её, нажмите";
+			mes "сочетание клавиш Ctrl + Tab или";
+			mes "кнопку ''Карта'' в окне Основной Информации.";
+			next;
+			mes "[Гид Пронтеры]";
+			mes "На вашей мини-карте,";
+			mes "щелкните на символах ''+'' и";
+			mes "''-'', чтобы изменить масштаб";
+			mes "на Мини-карте. Мы надеемся,";
+			mes "что вам понравится";
+			mes "в городе Пронтера.";
+			break;
+		case 4:
+			mes "[Гид Пронтеры]";
+			mes "Чтож, искатель приключений...";
+			mes "Я надеюсь ваше путешествие";
+			mes "по Рун-Мидгард";
+			mes "будет интересным и не опасным.";
+			close2;
+			set .@loop1,0;
+			break;
+		}
+	}
+	cutin "prt_soldier",255;
+	end;
+}
+
+prontera,282,208,2	duplicate(PrtGuide)	East Gate-Guide	105
+
+prontera,29,200,6	duplicate(PrtGuide)	West Gate-Guide	105
+
+prontera,160,29,0	duplicate(PrtGuide)	South Gate-Guide	105
+
+prontera,151,330,4	duplicate(PrtGuide)	North Gate-Guide	105

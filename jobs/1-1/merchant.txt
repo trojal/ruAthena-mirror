@@ -1,0 +1,1152 @@
+//===== eAthena Script ======================================= 
+//= Merchant Job Quest
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 2.1
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Job quest for Merchant classes
+//===== Additional Comments: ================================= 
+//= Fully working
+//= v1.1 Added instant job change for High Novice [Lupus]
+//= v1.3 Added Baby Class support [Lupus]
+//= v1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
+//= 1.5 Changed Prontera->Izlude teleport price to 600 [Lupus]
+//= 1.5.1 Removed Duplicates [Silent]
+//= 1.5.2 Now saves/restores all quest skills [Lupus]
+//= 1.6 Merged back JFunc, CHANGED NUMBERS TO CONSTANTS [Lupus]
+//= 1.7 Updated to use Free Ticket for Kafra [Lupus]
+//= 1.8 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
+//=	No longer uses function "F_ToHigh"
+//= 1.9 Bugfixes, thanks to Barron-Monster. [L0ne_W0lf]
+//= 1.9a Added a missing next; (Barron-Monster) [L0ne_W0lf]
+//= 1.9b Typo. "nextl" -> "next;" (Barron-Monster) [L0ne_W0lf]
+//= 2.0 Should "fix" the problem with the Biliban Kafra. [L0ne_W0lf]
+//= 2.1 Fixed mistake in condition check. [L0ne_W0lf]
+//===== Translated into Russian: =============================
+//= ...
+//============================================================ 
+
+alberta_in,53,43,6	script	Merchant#mer	86,{
+	if (Upper == 1) {
+		if (Class == Job_Novice_High && (ADVJOB == Job_Whitesmith || ADVJOB == Job_Creator)) {
+			mes "[Chief Mahnsoo]";
+			mes "Давненько не виделись!";
+			mes "Эй, мне кажется ты не закончил";
+			mes "свое дело...";
+			mes "Что случилось?";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Вау!";
+			mes "Ты действительно был в Вальхалле?! Да, ты прошел долгий путь...";
+			next;
+			if (getskilllv("NV_BASIC") < 9) {
+				mes "[Chief Mahnsoo]";
+				mes "Хммм.....";
+				mes "Что то мне подсказывает, что ты ещё не готов стать Торговцем. Давай ка, дружок, выучи до конца Основные Навыки.";
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Не беспокойся, наши двери всегда будут открыты для тебя. Возвращайся когда будешь готов, хорошо?";
+				close;
+			}
+			mes "[Chief Mahnsoo]";
+			mes "Я думаю, нам было предначертано встретиться вновь. И снова, я назначаю тебя Торговцем, носи этот титул с гордостью!";
+			next;
+			skill 143,0,0;
+			jobchange Job_Merchant_High;
+			skill 153,1,0;
+			skill 154,1,0;
+			skill 155,1,0;
+			mes "[Chief Mahnsoo]";
+			mes "Эхх~ Как в старые добрые времена! Хорошо, так держать!";
+			close;
+		}
+		else {
+			mes "[Chief Mahnsoo]";
+			mes "^333333*Вздох..*^000000";
+			mes "Я так скучаю...";
+			mes "Когда же придет весточка от моей любимой Blossom?";
+			close;
+		}
+	}
+	if (BaseJob == Job_Merchant) {
+		mes "[Chief Mahnsoo]";
+		mes "Привет!";
+		mes "Как здоровье,";
+		mes "Как торговля?";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Коль имеешь дело ";
+		mes "с деньгами, ";
+		mes "будь готов к неожиданностям,";
+		mes "Правда?";
+		close;
+	}
+	else if (BaseJob != Job_Merchant && BaseJob != Job_Novice) {
+		mes "[Chief Mahnsoo]";
+		mes "Мы, Торговцы ненавидим двуличных людей. С ними опасно иметь дело.";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Люди, которые всегда ищут выгоду с продажи вещей другим людям по бешенной цене, просто делают на этом деньги, и потом их тратят - отвратительные люди.";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Чтож,в любом случае, мы только принимаем заявки Новичков на получение звания Торговца. Но я ценю твою заинтересованность нашей работой.";
+		close;
+	}
+	else if (job_merchant_q == 9) {
+		mes "[Chief Mahnsoo]";
+		mes "Привет,";
+		mes ""+ strcharinfo(0) +".";
+		set job_merchant_q,0;
+		set job_merchant_q2,0;
+		set quest_alb_01,0;
+		mes "К сожалению, ты не смог получить Лицензию Торговца в этот раз .";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Я выброшу твою заявку, приходи в любое время, когда захочешь попробовать снова.";
+		close;
+	}
+	else if (job_merchant_q == 8 || job_merchant_q == 7) {
+		mes "[Chief Mahnsoo]";
+		mes "Привет,";
+		mes ""+ strcharinfo(0) +".";
+		mes "У меня хорошие";
+		mes "новости для тебя!";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Гильдия Торговцев приняла твою заявку. Ты доказал, что готов стать Торговцем! .";
+		if (job_merchant_q == 7) {
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "И остался один момент, остаток членского взноса, 500 Зеней, пожалуйста.";
+			mes "Ты готов?";
+			next;
+			switch(select("Заплатить членский взнос:Уйти")) {
+			case 1:
+				mes "[Chief Mahnsoo]";
+				if (Zeny < 500) {
+					mes "Эммм..";
+					mes "Я полагаю, у тебя сейчас нет таких денег?.";
+					next;
+					mes "[Chief Mahnsoo]";
+					mes "Пожалуйста, возвращайтесь, когда деньжатами разживешься.";
+					close;
+				}
+				set zeny,zeny-500;
+				mes "Ага...!";
+				mes "Теперь";
+				mes "членский взнос";
+				mes "оплачен.";
+				break;
+			case 2:
+				mes "[Chief Mahnsoo]";
+				mes "Я полагаю тебе нужно время, чтобы достать Зеней. Пожалуйста возвращайся";
+				mes "как только будешь готов.";
+				close;
+			}
+		}
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Поздравляю!";
+		callfunc "Job_Change",Job_Merchant;
+		callfunc "F_ClearJobVar";
+		mes "Я очень рад, что ты вступил в Гильдию Торговцев. Я надеюсь ты примешь активное участие в торговле Королевства Мидгарт.";
+		next;
+		if (quest_alb_01 == 1) {
+			mes "[Chief Mahnsoo]";
+			mes "*мгм* Ииии позволь дать тебе немного денег за доставку весточки для моей Blossom.";
+			mes "Надеюсь ты поможешь мне, в следующий раз~";
+			set zeny,zeny+200;
+			set quest_alb_01,2;
+		}
+		else {
+			mes "[Chief Mahnsoo]";
+			mes "И как там весточка? Забыл совсем? ОоО! Отличная Работа!";
+		}
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Наша цель- контролировать 20% мировой прибыли! Нам нужны такие молодые, предприимчивые люди, как ты!";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Но ко всему, мы будем счастливы заработав побольше денег.";
+		mes "Но мы все знаем это~";
+		close;
+	}
+	else if (job_merchant_q <= 6 && job_merchant_q != 0) {
+		mes "[Chief Mahnsoo]";
+		if (job_merchant_q2 == 1 || job_merchant_q2 == 2) {
+			mes "Для начала, получи посылку на складе, затем доставь в Тренировочный Лагерь Мечников Пронтеры.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Когда доберешься, отдай посылку Сотруднику Кафра-Сервиса она стоит там рядом. Её зовут Blossom. Все понял?";
+			next;
+			if (job_merchant_q2 == 1) {
+				mes "[Chief Mahnsoo]";
+				mes "Запомни, номер посылки ^3355FF2485741^000000.";
+			}
+			else {
+				mes "[Chief Mahnsoo]";
+				mes "Запомни, номер посылки ^3355FF2328137^000000.";
+			}
+		}
+		else if (job_merchant_q2 == 3 || job_merchant_q2 == 4) {
+			mes "Для начала, получи посылку на складе, и доставь ее в Гильдию Магов в Геффене.";
+			next;
+			if (job_merchant_q2 == 3) {
+				mes "[Chief Mahnsoo]";
+				mes "Когда доберешься, отдай посылку Mage Guildsman. Запомни, номер посылки ^3355FF2989396^000000.";
+			}
+			else {
+				mes "[Chief Mahnsoo]";
+				mes "Когда доберешься, отдай посылку Mage Guildsman. Запомни, номер посылки ^3355FF2191737^000000.";
+			}
+		}
+		else if (job_merchant_q2 == 5 || job_merchant_q2 == 6) {
+			mes "Для начала, получи посылку на складе, затем доставь ее в Моррок.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Тебе нужно будет найти Java Dullihan, Dyemaker, и вручить то что он заказал.";
+			next;
+			if (job_merchant_q2 == 5) {
+				mes "[Chief Mahnsoo]";
+				mes "Только он немного забывчив, так что отдай ее одному из его учеников. Запомни, серийный номер посылки ^3355FF3012685^000000.";
+			}
+			else {
+				mes "[Chief Mahnsoo]";
+				mes "Только он немного забывчив, так что отдай ее одному из его учеников. Запомни, номер посылки ^3355FF3487372^000000.";
+			}
+		}
+		else if (job_merchant_q2 == 7 || job_merchant_q2 == 8) {
+			mes "Для начала, получи посылку на складе, затем доставь ее Сотруднику Кафра-Сервиса на Byalan Island. Ее зовут Blossom.";
+			next;
+			if (job_merchant_q2 == 7) {
+				mes "[Chief Mahnsoo]";
+				mes "Запомни, номер посылки ^3355FF3318702^000000.";
+			}
+			else {
+				mes "[Chief Mahnsoo]";
+				mes "Запомни, серийный номер посылки ^3355FF3543625^000000.";
+			}
+		}
+		if (job_merchant_q2 == 7 || job_merchant_q2 == 8) {
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Ииииии...";
+			mes "Не забудь доставить сообщения для меня~";
+		}
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Не забудь куда нужно доставить посылку, и ее серийный номер.";
+		mes "Тебе нужно будет его сказать";
+		mes "заведующему складом.";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Зав.складом в комнате";
+		mes "справа от меня. Можешь поговорить";
+		mes "с ним";
+		mes "и он тебе поможет.";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "После доставки посылки возвращайся к Заведующему Складом, и отдай ему квитанцию.";
+		mes "Затем возвращайся,";
+		mes "поговорим.";
+		next;
+		mes "[Chief Mahnsoo]";
+		mes "Все понятно? вопросов нет?";
+		mes "Великолепно,";
+		mes "отправляйся.";
+		mes "Береги себя!";
+		close;
+	}
+	else if (job_merchant_q == 0) {
+		mes "[Chief Mahnsoo]";
+		mes "Итак, что тебя привело";
+		mes "в Гильдию Торговцев?";
+		mes "Могу я ";
+		mes "чем-нибудь помочь?";
+		next;
+		switch(select("Я хочу стать Торговцем.:Расскажи мне о торговцах.:А какие требования?:Ничего.")) {
+		case 1:
+			mes "[Chief Mahnsoo]";
+			mes "Ты хочешь";
+			mes "стать торговцем?";
+			mes "Ну чтож...";
+			next;
+			if (getskilllv("NV_BASIC") < 9) {
+				mes "[Chief Mahnsoo]";
+				mes "Во-первых тебе нужно быть Novice с Job уровнем 10. После того как станешь, выучи все Основные Навыки.";
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Мы не просто";
+				mes "делаем деньги!";
+				mes "У нас есть традиции, мы с гордостью их соблюдаем и принимаем только Достойных претендентов!";
+				close;
+			}
+			mes "[Chief Mahnsoo]";
+			mes "Хорошо, тебе нужно заполнить эту форму и приготовь 1,000 Зеней, это твой Членский взнос.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Ох...!";
+			mes "Если у тебя нет всей суммы сейчас,";
+			mes "Я возьму Половину сейчас.";
+			mes "Остаток заплатишь потом";
+			mes "пройди испытание и получи свою";
+			mes "лицензию Торговца.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Ты сам то как думаешь?";
+			mes "Ты готов?";
+			next;
+			if (select("Конечно.:Эммм, может попозже...") ==1 ) {
+				mes "[Chief Mahnsoo]";
+				mes "Давай ка проверим";
+				mes "все ли ты заполнил";
+				mes "в заявке...";
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Хмм ";
+				mes "" + strcharinfo(0) + "...";
+				mes "Красивое имя.";
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Эта заявка будет заверена";
+				mes "если ты";
+				mes "полностью оплатишь Членский взнос.";
+				mes "как предпочитаешь";
+				mes "оплачивать?";
+				next;
+				switch(select("Заплатить все 1,000 Зеней сейчас!:Сейчас 500 Зеней, остальное потом.:Уйти")) {
+				case 1:
+					mes "[Chief Mahnsoo]";
+					if (Zeny >= 1000) {
+						set job_merchant_q,2;
+						set zeny,zeny-1000;
+						mes "Хорошо~";
+						mes "Итак 1,000 зеней.";
+						mes "Великолепно!";
+					}
+					else {
+						mes "Видимо у тебя нет сейчас всей суммы. Почему бы не заплатить 500 зеней сейчас? Подумай об этом.";
+						close;
+					}
+					break;
+				case 2:
+					mes "[Chief Mahnsoo]";
+					if (Zeny >= 500) {
+						set job_merchant_q,1;
+						set zeny,zeny-500;
+						mes "Посмотрим...";
+						mes "Это 500 зеней. Хоть я и думаю что выплата по частям не годится для Торговца. Однако для учащихся, это вполне нормально.";
+					}
+					else {
+						mes "Хмм...";
+						mes "У тебя же нет даже половины Членского взноса. пожалуйста возвращайся когда достанешь хотя бы 500 зеней.";
+						close;
+					}
+					break;
+				case 3:
+					mes "[Chief Mahnsoo]";
+					mes "Возвращайся в любое время.";
+					mes "Хорошо?";
+					close;
+				}
+			}
+			else {
+				mes "[Chief Mahnsoo]";
+				mes "У тебя не хватает денег сейчас? Не проблема. Не торопись и возвращайся когда будешь";
+				mes "готов, хорошо?";
+				close;
+			}
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Хорошо, теперь ты в списке претендентов. И позволь, до того как мы начнем, сказать тебе одну вещь.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Есть некоторые люди, жадные и глупые, они даже представления не имеют каково быть Торговцем.";
+			mes "Надеюсь ты не такой.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Итак, сейчас";
+			mes "я тебя проинструктирую";
+			mes "как, ";
+			mes "пройти испытание и получить Лицензию Торговца.";
+			next;
+			mes "[Chief Mahnsoo]";
+			switch(rand(1,4)) {
+			case 1:
+				mes "Для начала, получи посылку на складе, затем доставь ее в Тренировочный Лагерь Мечников Пронтеры.";
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Когда доберешься, отдай посылку Сотруднику Кафра-Сервиса она стоит там рядом. Её зовут Blossom.";
+				mes "Все понял?";
+				callsub S_GiveSerial,2485741,1,2328137,2;
+				break;
+			case 2:
+				mes "Для начала,получи посылку на складе, и доставь ее в Гильдию Магов в Геффене. Когда доберешься, зайди к Mage Guildsman.";
+				callsub S_GiveSerial,2989396,3,2191737,4;
+				break;
+			case 3:
+				mes "Для начала, получи посылку на складе, и доставь ее в Morroc. Тебе нужно будет найти Java Dullihan, Dyemaker.";
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Только он немного забывчив, так что отдай ее одному из его учеников.";
+				callsub S_GiveSerial,3012685,5,3487372,6;
+				break;
+			case 4:
+				mes "Для начала, получи посылку на складе, затем доставь ее Сотруднику Кафра-Сервиса на Byalan Island.";
+				callsub S_GiveSerial,3318702,7,3543625,8;
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Эммм";
+				mes "и у меня личная";
+				mes "просьба";
+				mes "Сделаешь?";
+				next;
+				mes "[Chief Mahnsoo]";
+				mes "Отдай ей это письмо, когда доставишь посылку. Пожалуйста~";
+				getitem 1072,1; //Delivery_Message
+				break;
+			}
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Не забудь куда нужно доставить посылку, и ее серийный номер. Тебе нужно будет его сказать Заведующему Скалдом, справа от меня.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "После доставки, отдай квитанцию Заведующему Складом, Затем возвращайся ко мне.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Все ясно?";
+			mes "Вопросов нет?";
+			mes "Великолепно.";
+			mes "Береги себя!";
+			close;
+		case 2:
+			mes "[Chief Mahnsoo]";
+			mes "Торговец?";
+			mes "Нууу, мы обычно продаем товары, чтобы получить прибыль.";
+			mes "это и есть путь Торговца.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Я полагаю мы не лучшие в битвах, и у нас нет множества специальных атак. Да и вылечить себя мы не можем...";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Но мы можем покупать товары у NPC по низким ценам и продавать их чуть подороже другим людям";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Наше самое сильное умение 'Mammonite.' Сила Mammonite идет от гнева";
+			mes "мы выбрасываем деньги, чтобы со злостью нанести удар.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Выброшенные деньги";
+			mes "Разжигают ярость в любом Торговце!";
+			mes "Подумай об этом";
+			mes "Заставь мою кровь кипеть!";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Как бы то ни было, мы можем использовать любое";
+			mes "оружие, кроме Луков, Жезлов, и Двуручных Мечей. Но мы всегда можем продать их.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Да...";
+			mes "Мы все таки торговцы";
+			mes "и думаем о деньгах всегда...";
+			close;
+		case 3:
+			mes "[Chief Mahnsoo]";
+			mes "Есть три требования, которым ты должен полностью соответствовать чтобы стать Торговцем.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Во-первых, тебе нужно быть Novice с Job уровнем 10. После того как станешь,выучи все Основные Навыки.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "Во-вторых, Ты должен оплатить Членский Взнос, это 1,000 Зеней. Любой кандидат на звание Торговца должен с легкостью достать их.";
+			next;
+			mes "[Chief Mahnsoo]";
+			mes "В-третьих, пройти испытание, чтобы получить Лицензию Торговца. Тебе нужно будет доставить специальную посылку, определенному человеку.";
+			close;
+		case 4:
+			close;
+		}
+	}
+
+S_GiveSerial:
+	next;
+	mes "[Chief Mahnsoo]";
+	mes "Запомни...";
+	if (rand(1)) {
+		mes "Серийный номер";
+		mes "посылки";
+		mes "^3355FF"+getarg(0)+"^000000.";
+		set job_merchant_q2,getarg(1);
+	}
+	else {
+		mes "Серийный номер";
+		mes "Посылки";
+		mes "^3355FF"+getarg(2)+"^000000.";
+		set job_merchant_q2,getarg(3);
+	}
+	return;
+}
+
+alberta_in,28,29,2	script	Merchant Guildsman#mer	83,{
+	if (BaseJob == Job_Merchant) {
+		mes "[Union Staff Kay]";
+		mes "Привет.";
+		mes "Как поживаешь?";
+		close;
+	}
+	else if (BaseJob != Job_Merchant && BaseJob != Job_Novice) {
+		mes "[Union Staff Kay]";
+		mes "Эй паренек. У нас нет вакансий для работы, на пол ставки. Если хочешь подзаработать, тебе нужно еще где-то поискать.";
+		close;
+	}
+	else if (job_merchant_q == 9) {
+		mes "[Union Staff Kay]";
+		mes "Эй парень. Да ты.";
+		mes "Если хочешь начать заново, иди к Mahnsoo в другой комнате. Затем возвращайся, поговорим.";
+		close;
+	}
+	else if (job_merchant_q == 8 || job_merchant_q == 7) {
+		mes "[Union Staff Kay]";
+		mes "Отлично! Все великолепно! Я доложу Главе Гильдии. Сейчас иди и поговори с Chief Mahnsoo.";
+		close;
+	}
+	else if (job_merchant_q == 6 || job_merchant_q == 5) {
+		mes " [Union Staff Kay] ";
+		mes "Хорошо? Давай проверим. Тебя зовут " + strcharinfo(0) + "? Мгм, ты должен был доставить посылку...";
+		next;
+		mes "[Union Staff Kay]";
+		if (job_merchant_q2 == 1 || job_merchant_q2 == 2)
+			mes "В Тренировочный Лагерь! Ты виделся с Кафрой в Пронтере?! Везунчик~ ...Квитанция?";
+		else if (job_merchant_q2 == 3 || job_merchant_q2 == 4)
+			mes "в Академию Магов Геффена. Квитанция?";
+		else if (job_merchant_q2 == 5 || job_merchant_q2 == 6)
+			mes "Dyemaker в Моррок. Не плохо, квитанция?";
+		else if (job_merchant_q2 == 7 || job_merchant_q2 == 8)
+			mes "Ох хохохо~! Кафре на острове Byalan?! Превосходно! Квитанцию не забыл?";
+
+		if (job_merchant_q2 == 1 && countitem(1073) != 0)
+			delitem 1073,1; //Merchant_Voucher_1
+		else if (job_merchant_q2 == 2 && countitem(1074) != 0)
+			delitem 1074,1; //Merchant_Voucher_2
+		else if (job_merchant_q2 == 3 && countitem(1075) != 0)
+			delitem 1075,1; //Merchant_Voucher_3
+		else if (job_merchant_q2 == 4 && countitem(1076) != 0)
+			delitem 1076,1; //Merchant_Voucher_4
+		else if (job_merchant_q2 == 5 && countitem(1077) != 0)
+			delitem 1077,1; //Merchant_Voucher_5
+		else if (job_merchant_q2 == 6 && countitem(1078) != 0)
+			delitem 1078,1; //Merchant_Voucher_6
+		else if (job_merchant_q2 == 7 && countitem(1079) != 0)
+			delitem 1079,1; //Merchant_Voucher_7
+		else if (job_merchant_q2 == 8 && countitem(1080) != 0)
+			delitem 1080,1; //Merchant_Voucher_8
+		else {
+			next;
+			set job_merchant_q,9;
+			mes " [Union Staff Kay] ";
+			mes "Подожди минутку.";
+			mes "Где квитанция?";
+			mes "Что случилось?";
+			next;
+			mes " [Union Staff Kay] ";
+			mes "Если у тебя нет квитанции, значит ты не справился с заданием! Тебе лучше поговорить с Mahnsoo если хочешь попробовать снова. Будь внимательнее следующий раз!";
+			close;
+		}
+		next;
+		mes " [Union Staff Kay] ";
+		mes "...Супер! Все идеально! Я доложу Главе Гильдии. Сейчас тебе нужно поговорить с Chief Mahnsoo.";
+		close2;
+		if (job_merchant_q == 6)
+			set job_merchant_q,8;
+		else if (job_merchant_q == 5)
+			set job_merchant_q,7;
+		end;
+	}
+	else if (job_merchant_q == 4 || job_merchant_q == 3 && countitem(1081) == 0 && countitem(1082) == 0 && countitem(1091) == 0) {
+		mes " [Union Staff Kay] ";
+		mes "МММ?";
+		mes "Ты вернулся?";
+		mes "Доставил";
+		mes "посылку?";
+		next;
+		if (select("*Плак* Я потерял ее.:Запросто!") == 1) {
+			set job_merchant_q,9;
+			mes "[Union Staff Kay]";
+			mes "Ты что прикалываешься? Ты завалишь испытание, если посеешь посылку!";
+			next;
+			mes "[Union Staff Kay]";
+			mes "Эххх парень. Если захочешь пройти тест заново, поговори с Mahnsoo? Он даст тебе еще один шанс!";
+			close;
+		}
+		mes "[Union Staff Kay]";
+		mes "Хех...";
+		mes "Лады...";
+		close;
+	}
+	else if (job_merchant_q == 4 || job_merchant_q == 3 && countitem(1081) != 0 || countitem(1082) != 0 || countitem(1091) != 0) {
+		mes "[Union Staff Kay]";
+		mes "Эй, ты что тут встал? Не пора ли тебе отправляться?";
+		next;
+		if (select("I need a new package.:Oh, yeah. You're right!") == 1) {
+			if (countitem(1081) == 0 && countitem(1082) == 0 && countitem(1083) == 0 && countitem(1091) == 0) {
+				mes "[Union Staff Kay]";
+				mes "Ааа--?";
+				mes "Итак, куда посылку";
+				mes "дел?";
+				mes "Где она?!";
+				next;
+				if (select("*Плак* Я потерял ее!:Да тут она,тут.") == 1) {
+					set job_merchant_q,9;
+					mes "[Union Staff Kay]";
+					mes "Ты...";
+					mes "Ты потерял?!";
+					mes "Все, проваливай, ты не выполнил задание!";
+					next;
+					mes "[Union Staff Kay]";
+					mes "*Вздох* Если хочешь попробовать снова, иди поговори с Mahnsoo, он в соседней комнате.";
+					close;
+				}
+				mes "[Union Staff Kay]";
+				mes "Хех.";
+				mes "Я полагаю";
+				mes "ты ее потерял.";
+				mes "Тебе ненужна";
+				mes "новая.";
+				close;
+			}
+			mes "[Union Staff Kay]";
+			mes "*Вздох* Парень, ты уже начинаешь надоедать. Подожди, я вычеркну тебя нафик...";
+			if (countitem(1081) != 0)
+				delitem 1081,1; //Merchant_Box_1
+			else if (countitem(1082) != 0)
+				delitem 1082,1; //Merchant_Box_2
+			else if (countitem(1091) != 0)
+				delitem 1091,1; //Merchant_Box_Etc
+			if (job_merchant_q == 4)
+				set job_merchant_q,2;
+			else if (job_merchant_q == 3)
+				set job_merchant_q,1;
+			next;
+			mes "[Union Staff Kay]";
+			mes "Не отвлекай, мне тут порядок надо навести, попозже заходи.";
+			close;
+		}
+		mes "[Union Staff Kay]";
+		mes "Вот отстой...";
+		close;
+	}
+	else if ((job_merchant_q == 0 || job_merchant_q == 1 || job_merchant_q == 2)) {
+		set where_village,0;
+		mes "[Union Staff Kay]";
+		mes "МММ??.";
+		mes "что привело";
+		mes "тебя к нам?";
+		next;
+		switch(select("Мое испытание.:Я ищу работку, на пол ставки.:Да не, ничего.")) {
+		case 1:
+			mes "[Union Staff Kay]";
+			mes "Ясненько.";
+			mes "Хорошо.";
+			mes "И как";
+			mes "тебя зовут?";
+			mes "" + strcharinfo(0) + "...?";
+			next;
+			if (job_merchant_q == 0) {
+				mes "[Union Staff Kay]";
+				mes "Хех, тебя в списке нет. Ты заявку подавал?";
+				next;
+				mes "[Union Staff Kay]";
+				mes "Чтобы подать заявку ты должен поговорить с Chief Mahnsoo.";
+				mes "Он в приемной.";
+				close;
+			}
+			mes "[Union Staff Kay]";
+			mes "Ага. Держи посылку. И куда ее надо доставить?";
+			next;
+			switch(select("Пронтера.:Геффен.:Моррок.:Остров Byalan.")) {
+			case 1: set .@where_village,1; break;
+			case 2: set .@where_village,2; break;
+			case 3: set .@where_village,3; break;
+			case 4: set .@where_village,4; break;
+			}
+			mes "[Union Staff Kay]";
+			mes "Ага, сейчас напиши серийный номер посылки. Если хочешь отказаться напиши 0. ";
+			next;
+			while(1) {
+				while(1) {
+					input .@input;
+					if (.@input == 0) {
+						mes "[Union Staff Kay]";
+						mes "Точно отказываешься?";
+						if (select("Ага.:Дай попробовать еще раз.") == 1) {
+							mes "Так и запишем... 'Отказался'.";
+							close;
+						}
+						next;
+					}
+					else if (.@input < 1000000 || .@input > 5000000) {
+						mes "[Union Staff Kay]";
+						mes "Эй ой ой. Номер не тот! напиши правильный, от 1000000 до 5000000. Понял?";
+						next;
+					}
+					else 
+						break;
+				}
+				mes "[Union Staff Kay]";
+				if (.@where_village == 1)
+					mes "Доставить в Пронтеру. Серийный номер " + .@input + ". Все так?";
+				else if (.@where_village == 2)
+					mes "Доставить в Геффен. Фига се! Далековато! Серийный номер " + .@input + ". Согласен?";
+				else if (.@where_village == 3)
+					mes "Доставить в Моррок. Довольно далеко! Серийный номер " + .@input + ". Все так?";
+				else
+					mes "Счастливчик! Доставить на остров Byalan. Серийный номер " + .@input + ". Согласен?";
+				next;
+				if (select("Именно.:Уууупс! Номер нетот!") == 1) {
+					break;
+				}
+			}
+			if (.@where_village == 1) {
+				if (job_merchant_q2 == 1 && .@input == 2485741)
+					getitem 1081,1; //Merchant_Box_1
+				else if (job_merchant_q2 == 2 && .@input == 2328137)
+					getitem 1082,1; //Merchant_Box_2
+				else
+					getitem 1091,1; //Merchant_Box_Etc
+			}
+			else if (.@where_village == 2) {
+				if (job_merchant_q2 == 3 && .@input == 2989396)
+					getitem 1081,1; //Merchant_Box_1
+				else if (job_merchant_q2 == 4 && .@input == 2191737)
+					getitem 1082,1; //Merchant_Box_2
+				else
+					getitem 1091,1; //Merchant_Box_Etc
+			}
+			else if (.@where_village == 3) {
+				if (job_merchant_q2 == 5 && .@input == 3012685)
+					getitem 1081,1; //Merchant_Box_1
+				else if (job_merchant_q2 == 6 && .@input == 3487372)
+					getitem 1082,1; //Merchant_Box_2
+				else
+					getitem 1091,1; //Merchant_Box_Etc
+			}
+			else {
+				if (job_merchant_q2 == 7 && .@input == 3318702)
+					getitem 1081,1; //Merchant_Box_1
+				else if (job_merchant_q2 == 8 && .@input == 3543625)
+					getitem 1082,1; //Merchant_Box_2
+				else
+					getitem 1091,1; //Merchant_Box_Etc
+			}
+			if (job_merchant_q == 2)
+				set job_merchant_q,4;
+			else if (job_merchant_q == 1)
+				set job_merchant_q,3;
+			mes "[Union Staff Kay]";
+			mes "Отлично. Бери посылку и храни ее, как зеницу ока, пока не доставишь заказчику. Смотри не потеряй!";
+			next;
+			mes "[Union Staff Kay]";
+			mes "Желаю удачи. Запомни, ты должен принести мне";
+			mes "квитанцию, после того как вручишь посылку.";
+			close;
+		case 2:
+			mes "[Union Staff Kay]";
+			mes "Работа на пол ставки? Прости, мне нечего тебе предложить.";
+			close;
+		case 3:
+			mes "[Union Staff Kay]";
+			mes "Ничего.";
+			mes "Я надеюсь тебе понравиться";
+			mes "помогать людям";
+			mes "просто так.";
+			close;
+		}
+	}
+}
+
+morocc_in,140,102,4	script	Student#mer	86,{
+	if ((job_merchant_q == 4) || (job_merchant_q == 3)) {
+		mes "[Dyer's Student]";
+		mes "Ты курьер";
+		mes "с Гильдии торговцев?";
+		mes "Да! Ты пришел";
+		mes "по адресу.";
+		next;
+		mes "[Dyer's Student]";
+		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+			mes "Мгм~";
+			mes "Пожалуйста";
+			mes "положи посылку";
+			mes "туда.";
+		}
+		else {
+			mes "Но...";
+			mes "Где";
+			mes "Посылка которую я заказывал?";
+			mes "Странно...";
+			close;
+		}
+		next;
+		mes "[Dyer's Student]";
+		mes "Позволь я проверю серийный номер посылки, и я тебе отдам Квитанцию.";
+		next;
+		mes "[Dyer's Student]";
+		if (job_merchant_q2 == 5 && countitem(1081) != 0) {
+			mes "3012685...";
+			mes "Именно так.";
+			mes "Вот твоя";
+			mes "квитанция.";
+			delitem 1081,1; //Merchant_Box_1
+			getitem 1077,1; //Merchant_Voucher_5
+		}
+		else if (job_merchant_q2 == 6 && countitem(1082) != 0) {
+			mes "3487372...";
+			mes "Угу.";
+			mes "Вот твоя";
+			mes "квитанция.";
+			delitem 1082,1; //Merchant_Box_2
+			getitem 1078,1; //Merchant_Voucher_6
+		}
+		else {
+			mes "Извини, но...";
+			if (job_merchant_q2 == 5)
+				mes "Я думаю это не та посылка. Ее серийный номер должен быть 3012685. Видишь?";
+			else if (job_merchant_q2 == 6)
+				mes "Я думаю это не та посылка. Ее серийный номер должен быть 3487372. Видишь?";
+			else
+				mes "Я думаю это не та посылка. Ее серийный номер должен быть 3012685 или 3487372. Нууу... один из этих...";
+			close;
+		}
+		if (job_merchant_q == 4)
+			set job_merchant_q,6;
+		else if (job_merchant_q == 3)
+			set job_merchant_q,5;
+		next;
+		mes "[Dyer's Student]";
+		mes "Спасибо!";
+		mes "Еще увидимся";
+		mes "когда-нибудь!";
+		close;
+	}
+	else if (job_merchant_q == 6 || job_merchant_q == 5 && job_merchant_q2 == 6 || job_merchant_q2 == 5) {
+		mes "[Dyer's Student]";
+		mes "Ох...";
+		mes "Уже уходишь?";
+		mes "Ну давай!";
+		mes "Береги себя!";
+		close;
+	}
+	else {
+		mes "[Dyer's Student]";
+		mes "Мистер Java Dullihan единственный и неповторимый, лучший колорист на континенте Рун-Мидгард.";
+		next;
+		mes "[Dyer's Student]";
+		mes "ИИиииии я горд быть учеником! Когда-нибудь я тоже смогу делать прекрасные краски!";
+		next;
+		mes "[Dyer's Student]";
+		mes "Конечно, я еще учусь, но когда-нибудь...";
+		close;
+	}
+}
+
+geffen_in,155,122,4	script	Guild Staff#mer	47,{
+	if (job_merchant_q == 4 || job_merchant_q == 3) {
+		mes "[Guild Staff]";
+		mes "Аа! Ты наверное курьер Торговой Гильдии. Наконец-то моя посылка пришла! Отлично...!";
+		next;
+		mes "[Guild Staff]";
+		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+			mes "Ты должно быть очень устал";
+			mes "с дороги.";
+			mes "Ну и погодка";
+			mes "нынче...";
+		}
+		else {
+			mes "Постой...";
+			mes "А где";
+			mes "посылка?";
+			close;
+		}
+		next;
+		mes "[Guild Staff]";
+		mes "Хорошо, дай-ка я";
+		mes "проверю серийный номер...";
+		if (job_merchant_q2 == 3 && countitem(1081) != 0) {
+			mes "2989396. Да, это то что мы заказывали. Вот твоя квитанция.";
+			delitem 1081,1; //Merchant_Box_1
+			getitem 1075,1; //Merchant_Voucher_3
+		}
+		else if (job_merchant_q2 == 4 && countitem(1082) != 0) {
+			mes "2191737. Да, это то что мы заказывали. Вот твоя квитанция.";
+			delitem 1082,1; //Merchant_Box_2
+			getitem 1076,1; //Merchant_Voucher_4
+		}
+		else {
+			mes "Эй ой ой, это не та посылка. Номерок не сходится...";
+			next;
+			mes "[Guild Staff]";
+			if (job_merchant_q2 == 3) {
+				mes "Серийный номер";
+				mes "должен быть 2989396.";
+			}
+			else if (job_merchant_q2 == 4) {
+				mes "Серийный номер";
+				mes "должен быть 2191737.";
+			}
+			else {
+				mes "Серийный номер";
+				mes "должен быть 2989396";
+				mes "или 2191737, ну один";
+				mes "из этих.";
+			}
+			mes "Смотри сюда!";
+			mes "Ничего не";
+			mes "замечаешь?";
+			mes "Все правильно?";
+			close;
+		}
+		if (job_merchant_q == 4)
+			set job_merchant_q,6;
+		else if (job_merchant_q == 3)
+			set job_merchant_q,5;
+		next;
+		mes "[Guild Staff]";
+		mes "Хе хе хе~";
+		mes "Спасибо!";
+		mes "Удачи!";
+		close;
+	}
+	else if (job_merchant_q == 6 || job_merchant_q == 5 && job_merchant_q2 == 4 || job_merchant_q2 == 3) {
+		mes "[Guild Staff]";
+		mes "Привет,";
+		mes "Торговец~";
+		mes "Благодарю тебя.";
+		close;
+	}
+	else {
+		mes "[Guild Staff]";
+		mes "Мою посылку уже должны были доставить. Эх, что-то они задерживаются...";
+		close;
+	}
+}
+
+prontera,248,42,0	script	Kafra Employee#mer	116,{
+	cutin "kafra_02",2;
+	if (job_merchant_q == 6 || job_merchant_q == 5) && (job_merchant_q2 == 2 || job_merchant_q2 == 1) {
+		mes "[Kafra Employee]";
+		mes "ООО! Вы прошли долгий";
+		mes "путь";
+		mes "чтобы добраться сюда~";
+		close2;
+		cutin "",255;
+		end;
+	}
+	else if (job_merchant_q == 4 || job_merchant_q == 3) {
+		mes "[Kafra Employee]";
+		mes "Доставка";
+		mes "из гильдии Торговцев?";
+		mes "Ох, пожалуйста";
+		mes " положите сюда...";
+		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+			mes "Вы должно быть очень устали";
+			mes "добираясь так далеко!";
+		}
+		else {
+			mes "П-подождите. Вы не принесли ее?";
+			mes "Г-где посылка?";
+			close2;
+			cutin "",255;
+			end;
+		}
+		next;
+		mes "[Kafra Employee]";
+		mes "Так, проверим";
+		mes "серийный номер...";
+		if (job_merchant_q2 == 1 && countitem(1081) != 0) {
+			mes "2485741. Точно, это то";
+			mes "что мы заказывали. Ой,";
+			mes "и не забудьте квитанцию!";
+			next;
+			delitem 1081,1; //Merchant_Box_1
+			getitem 1073,1; //Merchant_Voucher_1
+		}
+		else if (job_merchant_q2 == 2 && countitem(1082) != 0) {
+			mes "2328137. Точно, это то";
+			mes "что мы заказывали. Ой,";
+			mes "и не забудьте квитанцию!";
+			next;
+			delitem 1082,1; //Merchant_Box_2
+			getitem 1074,1; //Merchant_Voucher_2
+		}
+		else {
+			mes "Мммм? Постойте. Это";
+			mes "не та посылка.";
+			if (job_merchant_q2 == 1)
+				mes "У нашей номер 2485741. Я уверена это не она.";
+			else if (job_merchant_q2 == 2)
+				mes "У нашей номер 2328137. Я уверена это не она.";
+			else
+				mes "У нашей номер 2328137 или 2328137.";
+			next;
+			mes "[Kafra Employee]";
+			mes "Я боюсь";
+			mes "произошла";
+			mes "ошибка. Возможно";
+			mes "вам следует вернуться";
+			mes "в Гильдию Торговцев";
+			mes "чтобы разобраться.";
+			close2;
+			cutin "",255;
+			end;
+		}
+		if (job_merchant_q == 4)
+			set job_merchant_q,6;
+		else if (job_merchant_q == 3)
+			set job_merchant_q,5;
+		mes "[Kafra Employee]";
+		mes "Еще раз спасибо";
+		mes "за";
+		mes "доставку.~";
+		close2;
+		cutin "",255;
+		end;
+	}
+	else {
+		mes "[Kafra Employee]";
+		mes "Добро пожаловать";
+		mes "В Корпорацию Кафра,";
+		mes "мы всегда";
+		mes "к вашим услугам~";
+		next;
+		mes "[Kafra Employee]";
+		mes "Как вы уже заметили";
+		mes "Гильдия Мечников";
+		mes "переехала в Излюд,";
+		mes "пригород Пронтеры.";
+		mes "Мы можем доставить вас туда";
+		mes "за 600 Зеней.";
+		next;
+		if (select("Use:Cancel") == 1) {
+			if (Zeny < 600) {
+				mes "[Kafra Employee]";
+				mes "Прошу прощения,";
+				mes "но у вас";
+				mes "нет таких денег.";
+				close2;
+				cutin "",255;
+				end;
+			}
+			set zeny,zeny-600;
+			set RESRVPTS, RESRVPTS + 37;
+			cutin "",255;
+			warp "izlude",94,103;
+			end;
+		}
+		close2;
+		cutin "",255;
+		end;
+	}
+}
+
+//izlu2dun,106,58,4	script	Kafra Employee#mer	116,{
+function	script	F_MercKafra	{
+	if ((job_merchant_q == 6 || job_merchant_q == 5) && (job_merchant_q2 == 8 || job_merchant_q2 == 7)) {
+		mes "[Kafra Employee]";
+		mes "Ой, Привет~";
+		mes "Что тебя";
+		mes "привело";
+		mes "сюда?";
+		close2;
+		cutin "",255;
+		end;
+	}
+	else if (job_merchant_q == 4 || job_merchant_q == 3) {
+		mes "[Kafra Employee]";
+		mes "Доставка посылки";
+		mes "от Гильдии Торговцев?";
+		mes "Ах,да,пожалуйста";
+		mes "положите ее сюда...";
+		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+			mes "Ты должно быть";
+			mes "так устал!";
+		}
+		else {
+			mes "П-подождите. Вы не принесли ее?";
+			mes "Г-где посылка?";
+			close2;
+			cutin "",255;
+			end;
+		}
+		next;
+		mes "[Kafra Employee]";
+		mes "Такс, проверим";
+		mes "серийный номер...";
+		if (job_merchant_q2 == 7 && countitem(1081) != 0) {
+			mes "3318702. Точно, это то";
+			mes "что мы заказывали. Ой,";
+			mes "и не забудьте квитанцию!";
+			delitem 1081,1; //Merchant_Box_1
+			getitem 1079,1; //Merchant_Voucher_7
+		}
+		else if (job_merchant_q2 == 8 && countitem(1082) != 0) {
+			mes "3543625. Точно, это то";
+			mes "что мы заказывали. Ой,";
+			mes "и не забудьте квитанцию!";
+			delitem 1082,1; //Merchant_Box_2
+			getitem 1080,1; //Merchant_Voucher_8
+		}
+		else {
+			mes "Мммм? Постойте. Это";
+			mes "не та посылка.";
+			if (job_merchant_q2 == 7)
+				mes "У той, что мы заказывали номер 3318702. Я уверена это не она.";
+			else if (job_merchant_q2 == 8)
+				mes "У той, что мы заказывали номер 3543625. Я уверена это не она.";
+			else
+				mes "У той, что мы заказывали номер 3318702 или 3543625.";
+			close2;
+			cutin "",255;
+			end;
+		}
+		if (job_merchant_q == 4)
+			set job_merchant_q,6;
+		else if (job_merchant_q == 3)
+			set job_merchant_q,5;
+		next;
+		if (countitem(1072) != 0 && quest_alb_01 == 0) {
+			select("This is from Chief Mahnsoo of the Merchant Guild...");
+			delitem 1072,1; //Delivery_Message
+			set quest_alb_01,1;
+			mes "[Kafra Employee]";
+			mes "Ой! письмо от";
+			mes "Mahnsoo! Спасибочки!";
+			mes "Я так волновалась..";
+			mes "Как он?";
+			mes "Все хорошо?";
+			mes "Мне нетерпится прочитать, что же он пишет...";
+			next;
+			mes "[Kafra Employee]";
+			mes "Спасибо, что ";
+			mes "добрался сюда";
+			mes "и принес все это";
+			mes "Вот возьми ,";
+			mes "перекуси =].";
+			mes "Ну пока, еще увидимся~";
+			getitem 513,3; //Banana
+		}
+		else {
+			mes "[Kafra Employee]";
+			mes "Еще раз";
+			mes "Спасибо";
+			mes "За доставку~";
+		}
+		close2;
+		cutin "",255;
+		end;
+	}
+	return;
+}

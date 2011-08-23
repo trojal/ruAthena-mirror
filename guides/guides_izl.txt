@@ -1,0 +1,161 @@
+//===== eAthena Script ======================================= 
+//= Izlude Guides
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.5a
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Guides for the City of Izlude
+//===== Additional Comments: ================================= 
+//= Fully working
+//= 1.2 Optimized, updated common guide names [Lupus]
+//= 1.3 Updated the guide according to how it is on iRO, thanks [MasterOfMuppets]
+//=     to Muad_Dib
+//= 1.4 Fitted the many lines into 1 or 2, and corrected some typos [erKURITA]
+//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
+//= 1.5a Fixed some errors with the loop[Samuray22]
+//	-Thanks to $ephiroth.
+//===== Translated into Russian: =============================
+//= перевод Shadow Smail rater@yandex.ru
+//============================================================
+
+izlude,121,87,6	script	Guide#iz	105,{
+	cutin "prt_soldier",2;
+	mes "[Izlude Guide]";
+	mes "Добро пожаловать в Излюд,";
+	mes "город-спутник Пронтеры!";
+	mes "Если Вам нужны советы";
+	mes "по ориентированию в городе,";
+	mes "спрашивайте меня в любое время.";
+	set .@loop1,1;
+	while(.@loop1) {
+		next;
+		switch(select("Городской путеводитель:Убрать отметки с мини-карты:Справка:Уйти")) {
+		case 1:
+			mes "[Izlude Guide]";
+			mes "Пожалуйста выберите";
+			mes "пункт назначения";
+			mes "из следующего меню.";
+			if (.@compass_check == 0) {
+				mes "Хотите, чтобы я";
+				mes "отметил здания";
+				mes "на вашей карте?";
+				next;
+				if (select("Да:Нет") == 1) set .@compass_check,1;
+			}
+			set .@loop2,1;
+			while(.@loop2) {
+				if (.@wait_button_chk == 0) set .@wait_button_chk,1;
+				else next;
+				
+				switch(select("^FF0000Ассоциация Мечников^000000:Зал Мечников:Арена:Пристань Излуда:Оружейный магазин:Товарная лавка:Отмена")) {
+				case 1:
+					mes "[Izlude Guide]";
+					mes "Ассициация мечников";
+					mes "находится на островке,";
+					mes "который на западе города. Если хочешь стать Swordman'ом,";
+					mes "обязательно туда сходи.";
+					if (.@compass_check)
+						viewpoint 1,52,140,0,0xFF0000;
+					break;
+				case 2:
+					mes "[Izlude Guide]";
+					mes "Зал Мечников";
+					mes "находится на островке";
+					mes "на востоке города.";
+					if (.@compass_check)
+						viewpoint 1,214,130,1,0x00FF00;
+					break;
+				case 3:
+					mes "[Izlude Guide]";
+					mes "Знаменитая арена";
+					mes "Излюда находится на";
+					mes "севере города.";
+					if (.@compass_check)
+						viewpoint 1,128,225,2,0x00FF00;
+					break;
+				case 4:
+					mes "[Izlude Guide]";
+					mes "Ты можешь найти";
+					mes "Marina на северо-востоке";
+					mes "Излюда. Там ты можешь сесть";
+					mes "на корабль до";
+					mes "Альберты или Byalan Island.";
+					if (.@compass_check)
+						viewpoint 1,200,180,3,0xFF0000;
+					break;
+				case 5:
+					mes "[Izlude Guide]";
+					mes "Ты можешь легко";
+					mes "найти Оружейный магазин";
+					mes "на северо-западе города.";
+					if (.@compass_check)
+						viewpoint 1,111,149,4,0xFF00FF;
+					break;
+				case 6:
+					mes "[Izlude Guide]";
+					mes "Tool Shop совсем не";
+					mes "трудно найти. Он находится";
+					mes "в севееро-восточной части города.";
+					if (.@compass_check)
+						viewpoint 1,148,148,5,0xFF00FF;
+					break;
+				case 7:
+					mes "[Izlude Guide]";
+					mes "Если хочешь, чтобы я убрал";
+					mes "отметки с твоей карты,";
+					mes "выбери соответствующий пункт в меню.";
+					set .@loop2,0;
+					break;
+				}
+			}
+			break;
+		case 2:
+			viewpoint 2,237,41,0,0x00FF00;
+			viewpoint 2,237,41,1,0x0000FF;
+			viewpoint 2,46,345,2,0x00FF00;
+			viewpoint 2,175,220,3,0xFF0000;
+			viewpoint 2,134,221,4,0xFF0000;
+			viewpoint 2,204,214,5,0xFF0000;
+			set .@compass_check,0;
+			break;
+		case 3:
+			mes "[Izlude Guide]";
+			mes "Достижения в колдовстве и";
+			mes "технологии позволили";
+			mes "нам улучшить нашу информацтонную";
+			mes "систему. Теперь ты можешь";
+			mes "легко находить здания,";
+			mes "благодаря отметкам на карте.";
+			next;
+			mes "[Izlude Guide]";
+			mes "Твоя карта находится";
+			mes "в правом верхнем углу";
+			mes "экрана. Если ее там нет,";
+			mes "нажми Ctrl+Tab,";
+			mes "или нажми кнопку 'Map' в твоем Basic Info Window.";
+			next;
+			mes "[Izlude Guide]";
+			mes "На твоей карте,";
+			mes "Нажми ''+'' или ''-''";
+			mes "чтобы приближать и удалять.";
+			mes "Я надеюсь, тебе понравится";
+			mes "твое путешествие,";
+			mes "и ты будешь посещать наш город как можно чаще.";
+			break;
+		case 4:
+		        mes "Удачного тебе путешествия,";
+			mes "и пожалуйста, не стесняйся";
+			mes "спрашивать, если у тебя";
+			mes "есть какие-то вопросы об Излюде.";
+			close2;
+			set .@loop1,0;
+			break;
+		}
+	}
+	cutin "prt_soldier",255;
+	end;
+}

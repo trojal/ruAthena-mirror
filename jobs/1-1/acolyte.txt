@@ -1,0 +1,456 @@
+//===== eAthena Script ======================================= 
+//= Acolyte Job Quest
+//===== By: ================================================== 
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.9
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Job quest for Acolyte classes
+//===== Additional Comments: ================================= 
+//= v1.0 Fully working.
+//= v1.1 Added function calls for Priest Quest.
+//= v1.2 Fixed Marthilda, Yosuke bugs. [Lupus]
+//= v1.2a Added instant job change for High Novice [Lupus]
+//= v1.3 Added Baby Class support [Lupus]
+//= v1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
+//= 1.5 Now saves/restores all quest skills [Lupus]
+//= 1.6 Merged back JFunc [Lupus]
+//= 1.7 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
+//=	No longer uses function "F_ToHigh"
+//=	Proper dialog for Priest job quest is unused (for now.)
+//= 1.7a Functions now make use of proper priest quest dialog [L0ne_W0lf]
+//= 1.8 Removed an Unnecessary "set job_acolyte_q,0;" [Samuray22]
+//= 1.8a More bug fixes care of Crashy. [L0ne_W0lf]
+//= 1.9 Changed Marthilda to Mathilda. [L0ne_W0llf]
+//===== Translated into Russian: =============================
+//= Translated to Russian [....]
+//============================================================ 
+
+prt_church,184,41,4	script	Cleric#aco	60,{
+	if (Upper == 1) {
+		if (ADVJOB == Job_High_Priest || ADVJOB == Job_Champion) {
+			if (Class == Job_Novice_High) {
+				mes "[Father Mareusis]";
+				mes "Ах, я чувствую в вас ";
+				mes "большой жизненный опыт. Вы должны были обучиться очень многому до того как посетить Вальхаллу";
+				next;
+				if (getskilllv(1) < 9) {
+					mes "[Father Mareusis]";
+					mes "К сожаленью, вы еще не готовы стать послушником. Пожалуйста закончите изучение своих основных навыков (Basic Skills).";
+					next;
+					mes "[Father Mareusis]";
+					mes "Между тем...";
+					mes "Я пока подожду...";
+					mes "Ты готов";
+					mes "Да пребудет с тобой бог";
+					close;
+				}
+				mes "[Father Mareusis]";
+				mes "Хорошо, я приветствую тебя,";
+				mes "пришедший из Вальхаллы, и";
+				mes "желаю тебе удачи в твоем";
+				mes "новом жизненном пути.";
+				next;
+				skill 143,0,0;
+				jobchange Job_Acolyte_High;
+				skill 142,1,0;
+				mes "[Father Mareusis]";
+				mes "А сейчас, продолжи свой путь и и помоги тем, кто нуждается в вашей помощи. Да осветит бог ваш путь.";
+				close;
+			}
+			else {
+				mes "[Father Mareusis]";
+				mes "А сейчас, продолжи свой путь и и помоги тем, кто нуждается в вашей помощи. Да осветит бог ваш путь.";
+				close;
+			}
+		}
+		else {
+			mes "[Father Mareusis]";
+			mes "Я чувствую, что у вас большой жизненный опыт. Вы должны изучить еще очень многое, перед тем как войдете в Вальхаллу.";
+			next;
+			mes "[Father Mareusis]";
+			mes "Тем не менее, я могу сказать вам, что вы не сможете стать послушником. Пожалуйста вспомните кем вы были в прошлой жизни и найдите свой путь.";
+			close;
+		}
+	}
+	mes "[Father Mareusis]";
+	mes "Чего надобно, Дитя моё?";
+	next;
+	switch(select("Отец, я хочу стать Послушником.:Какие требования?:Просто проходил мимо.")) {
+	case 1:
+		mes "[Father Mareusis]";
+		if (BaseJob == Job_Acolyte) {
+			mes "Вы хорошо себя сегодня чувствуете? По вашим одеждам я могу судить, что вы уже послушник. Вы же не смеетесь надо мной, не правда ли?";
+			close;
+		}
+		else if (BaseJob != Job_Novice) {
+			mes "Я сожаленью мы не можем принять вас в послушники...";
+			close;
+		}
+		if (job_acolyte_q == 0) {
+			mes "Истинно";
+			mes "хочешь стать";
+			mes "слугой Божьим?";
+			next;
+			if (select("Да, Батюшка, хочу.:Нет, я пошутил.") == 1) {
+				mes "[Father Mareusis]";
+				mes "Хорошо. Я повышаю вас" + strcharinfo(0) + "до сана Послушник. Вы понимаете, что вы должны совершить, что бы стали слугой божиим, верно?";
+				next;
+				mes "[Father Mareusis]";
+				mes "Хорошо, я";
+				mes "дам вам задание...";
+				switch(rand(3)) {
+				default:
+					set job_acolyte_q,2;
+					mes "Пожалуйста встретьтесь с ^000077Father Rubalkabara^000000, служителем прихода Пронтеры и вернитесь назад. Он практикует аскетизм в ^000077Relics NorthEast of Prontera City^000000.";
+					break;
+				case 1:
+					set job_acolyte_q,3;
+					mes "Пожалуйста встретьтесь с  ^000077Mother Mathilda^000000 и возвращайтесь ко мне. она практикует аскетизм неподалеку от ^000077Morroc Town, SouthWest of Prontera City^000000.";
+					break;
+				case 2:
+					set job_acolyte_q,4;
+					mes "Пожалуйста встретьтесь с  ^000077Father Yosuke^000000 и возвращайтесь ко мне. Он практикует аскетизм возле ^000077a bridge somewhere NorthWest of Prontera^000000.";
+					break;
+				}
+				next;
+				mes "[Father Mareusis]";
+				mes "Да пусть бог осветит ваш путь и да направит он тебя по стопам истинным.";
+				close;
+			}
+			mes "[Father Mareusis]";
+			mes "Вы солгали?";
+			mes "Это хорошо, что вы";
+			mes "признались в";
+			mes "грехе. Ступай";
+			mes "с миром, сын мой..";
+			close;
+		}
+		mes "О, вы вернулись. Давайте посмотрим готовы ли вы служить богу. Кхм...";
+		next;
+		mes "[Father Mareusis]";
+		if (getskilllv(1) < 9) {
+			mes "О, Боже! Вы не выполнили еще основную подготовку?! Это очень важно для вас!";
+			next;
+			mes "[Father Mareusis]";
+			mes "Вы должны тренироваться больше и усерднее! Возвращайтесь и удостоверьтесь, что вы набрали необходимый уровень профессии (Job lvl) и выучили все начальные навыки (Basic Skills)!";
+			close;
+		}
+		if (job_acolyte_q < 5) {
+			mes "Ох, я не могу найти ваше имя в Регистрационном списке.";
+			next;
+			switch(job_acolyte_q) {
+			case 2:
+				mes "[Father Mareusis]";
+				mes "Пожалуйста встретьтесь с ^000077Father Rubalkabara^000000, он член прихода Пронты и возвращайтесь ко мне.";
+				next;
+				mes "[Father Mareusis]";
+				mes "Он практикует аскетизм в ^000077Relics at the NorthEast of Prontera City^000000.";
+				break;
+			case 3:
+				mes "[Father Mareusis]";
+				mes "Пожалуйста встретьтесь с  ^000077Mother Mathilda^000000 и возвращайтесь ко мне.";
+				next;
+				mes "[Father Mareusis]";
+				mes "Она практикует аскетизм неподалеку от ^000077Morroc Town, located SouthWest of Prontera City^000000.";
+				break;
+			case 4:
+				mes "[Father Mareusis]";
+				mes "Пожалуйста встретьтесь с  ^000077 Father Yosuke ^000000 и возвращайтесь ко мне.";
+				next;
+				mes "[Father Mareusis]";
+				mes "Он практикует аскетизм рядом с  ^000077bridge somewhere to the NorthWest of Prontera^000000.";
+				break;
+			}
+			next;
+			mes "[Father Mareusis]";
+			mes "Да пусть бог осветит ваш путь и да направит он тебя по стопам истинным.";
+			close;
+		}
+		mes "Хмм...";
+		mes "Я вижу ваше имя в списке, значит вы доказали, что достойны этого.";
+		next;
+		mes "[Father Mareusis]";
+		mes "Я горд сообщить вам, что вы готовы стать Послушником!";
+		next;
+		skill 143,0,0;
+		callfunc "Job_Change",Job_Acolyte;
+		callfunc "F_ClearJobVar";
+		mes "[Father Mareusis]";
+		mes "Не забывайте о боге, который всегда наблюдает за нами сверху.";
+		next;
+		mes "[Father Mareusis]";
+		mes "Используйте свои умения, чтобы помогать другим во имя Его. Даже в самые трудные времена, ваша вера должна быть непоколебима, Сын мой!.";
+		next;
+		mes "[Father Mareusis]";
+		mes "И наконец, я хочу принести вам мои поздравления, о том, что вы прошли через все трудности и добились своего.";
+		close;
+	case 2:
+		mes "[Father Mareusis]";
+		mes "Вы хотите стать Послушником? Для этого вы должны выполнить 2 требования.";
+		next;
+		mes "[Father Mareusis]";
+		mes "Первое, вы должны иметь по крайней мере 9 уровень профессии (Job lvl) и выучить все ваши начальные навыки (Basic Skills) . Второе, вы должны будите пройти ряд заданий церкви.";
+		next;
+		mes "[Father Mareusis]";
+		if (job_acolyte_q != 0) {
+			switch(job_acolyte_q) {
+			case 2:
+				mes "Для вашего испытания встретьтесь с  ^000077Father Rubalkabara ^000000 после чего возвращайтесь ко мне.";
+				next;
+				mes "[Father Mareusis]";
+				mes "Он практикует аскетизм в ^000077Relics at the NorthEast of Prontera City^000000.";
+				break;
+			case 3:
+				mes "Для вашего испытания встретьтесь с ^000077Mother Mathilda^000000 после чего возвращейтсь ко мне.";
+				next;
+				mes "[Father Mareusis]";
+				mes "Она практикует аскетизм возле ^000077Morroc, located to the SouthWest of Prontera City^000000.";
+				break;
+			default:
+				mes "Для вашего испытания встретьтесь с ^000077Father Yosuke^000000 после чего возвращайтесь ко мне.";
+				next;
+				mes "[Father Mareusis]";
+				mes "Он практикует аскетизм неподалеку от ^000077NorthWest of Prontera^000000.";
+				break;
+			}
+			next;
+			mes "[Father Mareusis]";
+			mes "Да пусть бог осветит ваш путь и да направит он тебя по стопам истинным.";
+		}
+		else {
+			mes "Ваше задание будет выдано вам только после тго как вы заполните анкету.";
+		}
+		next;
+		mes "[Father Mareusis]";
+		mes "Пожалуйста возвращайтесь, как только выполните те 2 моих требования. Как бы долог не был ваш путь к богу, вы можете преодолеть его.";
+		close;
+	case 3:
+		close;
+	}
+}
+
+prt_fild03,365,255,2	script	Ascetic#aco	89,{
+	mes "[Father Rubalkabara]";
+	if (BaseJob == Job_Novice) {
+		if (job_acolyte_q == 6) {
+			mes "Пожалуйста будьте осторожны. Они должны знать, что вы встречались со мной, когда вы достигнете Святилище Пронтеры.";
+			next;
+			mes "[Father Rubalkabara]";
+			mes "Я послал почтового голубя с сообщением. Надеюсь он прибудет туда вовремя...";
+			close;
+		}
+		if (job_acolyte_q != 0) {
+			if (job_acolyte_q == 2) {
+				mes "Да...? Вы должно быть один из тех кто стремится стать Послушником. Да, да... Я уже получил новости из Святилища.";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Итак, ваше имя " + strcharinfo(0) + "правильно? Отлично, списибо, что встретились со мной.";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Я надеюсь вы достаточно узнали о Послушниках от Friar Mareusis. Да еще есть чень много знающих и полезных людей в Святилище Пронтеры.";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Кроме того, я в курсе что молодые люди твоего поколения не любят, когда их поучают старики типа меня. Хахаха...";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Но тебе нужно научиться выслушивать то что говорят старшие, ибо бог любит учить своих детей. Увидишь.";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Хорошо, Я пошлю сообщение о том, что вы посещали меня. Итак, ты можешь вернуться в Святилище Пронтеры.";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Прощай.";
+				close2;
+				savepoint "prt_fild03",361,255;
+				set job_acolyte_q,6;
+				end;
+			}
+			else {
+				mes "Ох...";
+				mes "Вы один из";
+				mes "претендентов на Послушника...?";
+				mes "Посмотрим...";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Ваше имя " + strcharinfo(0) + "?";
+				mes "Я не вижу вашего имени";
+				mes "в моем списке. Хмммм...";
+				next;
+				mes "[Father Rubalkabara]";
+				mes "Почему бы вам не вернуться в Пронтеру и не проверить все снова?";
+				close;
+			}
+		}
+		else {
+			mes "Ах? Что привело тебя суда? Это опасное место для таких новичков как вы!";
+			close;
+		}
+	}
+	else if (BaseJob == Job_Acolyte) callfunc "F_FatherRub";
+	else {
+		if (BaseJob == Job_Priest) {
+			mes "Поздравляю.";
+			next;
+			mes "[Father Rubalkabara]";
+			mes "Добро пожаловать в Подземелья. Почувствуйте себя себя свободно. Это место прекрасно, несмотря на то, что опастность преследует вас здесь по всюду...";
+			close;
+		}
+		else {
+			mes "Ох...";
+			mes "Вы пришли в подземелья для обучения? Или вы просто Странник?";
+			next;
+			mes "[Father Rubalkabara]";
+			mes "Кто бы вы ни были, пожалуйста остерегайтесь. Здесь бродят ужастные монстры, они сильны и очень живучи, ни смотря на их внешний вид.";
+			close;
+		}
+	}
+}
+
+moc_fild07,41,355,4	script	Ascetic#2aco	95,{
+	mes "[Mother Mathilda]";
+	if (BaseJob == Job_Novice) {
+		if (job_acolyte_q == 7) {
+			mes "Я пошлю почтового голубя в Святилище Пронтеры.Когда вы вернетесь, Священник уже должен быдет получить мое сообщение.";
+			next;
+			mes "[Mother Mathilda]";
+			mes "Я молю перед богом о вашем ближайшем становлении Послушником.";
+			close;
+		}
+		if (job_acolyte_q != 0) {
+			if (job_acolyte_q == 3) {
+				mes "Ах, вы должно быть один из претендентов в Послушники. Я очень рад приветствовать вас.";
+				next;
+				mes "[Mother Mathilda]";
+				mes "Как вас зовут? " + strcharinfo(0) + "? Дайте глянуть... Ах, ваше имя в моем списке.";
+				next;
+				mes "[Mother Mathilda]";
+				mes "Я пошлю сообщение в Святилище Пронтеры что вы, " + strcharinfo(0) + "посетили меня и выполнили свое испытание.";
+				next;
+				mes "[Mother Mathilda]";
+				mes "Пожалуйста возвращайтесь в Святилище Пронтеры и поговорите со Свещенником.";
+				close2;
+				savepoint "moc_fild07",35,355;
+				set job_acolyte_q,7;
+				end;
+			}
+			else {
+				mes "Ах...!";
+				mes "Вы должно быть один";
+				mes "из претендентов в Послушники.";
+				mes "Я рад приветствовать вас.";
+				next;
+				mes "[Mother Mathilda]";
+				mes "Как ваше имя?";
+				mes "" + strcharinfo(0) + "? Посмотрим...";
+				next;
+				mes "[Mother Mathilda]";
+				mes "Хммм...";
+				mes "Кажется вашего имени ";
+				mes "нет в моем списке...";
+				next;
+				mes "[Mother Mathilda]";
+				mes "Возможно вам стоит вернуться в Святилище Пронтеры и проверить еще раз на прохождение вашего испытания.";
+				close;
+			}
+		}
+		else {
+			mes "...";
+			close;
+		}
+	}
+	else if (BaseJob == Job_Acolyte) callfunc "F_MotherMart";
+	else {
+		if (BaseJob == Job_Priest) {
+			mes "Приветствую вас~~";
+			next;
+			mes "[Mother Mathilda]";
+			mes "Как ваша практика? Я уверен вы довольны творя дела свои под дланью господней.";
+			close;
+		}
+		else {
+			mes "Да пребудет бог";
+			mes "с тобой...";
+			close;
+		}
+	}
+}
+
+prt_fild00,208,218,6	script	Ascetic#3aco	98,{
+	mes "[Father Yosuke]";
+	if (BaseJob == Job_Novice) {
+		if (job_acolyte_q == 8) {
+			mes "Что?";
+			next;
+			mes "[Father Yosuke]";
+			mes "У вас какое-то дело ко мне?! Нет?! Тогда возвращайтесь в Святилище!";
+			close;
+		}
+		if (job_acolyte_q != 0) {
+			if (job_acolyte_q == 4) {
+				mes "Эй.";
+				mes "Вы там,";
+				mes "вы выглядите как";
+				mes "кандидат в Послушники";
+				mes "Я прав?";
+				next;
+				mes "[Father Yosuke]";
+				mes "Неплохо, неплохо. Вы противостояли испытанию очень хорошо.";
+				mes "Итак, как вас зовут?";
+				next;
+				mes "[Father Yosuke]";
+				mes "" + strcharinfo(0) + ", хм?";
+				next;
+				mes "[Father Yosuke]";
+				mes "Хорошо. я пошлю сообщение в Святилище " + strcharinfo(0) + " , что вы посетили меня. ";
+				next;
+				mes "[Father Yosuke]";
+				mes "А теперь возвращайся в Святилищи и закончи свое испытание на пути к тому, чтобы стать Послушником, сын мой.";
+				close2;
+				savepoint "prt_fild00",206,230;
+				set job_acolyte_q,8;
+				end;
+			}
+			else {
+				mes "Эй.";
+				mes "Вы выглядите как претендент в Послушники. Я прав?";
+				next;
+				mes "[Father Yosuke]";
+				mes "Совсем неплохо, вы проделали весь этот путь от Пронтеры до меня. Итак, как вас зовут сын мой?";
+				next;
+				mes "[Father Yosuke]";
+				mes "" + strcharinfo(0) + ", хм? Почему тебя нет в моем списке?";
+				next;
+				mes "[Father Yosuke]";
+				mes "Возможно это какая-то ошибка. Возвращайся в Святилище и поговори еще раз с Епископом.";
+				close;
+			}
+		}
+		else {
+			mes "Вы...";
+			mes "Новичек.";
+			mes "Хотели что-нибудь";
+			mes "сказать мне?";
+			close;
+		}
+	}
+	else if (BaseJob == Job_Acolyte) callfunc "F_FatherYos";
+	else {
+		if (BaseJob == Job_Priest) {
+			mes "Эй...";
+			next;
+			mes "[Father Yosuke]";
+			mes "Если вам нравится, приходить суда разговаривать со мной о высших силах. Выличиство бого живет в вас...";
+			close;
+		}
+		else {
+			mes "У вас есть, что сказать мне? У меня";
+			mes "очень мало времени....";
+			close;
+		}
+	}
+}
+

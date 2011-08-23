@@ -1,0 +1,192 @@
+//===== eAthena Script =======================================
+//= Karachun Event (Xmas Rings Quest)
+//===== By: ==================================================
+//= Lupus (1.0)
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= eAthena Version; 4880+ (with 'setItemScript' command)
+//===== Description: =========================================
+//= Custom event: Karachun (from 8 Dec till 8 Jan), X-Mas, HNY
+//===== Additional Comments: =================================
+//= 1.0 Tested, fully working. 1.0a a few typos fix
+//= 1.1 Readded Mdef +1 and  Luk +1 to Santa's Hat [Lupus]
+//===== Translated into Russian: =============================
+//= 21.01.2008 Коррекция перевода [Vorp]
+//============================================================
+
+
+prontera,156,174,4	script	Snower	713,{
+	mes "[Snower]";
+	if(Q_XMSRINGS==2){
+		mes "Ох.. это правада? Вы помогли моей сестре Sneewy? Спасибо вам.";
+	}else if(Q_XMSRINGS==3){
+		mes "Snoowy послала мне птицу с сообщением. Она сообщила мне о вашей помощи...";
+		mes "Я сообщу секрет волшебных колец.";
+		emotion e_no1;
+		next;
+		mes "[Snower]";
+		mes "У них есть волшебная сила только с 1го Января по 8е Января.";
+		next;
+		mes "[Snower]";
+		mes "Между прочим, только с одетой Santa's Hat можно обнаружить их истинную силу.";
+		next;
+		mes "[Snower]";
+		mes "Если вы оденете оба кольца, их сила удвоется.";
+		mes "Удачного дня!";
+		close;
+	}else{
+		mes "Привет! Две моих сестры и я подготавливаем подароки к целым 2 праздникам!";
+	}
+	emotion e_sob;
+	next;
+	menu "Где Ваши сестры?",-, "Какие праздники?",M_PR,"Что за подарки?",M_WRAP,"Я могу помочь Вам?",M_QUEST;
+
+	mes "[Snower]";
+	mes "Моя младшая сестра Sneewy уехала на каую-то далекую землю, чтобы подготавивать подароки для бедных детей... Я не знаю где именно. Вы должны спросить мою старшую сестру и ее птиц.";
+	next;
+	mes "[Snower]";
+	mes "Моя старшая сестра? Ее имя Snoowy. Она отправилась в плавание на зеленый остров... Она вроде говорила о подарках для дельфинов...";
+	close;
+
+M_PR:
+	mes "[Snower]";
+	mes "Целых два праздника? Хорошо, что они идут один за другим!";
+	mes "^008000Новый Год^000000 и ^000080Рождество^000000!";
+	next;
+	goto M_QUEST;
+
+M_WRAP:
+	mes "[Snower]";
+	mes "Мои сестры говорят, что все подарки должны выглядеть одинаковы. Иначе некоторые дети могут растроится!";
+	next;
+	mes "[Snower]";
+	mes "Вы хотите, что бы я обернул ваши разноцветные Gift Boxes серой бумагой?";
+	next;
+	menu "Заверните их, пожалуйста!",-, "Нет, спасибо.",M_QUEST;
+
+	set @prizes, countitem(664)+countitem(665)+countitem(666)+countitem(667);
+	if( @prizes == 0){
+		mes "[Snower]";
+		mes "Я не вижу у вас разноцветных подарков...";
+		if(countitem(644))mes "У вас есть только серые коробки.";
+		close;
+	}
+	delitem 664,countitem(664);
+	delitem 665,countitem(665);
+	delitem 666,countitem(666);
+	delitem 667,countitem(667);
+	getitem 644,@prizes;
+
+	mes "[Snower]";
+	mes "*вздох* Вот они, готовы.";
+	next;
+
+M_QUEST:
+	mes "[Snower]";
+	mes "Я хочу, чтобы Вы нашли моих сестер КАК МОЖНО СКОРЕЕ... Им нужна помощь.";
+	if(Q_XMSRINGS==0) set Q_XMSRINGS,1;
+	close;
+
+OnInit:
+//Santa's Hat
+	setitemscript 2236,"{ bonus bMdef,1; bonus bLuk,1; if(isequipped(2636,2637)){if(@xmr == gettime(2))end; set @xmr,gettime(2); misceffect 410; end;} if(isequipped(2636)){if(@xmr == gettime(2))end; set @xmr,gettime(2); misceffect 72;} if(isequipped(2637)){if(@xmr == gettime(2))end; set @xmr,gettime(2); misceffect 338;}}";
+//Gold Xmas Ring
+	setitemscript 2636,"{ bonus bLoseSPWhenUnequip,30; if(isequipped(2236)==0)end; if(getskilllv(28)){skill 51,4+isequipped(2637);}else{skill 28,1+4*isequipped(2637);} }";
+//Silver Xmas Ring
+	setitemscript 2637,"{ bonus bDamageWhenUnequip,40; if(isequipped(2236)==0)end; if(getskilllv(26)){skill 40,1;}else{skill 26,1+isequipped(2636);} }";
+	end;
+}
+
+louyang,224,249,4	script	Sneewy	717,{
+	mes "[Sneewy]";
+	if(Q_XMSRINGS==0){
+		mes "Привет! Я жду от моей сестры птицу с почтой...";
+		emotion e_sob;
+		close;
+	}
+	if(Q_XMSRINGS==1){
+		mes "Я хочу, что бы вы нашли мне 4 серых Gift Boxes для бедных детей...";
+		emotion e_sob;
+		next;
+		mes "[Sneewy]";
+		mes "Ой, привет. Has my brother Snower told you everything?";
+		next;
+		menu "Вот ваши 4 Gift Boxes",-, "Я не знаю где мне их взять...",M_END;
+
+		mes "[Sneewy]";
+		if(countitem(644)<4){
+			mes "Дайте мне 4 подарка для бедных детишек... Я подожду, пока вы не принесете их!";
+			emotion e_sry;
+			close;
+		}
+		set Q_XMSRINGS,2;
+		delitem 644,4;
+		getnameditem 2637,strcharinfo(0);
+		emotion e_kis2;
+		mes "Благодарю вас! Вот вам, кое что от меня!";
+		next;
+		mes "[Sneewy]";
+		mes "Между прочим, если Вы оденете два кольца, тогда ваши праздники станут веселее и интрееснее!";
+		close;
+	}
+	emotion e_thx;
+	mes "Еще раз спасибо! Теперь все дети встретят праздники с подарками!";
+	close;
+
+M_END:
+	mes "[Sneewy]";
+	mes "Жалоко... У меня есть волшебное кольцо... Я могу обменять его на 4 подарка (Gift Boxes)...";
+	emotion e_swt;
+	close;
+}
+
+izlu2dun,133,160,2	script	Snoowy	714,{
+	mes "[Snoowy]";
+	if(Q_XMSRINGS==0){
+		mes "Привееет! Вы знаете моего братика и сестричку? Как так? Мой брат Snower хорошо известен в Пронтере!! Просто спросите там любого ребенка.";
+		emotion e_hmm;
+		close;
+	}
+	if(Q_XMSRINGS==1){
+		mes "Знаете... Как могут быть бедные дети быть более важными, чем дети моря.. Разве я не права?";
+		next;
+		mes "[Snoowy]";
+		mes "Эээ. Привееетсвую здесь. Моя сестра Sneewy послала мне сообщение с птицей. Правда письмо стало мокрым и я не моге прочесть обратный адресв письме...";
+		next;
+		mes "[Snoowy]";
+		mes "Взгляни, вроде бы тут 'янг' в конце... Хмм... Она возможно написала с ошибкой 'Л Ду Борянг'...";
+		close;
+	}
+	if(Q_XMSRINGS==2){
+		mes "Вы помогли моей сестре? Это просто великолепно!";
+		next;
+		mes "[Snoowy]";
+		mes "Но мне тоже нужно 3 подарка для моих морских друзей...";
+		next;
+		menu "Возьми эти подарки!",-, "Я вернусь, когда найду их.",M_END;
+
+		mes "[Snoowy]";
+		if(countitem(644)<3){
+			mes "Ой!! У вас не еще нету 3 серых подарков для меня.";
+			emotion e_sry;
+			close;
+		}
+		set Q_XMSRINGS,3;
+		delitem 644,3;
+		getnameditem 2636,strcharinfo(0);
+		emotion e_kis;
+		mes "Спааасибо вааам! Возьмите это волшебное колечко!";
+		close;
+	}
+	emotion e_thx;
+	mes "Ох... целый морской народ посылает Вам свои благодарности! Им так понравились подарки!!!";
+	if(rand(2))mes "Вы знаете, что шапочка Santa's Hat может увеличить силу колец?";
+	close;
+
+M_END:
+	mes "[Snoowy]";
+	mes "Я могу обменять ЗОЛОТОЕ магическое кольцо на 3 подарка...";
+	emotion e_swt;
+	close;
+}

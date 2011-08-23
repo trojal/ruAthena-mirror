@@ -1,0 +1,841 @@
+//===== eAthena Script ======================================= 
+//= Player Marriage
+//===== By: ================================================== 
+//= L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.2
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Official Marriage script.
+//= Added isloggedin() check, even though Aegis doesn't do it.
+//= Currently does not support same-sex marriages.
+//= Old script located in: npc/custom/marriage.txt
+//= - Variable in use: wedding_sign (max 1)
+//= - Variable in use: $Wedding (max 1) 
+//= - Variab;e in use: $wed_groom$ $wed_bride$
+//===== Additional Comments: ================================= 
+//= 1.0 First version. [L0ne_W0lf]
+//= 1.1 Fixed a missing ")" [L0ne_W0lf]
+//= 1.2 Corrected duration of Wedding status. [L0ne_W0lf]
+//===== Translated into Russian: =============================
+//= от Marksman (Fate of The Gods)
+//============================================================
+
+prt_church,97,100,4	script	Wedding Staff#w	71,{
+	cutin "wedding_marry01",2;
+	if (Upper == 2) {
+		mes "[Marry Happy]";
+		mes "Привет!";
+		mes "Меня зовут Marry Happy";
+		mes "и я здесь для того, чтобы";
+		mes "обеспечить Вас информацией о";
+		mes "браке. У Вас есть";
+		mes "какие-нибудь вопросы?";
+		next;
+		if (select("Я хочу жениться.:Мне не нужна Ваша помощь!") == 1) {
+			mes "[Marry Happy]";
+			mes "Прошу прощения, но";
+			mes "приемным персонажам";
+			mes "не позволено";
+			mes "жениться. А сейчас";
+			mes "почему бы Вам не радоваться";
+			mes "простым удовольствиям детства?";
+			goto L_End;
+		}
+		mes "[Marry Happy]";
+		mes "Конечно нет!";
+		mes "Маленькие дети";
+		mes "не могут жениться -";
+		mes "против этого слишком много законов…";
+		mes "Ты просто";
+		mes "очаровашка!";
+		goto L_End;
+	}
+	mes "[Marry Happy]";
+	mes "Брак – это прекрасный";
+	mes "союз двух сердец, которым";
+	mes "суждено быть вместе навсегда,";
+	mes "в горе и в радости.";
+	mes "Есть ли в Вашей жизни";
+	mes "такой человек?";
+	next;
+	switch(select("Расспросить о Свадебной Церемонии:Расспросить о Процедуре:Подать заявление на Свадьбу:Мы - Непобедимая Армия Холостяков!")) {
+	case 1:
+		mes "[Marry Happy]";
+		mes "Мудрый и великодушный";
+		mes "Король Тристрам III";
+		mes "проводил свадебные церемонии,";
+		mes "но сейчас у него нет такой возможности";
+		mes "из-за обязанностей Короля";
+		mes "и плотного расписания.";
+		next;
+		mes "[Marry Happy]";
+		mes "Епископ Вомарс, епископ любви";
+		mes "теперь организовывает";
+		mes "свадебные церемонии.";
+		mes "Он – настоящее сокровище";
+		mes "Королевства Рун-Мидгарт.";
+		next;
+		mes "[Marry Happy]";
+		mes "Когда Вы женитесь на ком-то -";
+		mes "это на всю жизнь, так что хорошенько подумайте,";
+		mes "прежде чем согласиться.";
+		mes "Помните, что мужчина может жениться";
+		mes "только на женщине и наоборот.";
+		next;
+		mes "[Marry Happy]";
+		mes "Если Вам повезло";
+		mes "найти того, с кем действительно";
+		mes "хотите провести всю оставшуюся жизнь,";
+		mes "возможно, Вы захотите сделать предложение. Я надеюсь,";
+		mes "каждый найдет свою половинку…";
+		break;
+
+	case 2:
+		mes "[Marry Happy]";
+		mes "Первая часть";
+		mes "свадебной церемонии -";
+		mes "заполнить заявление.";
+		mes "Как только жених и невеста";
+		mes "заполнят заявления, они";
+		mes "вдвоем должны сформировать партию.";
+		next;
+		mes "[Marry Happy]";
+		mes "После этого";
+		mes "пара должна поговорить";
+		mes "с Епископом Вомарсом. Жених";
+		mes "говорит первым и должен сказать";
+		mes "имя невесты Епископу. Иначе церемония будет остановлена.";
+		next;
+		mes "[Marry Happy]";
+		mes "Потом невеста";
+		mes "говорит с Епископом и говорит";
+		mes "ему имя своего жениха.";
+		mes "Если имена правильно названы";
+		mes "Епископу, влюбленные";
+		mes "смогут обменяться кольцами.";
+		next;
+		mes "[Marry Happy]";
+		mes "Когда обмен кольцами произошел,";
+		mes "пара навсегда связывается узами брака. Конечно,";
+		mes "перед этим есть масса возможностей передумать, так что…";
+		next;
+		mes "[Marry Happy]";
+		mes "Если пожениться";
+		mes "хотят слишком много";
+		mes "пар, пожалуйста, встаньте в очередь";
+		mes "и говорите с Епископом";
+		mes "Вомарсом по порядку, так как пожениться может лишь одна пара за раз.";
+		next;
+		mes "[Marry Happy]";
+		mes "И, наконец, убедитесь, что назвали";
+		mes "Епископу Вомарсу правильное имя,";
+		mes "не тратя при этом много времени. Если будете долго возиться,";
+		mes "церемония автоматически прервется и Вам придется начать сначала.";
+		next;
+		mes "[Marry Happy]";
+		mes "Невестам необходимо помнить,";
+		mes "что у них есть только 3 минуты";
+		mes "на разговор с Епископом";
+		mes "Вомарсом после того, как их женихи";
+		mes "закончили говорить с ним.";
+		next;
+		if (select("Спасибо, Вы мне очень помогли!:Как проще всего сказать имя партнера?") == 1) {
+			mes "[Marry Happy]";
+			mes "Что ж, я здесь для того, чтобы";
+			mes "свадьбы проходили";
+			mes "как можно лучше.";
+			mes "Если Вы что-то";
+			mes "не поняли,";
+			mes "не стесняйтесь, спрашивайте.";
+			goto L_End;
+		}
+		mes "[Marry Happy]";
+		mes "Проще всего написать";
+		mes "имя Вашего партнера";
+		mes "епископу – послать приватное";
+		mes "сообщение Вашему партнеру и";
+		mes "затем кликнуть левой кнопкой мыши на имени в левой части чата.";
+		next;
+		mes "[Marry Happy]";
+		mes "Нажмите клавиши ''Ctrl'' и ''C',";
+		mes "чтобы скопировать имя. Затем";
+		mes "Вы можете вставить имя в";
+		mes "строку ввода, нажав";
+		mes "клавиши ''Insert'' и ''Shift''. Звучит просто, не правда ли?";
+		next;
+		mes "[Marry Happy]";
+		mes "Хорошо, теперь давайте попробуем";
+		mes "поупражняться. Сообщите мне";
+		mes "имя Вашего партнера, используя";
+		mes "метод, который я только что описала.";
+		next;
+		input .@partner$;
+		mes "[Marry Happy]";
+		mes "Отлично, после того, как Вы";
+		mes "решите пожениться,";
+		mes "возвращайтесь ко мне и";
+		mes "подайте заявление.";
+		mes "Еще увидимся, странник.";
+		break;
+
+	case 3:
+		cutin "wedding_marry02",2;
+		if (sex) {
+			mes "[Marry Happy]";
+			mes "Так Вы желаете пожениться?";
+			mes "Как жениху, Вам надо подготовить";
+			mes "^3377FF1 Смокинг^000000 и заплатить ^3377FF1,300,000 зени^000000.";
+			mes "Невесте необходимо Свадебное Платье";
+			mes "и надо заплатить 1,200,000 зени.";
+		}
+		else {
+			mes "[Marry Happy]";
+			mes "Так Вы желаете выйти замуж?";
+			mes "Как невесте, Вам надо подготовить";
+			mes "1 Свадебное Платье и уплатить";
+			mes "1,200,000 зени. Жених должен принести";
+			mes "Смокинг и уплатить 1,300,000 зени, чтобы пожениться.";
+		}
+		next;
+		mes "[Marry Happy]";
+		mes "Невесте и жениху также";
+		mes "необходимы ^3377FF1 Бриллиантовые Кольца^000000 (Diamond Rings),";
+		mes "чтобы обменяться ими.";
+		mes "Все эти вещи необходимы Вам";
+		mes "при подаче заявления";
+		mes "на проведение свадебной церемонии.";
+		next;
+		mes "[Marry Happy]";
+		mes "Будущие невеста и";
+		mes "жених должны подать";
+		mes "заявления перед";
+		mes "свадьбой.";
+		mes "А теперь, Вы желаете подать";
+		mes "заявление на проведение свадьбы?";
+		next;
+		if (select("Да:Нет") == 1) {
+			if (getpartnerid()) {
+				cutin "wedding_marry02",2;
+				mes "[Marry Happy]";
+				mes "Мне жаль, но Вы не можете";
+				mes "подать заявление на еще одну свадьбу!";
+				mes "Я не позволю Вам";
+				mes "предать Вашу половинку и,";
+				mes "кроме того, полигамия";
+				mes "запрещена в Рун-Мидгарте.";
+				break;
+			}
+			else if (wedding_sign == 1) {
+				mes "[Marry Happy]";
+				mes "Вы уже подали";
+				mes "заявление на проведение свадьбы?";
+				mes "Хмм, убедитесь, что Ваш";
+				mes "партнер также подал";
+				mes "заявление и затем";
+				mes "поговорите с Епископом Вомарсом.";
+				break;
+			}
+			else if (BaseLevel < 45) {
+				mes "[Marry Happy]";
+				mes "Хмм, Вы должны быть";
+				mes "достаточно сильны, чтобы защитить";
+				mes "человека, которого любите,";
+				mes "прежде чем думать о свадьбе.";
+				mes "После того, как подрастете,";
+				mes "возвращайтесь, тогда и поговорим.";
+				goto L_End;
+			}
+			else if (countitem(2613) < 1) {
+				mes "[Marry Happy]";
+				mes "Мм? Вы забыли принести";
+				mes "Бриллиантовое Кольцо (Diamond Ring)";
+				mes "для обмена с партнером";
+				mes "во время свадебной церемонии.";
+				mes "Внимательно поищите его и";
+				mes "приходите, как только найдете, хорошо?";
+				goto L_End;
+			}
+			else if (sex) {
+				if (zeny < 1300000) {
+					mes "[Marry Happy]";
+					mes "Мне жаль, но у Вас";
+					mes "нет 1,300,000 зени,";
+					mes "которые должны заплатить все женихи";
+					mes "для свадебной церемонии.";
+					mes "Может быть, Вы не туда их положили?";
+					goto L_End;
+				}
+				else if (countitem(7170) < 1) {
+					mes "[Marry Happy]";
+					mes "Где Ваш Смокинг?";
+					mes "Вам обязательно надо";
+					mes "одеть его для свадебной";
+					mes "церемонии! Найдите его, принесите";
+					mes "мне и мы, наконец, сможем";
+					mes "начать свадьбу, хорошо?";
+					goto L_End;
+				}
+			}
+			else if (sex == 0) {
+				if (zeny < 1200000) {
+					mes "[Marry Happy]";
+					mes "Мне жаль, но все невесты";
+					mes "должны заплатить 1,200,000";
+					mes "зени, чтобы начать";
+					mes "свадебную церемонию. Возможно,";
+					mes "Вы можете попросить Вашего партнера";
+					mes "помочь Вам с деньгами?";
+					goto L_End;
+				}
+				else if (countitem(2338) < 1) {
+					mes "[Marry Happy]";
+					mes "О, дорогая, Вы не забыли";
+					mes "Ваше Свадебное Платье?";
+					mes "Поторопитесь, найдите его,";
+					mes "принесите мне..";
+					mes "Вам оно обязательно";
+					mes "нужно для свадьбы!";
+					goto L_End;
+				}
+			}
+			mes "[Marry Happy]";
+			mes "Что ж, кажется, Вы";
+			mes "все приготовили.";
+			mes "Хотя, я не знаю, кто";
+			mes "Ваш партнер, позвольте мне";
+			mes "первой поздравить Вас";
+			mes "с грядущей свадьбой..";
+			next;
+			mes "[Marry Happy]";
+			mes "Теперь, надо подать";
+			mes "заявление. Пожалуйста, напишите";
+			mes "здесь Ваше точное имя.";
+			next;
+			while(1) {
+				input .@name$;
+				if (.@name$ != strcharinfo(0)) {
+					mes "[Marry Happy]";
+					mes "Хмм, Вы должны написать";
+					mes "Ваше имя точно так,";
+					mes "как оно показано. Может быть,";
+					mes "Вам надо скопировать и вставить его?";
+					mes "В любом случае, попробуйте еще раз.";
+					next;
+				}
+				else 
+					break;
+			}
+			mes "[Marry Happy]";
+			mes "Замечательно, похоже, мы";
+			mes "заполнили Ваше заявление.";
+			mes "Помните, Вам надо";
+			mes "сказать Епископу Вомарсу точное";
+			mes "имя Вашего партнера, когда";
+			mes "Вы будете с ним говорить, хорошо?";
+			next;
+			mes "[Marry Happy]";
+			mes "Когда Ваш партнер";
+			mes "закончит с заявлением";
+			mes "Вы оба должны";
+			mes "говорить с Епископом, чтобы";
+			mes "начать свадебную церемонию.";
+			Emotion e_lv;
+			next;
+			mes "[Marry Happy]";
+			if (sex) {
+				mes "Так как Вы жених,";
+				mes "Вам надо поговорить";
+				mes "с Епископом первым. Когда";
+				mes "закончите, наступит";
+				mes "очередь Вашей невесты";
+				mes "говорить с епископом Вомарсом.";
+				set zeny,zeny-1300000;
+				delitem 7170,1; //Tuxedo
+			}
+			else {
+				mes "Так как Вы невеста,";
+				mes "Вам надо подождать,";
+				mes "пока жених первым поговорит";
+				mes "с Епископом Вомарсом.";
+				mes "Когда он закончит, настанет";
+				mes "Ваша очередь говорить с Епископом.";
+				set zeny,zeny-1200000;
+				delitem 2338,1; //Wedding_Dress
+			}
+			delitem 2613,1; //Diamond_Ring
+			set wedding_sign,1;
+			goto L_End;
+		}
+		mes "[Marry Happy]";
+		mes "Нет..?";
+		mes "Что ж, когда";
+		mes "будете готовы жениться,";
+		mes "не стесняйтесь, возвращайтесь";
+		mes "ко мне, чтобы подать заявление,";
+		mes "хорошо? Удачного дня.";
+		break;
+
+	case 4:
+		cutin "wedding_marry02",2;
+		donpcevent "Single Army#Prontera::OnEnable";
+		donpcevent "Single Army#Geffen::OnEnable";
+		donpcevent "Single Army#Morocc::OnEnable";
+		donpcevent "Single Army#Payon::OnEnable";
+		donpcevent "Single Army#Amatsu::OnEnable";
+		donpcevent "Single Army#Gonryun::OnEnable";
+		Emotion e_omg;
+		mes "[Армия Холостяков]";
+		mes "^CC9933Ты должен";
+		mes "сам улучшать вещи, чтобы";
+		mes "создавать крутое снаряжение!^000000";
+		donpcevent "Single Army#Prontera::OnEmote";
+		next;
+		mes "[Армия Холостяков]";
+		mes "^330099Глупо создавать";
+		mes "партии в подземельях!";
+		mes "Я могу все";
+		mes "сделать сам!^000000";
+		donpcevent "Single Army#Geffen::OnEmote";
+		next;
+		mes "[Армия Холостяков]";
+		mes "^666666Черт, я упражнялся";
+		mes "в одиночку с самого";
+		mes "рождения до";
+		mes "смены профессии!^000000";
+		donpcevent "Single Army#Morocc::OnEmote";
+		next;
+		mes "[Армия Холостяков]";
+		mes "^666600 ВЫБЕРИ встречу";
+		mes "Рождества в одиночестве…";
+		mes "играя в Солитер и";
+		mes "разгадывая кроссворды!^000000";
+		donpcevent "Single Army#Payon::OnEmote";
+		next;
+		mes "[Армия Холостяков]";
+		mes "^CC9966Женщины могут сломить";
+		mes "мою душу, но им никогда";
+		mes "не забрать… мою СВОБОДУ!^000000";
+		donpcevent "Single Army#Amatsu::OnEmote";
+		next;
+		mes "[Армия Холостяков]";
+		mes "^669900...Мы свободны! Мы -";
+		mes "Непобедимая Армия Холостяков!^000000";
+		donpcevent "Single Army#Gonryun::OnEmote";
+		close2;
+		cutin "wedding_marry01",255;
+		Emotion e_swt;
+		donpcevent "Single Army#Prontera::OnInit";
+		donpcevent "Single Army#Geffen::OnInit";
+		donpcevent "Single Army#Morocc::OnInit";
+		donpcevent "Single Army#Payon::OnInit";
+		donpcevent "Single Army#Amatsu::OnInit";
+		donpcevent "Single Army#Gonryun::OnInit";
+		end;
+	}
+	close2;
+	cutin "wedding_marry01",255;
+	end;
+
+L_End:
+	close2;
+	cutin "",255;
+	end;
+}
+
+prt_church,97,102,0	script	Single Army#Prontera	105,{
+	mes "[Армия Холостяков]";
+	mes "^CC9933Ты должен";
+	mes "сам улучшать вещи, чтобы";
+	mes "создавать крутое снаряжение!^000000";
+	close;
+
+OnInit:
+	disablenpc "Single Army#Prontera";
+	end;
+
+OnEnable:
+	enablenpc "Single Army#Prontera";
+	Emotion e_go;
+	end;
+
+OnEmote:
+	emotion e_rock;
+	end;
+}
+
+prt_church,98,102,0	script	Single Army#Geffen	705,{
+	mes "[Армия Холостяков]";
+	mes "^330099Глупо создавать";
+	mes "партии в подземельях!";
+	mes "Я могу все";
+	mes "сделать сам!^000000";
+	close;
+
+OnInit:
+	disablenpc "Single Army#Geffen";
+	end;
+
+OnEnable:
+	enablenpc "Single Army#Geffen";
+	Emotion e_go;
+	end;
+
+OnEmote:
+	emotion e_rock;
+	end;
+}
+
+prt_church,99,102,0	script	Single Army#Morocc	707,{
+	mes "[Армия Холостяков]";
+	mes "^666666Черт, я упражнялся";
+	mes "в одиночку с самого";
+	mes "рождения до";
+	mes "смены профессии!^000000";
+	close;
+
+OnInit:
+	disablenpc "Single Army#Morocc";
+	end;
+
+OnEnable:
+	enablenpc "Single Army#Morocc";
+	Emotion e_go;
+	end;
+
+OnEmote:
+	emotion e_rock;
+	end;
+}
+
+prt_church,100,102,0	script	Single Army#Payon	708,{
+	mes "[Армия Холостяков]";
+	mes "^666600 ВЫБЕРИ встречу";
+	mes "Рождества в одиночестве…";
+	mes "играя в Солитер и";
+	mes "разгадывая кроссворды!^000000";
+	close;
+
+OnInit:
+	disablenpc "Single Army#Payon";
+	end;
+
+OnEnable:
+	enablenpc "Single Army#Payon";
+	Emotion e_go;
+	end;
+
+OnEmote:
+	emotion e_rock;
+	end;
+}
+
+prt_church,101,102,0	script	Single Army#Amatsu	767,{
+	mes "[Армия Холостяков]";
+	mes "^CC9966Женщины могут сломить";
+	mes "мою душу, но им никогда";
+	mes "не забрать… мою СВОБОДУ!^000000";
+	close;
+
+OnInit:
+	disablenpc "Single Army#Amatsu";
+	end;
+
+OnEnable:
+	enablenpc "Single Army#Amatsu";
+	Emotion e_go;
+	end;
+
+OnEmote:
+	emotion e_rock;
+	end;
+}
+
+prt_church,102,102,0	script	Single Army#Gonryun	780,{
+	mes "[Армия Холостяков]";
+	mes "^669900...Мы свободны! Мы -";
+	mes "Непобедимая Армия Холостяков!^000000";
+	close;
+
+OnInit:
+	disablenpc "Single Army#Gonryun";
+	end;
+
+OnEnable:
+	enablenpc "Single Army#Gonryun";
+	Emotion e_go;
+	end;
+
+OnEmote:
+	emotion e_rock;
+	end;
+}
+
+prt_church,100,128,4	script	Bishop#w	60,{
+	cutin "wedding_bomars01",2;
+	if (Upper == 2) {
+		mes "[Вомарс]";
+		mes "Здравствуй, дитя мое.";
+		mes "Ты потерялся? Хмм.";
+		mes "Ты знаешь, где твои";
+		mes "мама и папа?";
+		close2;
+		cutin "wedding_bomars01",255;
+		end;
+	}
+
+	if (!getpartnerid()) {
+		if (!$wedding) {
+			if (wedding_sign == 1) {
+				getpartymember(getcharid(1));
+				set .@partymembercount,$@partymembercount;
+				if (.@partymembercount == 2) {
+					if (sex) {
+						set $wedding,1;
+						initnpctimer;
+						mes "[Вомарс]";
+						mes "Молодые возлюбленные, прошу вас,";
+						mes "помните эти мгновения";
+						mes "до конца вашей жизни. Пусть ваше будущее наполнится миром";
+						mes "и радостью. И пусть ваша любовь";
+						mes "растет с каждым днем.";
+						next;
+						mapannounce "prt_church","Это свадебное предложение для жениха, Мистера " + strcharinfo(0) + "...",bc_map;
+						mes "[Вомарс]";
+						mes "До скончания времен";
+						mes "да восстоишь ты";
+						mes "на одной стороне";
+						mes "со своей возлюбленной,";
+						mes "дабы поддержать и защитить ее.";
+						mes "А теперь, могу я узнать имя твоей невесты?";
+						next;
+						input $wed_bride$;
+						mes "[Вомарс]";
+						mes "Мистер " + strcharinfo(0) + "...";
+						mes "Клянешься ли ты, что";
+						mes "до конца дней своих будешь оберегать";
+						mes "и заботиться о своей невесте,";
+						mes "Мисс " + $wed_bride$ + "?";
+						next;
+						select("Клянусь.");
+						set $wed_groom$,strcharinfo(0);
+						mes "[Вомарс]";
+						mes "Теперь, время";
+						mes "для свадебной клятвы";
+						mes "твоей невесты.";
+						mes "Если она подойдет сюда…";
+						close2;
+						mapannounce "prt_church","Жених, Мистер " + strcharinfo(0) + ", принес клятву верности Мисс " + $wed_bride$ + "...",bc_map;
+						cutin "",255;
+						end;
+					}
+					mes "[Вомарс]";
+					mes "Мне жаль, но жених";
+					mes "должен поговорить со мной первым,";
+					mes "чтобы начать свадьбу.";
+					mes "Это устоявшаяся традиция,";
+					mes "но я признаю, что она";
+					mes "сохраняет спокойное течение жизни.";
+					goto L_End;
+				}
+				mes "[Вомарс]";
+				mes "Прежде чем вы поженитесь,";
+				mes "вы должны";
+				mes "создать партию";
+				mes "вместе со своим партнером.";
+				mes "Потом мы продолжим";
+				mes "церемонию.";
+				goto L_End;
+			}
+			mes "[Вомарс]";
+			mes "Перед тем, как пожениться,";
+			mes "Вы должны подать";
+			mes "заявление Happy Marry";
+			mes "Она скажет Вам,";
+			mes "что еще необходимо";
+			mes "для подготовки к свадьбе.";
+			goto L_End;
+		}
+		else if ($wedding == 1) {
+			if (wedding_sign == 1) {
+				getpartymember(getcharid(1));
+				set .@partymembercount,$@partymembercount;
+				if (.@partymembercount == 2) {
+					if (sex == 0) {
+						if (strcharinfo(0) == $wed_bride$) {
+							mes "[Вомарс]";
+							mes "Молодые возлюбленные, прошу вас,";
+							mes "помните эти мгновения";
+							mes "до конца вашей жизни. Пусть ваше будущее наполнится миром";
+							mes "и радостью. И пусть ваша любовь";
+							mes "растет с каждым днем.";
+							next;
+							mapannounce "prt_church","Давайте послушаем, что должна сказать невеста, Мисс "+$wed_bride$+"...",bc_map;
+							mes "[Вомарс]";
+							mes "Мисс "+$wed_bride$+"...";
+							mes "Клянешься ли ты оставаться";
+							mes "верной "+$wed_groom$+",";
+							mes "быть с ним заодно, несмотря";
+							mes "на все опасности?";
+							next;
+							if (select("^FF0000Нет.^000000:Клянусь.") == 1) {
+								cutin "wedding_bomars03",2;
+								mapannounce "prt_church","Следующая пара, пожалуйста…",bc_map;
+								mes "[Вомарс]";
+								mes "Значит "+$wed_groom$;
+								mes "один из вас";
+								mes "не хочет жениться? Хмм.";
+								mes "Мне искренне жаль";
+								mes "за это непонимание…";
+								set $wedding,0;
+								close2;
+								stopnpctimer;
+								cutin "",255;
+								end;
+							}
+							mes "[Вомарс]";
+							mes "Ты действительно клянешься";
+							mes "быть верной и терпеливой?";
+							mes "Ты выйдешь за "+$wed_groom$+"?";
+							next;
+							if (select("Да.:^FF0000Нет.^000000") == 1) {
+								if (isloggedin(getcharid(3,$wed_groom$))) {
+									if (marriage($wed_groom$)) {
+										//Call Wedding effect
+										wedding;
+										//Give ring to Bride, and change to wedding sprite.
+										sc_start SC_Wedding,3600000,1;
+										getitem 2635,1; //Bride_Ring
+										//Give ring to Groom, and change to wedding sprite.
+										attachrid(getcharid(3,$wed_groom$));
+										sc_start SC_Wedding,3600000,1;
+										getitem 2634,1; //Bridegroom_Ring
+										detachrid;
+										//Switch Script progression back to Bride
+										attachrid(getcharid(3,$wed_bride$));
+										cutin "wedding_bomars02",2;
+										mapannounce "prt_church","Я объявляю вас, "+$wed_groom$+" and "+$wed_bride$+", мужем и женой.",bc_map;
+										mes "[Вомарс]";
+										mes "Силой, данной мне,";
+										mes "Королевскому Епископу";
+										mes "Королевства Рун-Мидгарт,";
+										mes "Я объявляю вас";
+										mes "мужем и женой. Пусть ваше будущее будет";
+										mes "благословенно многими радостями.";
+										next;
+										mes "[Вомарс]";
+										mes "И в заключение…";
+										mes "Будь всегда счастлива,";
+										mes "дорогая "+$wed_bride$+"...";
+										set $wed_groom$,"";
+										set $wed_bride$,"";
+										set $wedding,0;
+										close2;
+										stopnpctimer;
+										cutin "",255;
+										detachrid;
+										end;
+									}
+								}
+								cutin "wedding_bomars03",2;
+								mes "[Вомарс]";
+								mes "Хмм. Похоже,";
+								mes "твой жених ушел, прежде";
+								mes "чем церемония закончилась.";
+								mes "Пожалуйста, попытайся еще раз,";
+								mes "когда он вернется.";
+								goto L_End;
+							}
+							else {
+								cutin "wedding_bomars03",2;
+								mapannounce "prt_church","Увы! "+$wed_bride$+" отвергла предложение "+$wed_groom$+"!",bc_map;
+								mes "[Вомарс]";
+								mes "Хм. Похоже,";
+								mes "ты передумала.";
+								mes "И хотя мне";
+								mes "жаль жениха, но ты";
+								mes "должна делать то,";
+								mes "что говорит тебе твое сердце. Теперь уходи!";
+							}
+							set $wed_groom$,"";
+							set $wed_bride$,"";
+							set $wedding,0;
+							close2;
+							stopnpctimer;
+							cutin "",255;
+							end;
+						}
+						callsub S_Busy;
+					}
+					callsub S_Busy;
+				}
+				callsub S_Busy;
+			}
+			if (strcharinfo(0) == $wed_bride$) {
+				mes "[Вомарс]";
+				mes "Хм? Похоже, что";
+				mes "Happy Marry до сих пор не получила";
+				mes "Ваше заявление на";
+				mes "свадьбу. Пожалуйста, обратитесь";
+				mes "к ней, и мы сможем начать";
+				mes "свадебную церемонию.";
+				goto L_End;
+			}
+			callsub S_Busy;
+		}
+		callsub S_Busy;
+	}
+	mes "[Вомарс]";
+	mes "Я желаю вам вечного";
+	mes "счастья. Не важно,";
+	mes "насколько мрачным может быть";
+	mes "настоящее, всегда поддерживайте";
+	mes "друг друга и смотрите";
+	mes "в будущее с надеждой.";
+
+L_End:
+	close2;
+	cutin  "",255;
+	end;
+
+S_Busy:
+	if ($wed_groom$ != "" && $wed_bride$ != "") {
+		mes "[Вомарс]";
+		mes "Сейчас проводится";
+		mes "свадьба Мисс "+ $wed_bride$ +" и";
+		mes "Мистера "+ $wed_groom$;
+		mes "Пожалуйста,";
+		mes "ведите себя тише.";
+		goto L_End;
+	}
+	mes "[Вомарс]";
+	mes "Сейчас я провожу свадьбу";
+	mes "для другой пары, так что,";
+	mes "пожалуйста, дождитесь своей очереди.";
+	mes "Спасибо за понимание... ^FFFFFF ^000000";
+	goto L_End;
+
+OnInit:
+	set $wedding,0;
+	end;
+
+OnStop:
+	stopnpctimer;
+	end;
+
+OnReset:
+	set $wed_groom$,"";
+	set $wed_bride$,"";
+	set $wedding,0;
+	end;
+
+OnTimer180000:
+	mapannounce "prt_church","Вы отвечали слишком медленно…Следующая пара, пожалуйста.",bc_map;
+	set $wed_groom$,"";
+	set $wed_bride$,"";
+	set $wedding,0;
+	stopnpctimer;
+	end;
+}

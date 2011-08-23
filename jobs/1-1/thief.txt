@@ -1,0 +1,543 @@
+//===== eAthena Script =======================================
+//= Thief Job Quest
+//===== By: ==================================================
+//= eAthena dev team
+//===== Current Version: =====================================
+//= 1.7
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= [Aegis Conversion]
+//= Job quest for Thief classes
+//===== Additional Comments: =================================
+//= Fully working
+//= v1.1 Added instant job change for High Novice [Lupus]
+//= 1.3 Added Baby Class support [Lupus]
+//= v1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
+//= Fixed possible EXP abuse [Lupus]
+//= 1.5 Now saves/restores all quest skills [Lupus]
+//= 1.6 Merged back JFunc [Lupus] 1.6a typos
+//= 1.7 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
+//=	No longer uses function "F_ToHigh"
+//===== Translated into Russian: =============================
+//= SakhRo
+//============================================================
+
+moc_prydb1,39,129,2	script	Thief Guide	69,{
+	if (Upper == 1) {
+		if (ADVJOB == Job_Assassin_Cross || ADVJOB == Job_Stalker) {
+			if (Class == Job_Novice_High) {
+				mes "[Thief Guide]";
+				mes "А? Я тебя знаю? Ужас как же похоже ты выглядишь. У тебя случаем нету близнеца?";
+				next;
+				if (getskilllv(1) < 9) {
+					mes "[Thief Guide]";
+					mes "Что, хочешь стать Вором? Извини, но ты выглядишь ещё слишком неопытным.";
+					next;
+					mes "[Thief Guide]";
+					mes "Для начала подними уровень Basic Skill до 9, затем приходи снова";
+					close;
+				}
+				mes "[Thief Guide]";
+				mes "Хм, Я вижу ты немало сражений провел ты в своей жизни, так что с этой минуты ты становишься Вором.";
+				next;
+				skill 143,0,0;
+				jobchange Job_Thief_High;
+				skill 149,1,0;
+				skill 150,1,0;
+				skill 151,1,0;
+				skill 152,1,0;
+				mes "[Thief Guide]";
+				mes "Так как ты теперь Вор, то и живи как Вор. Теперь ступай! Следующий~";
+				close;
+			}
+			else {
+				mes "[Thief Guide]";
+				if (sex)
+					mes "Эй, болван.";
+				else
+					mes "Эй, детка~";
+				close;
+			}
+		}
+		else {
+			mes "[Thief Guide]";
+			if (sex)
+				mes "Эй, болван.";
+			else
+				mes "Эй, детка.";
+			mes "...Эй! Ты выглядишь слишком паинькой, чтобы быть вором!! Проваливай, я занята. Следующий!";
+			close;
+		}
+	}
+	if (BaseJob == Job_Thief) {
+		mes "[Thief Guide]";
+		mes "Если у тебя появятся проблемы, не стесняйся обратиться ко мне, идет?";
+		close;
+	}
+	else if (BaseJob != Job_Novice && BaseJob != Job_Thief) {
+		mes "[Thief Guide]";
+		mes "Какого черта...?";
+		switch(Class) {
+		case 1:
+			mes "Хм.";
+			mes "Здесь у нас...";
+			mes "здоровый меч.";
+			next;
+			mes "[Thief Guide]";
+			mes "Нуу...";
+			mes "Попробуй для начала";
+			mes "что-нибуль создать";
+			mes "...Приятель?";
+			break;
+		case 2:
+			mes "Что здесь делает Маг? Тебе не кажется, что свои фокусы с картами следует показывать в другом месте? Ух, ладно, это же свободная страна...";
+			next;
+			mes "[Thief Guide]";
+			mes "Эй, стой,";
+			mes "Ответ - нет";
+			mes "Выметайся отсюда!";
+			break;
+		case 3:
+			mes "Мужик, разве ты, ";
+			mes "Лучник, не должен играть";
+			mes "в лесу";
+			mes "или что-то в этом духе?";
+			break;
+		case 4:
+			mes "Ты же знаешь, чтобы выживать, мы ворумем, верно? Так какого черта ты делаешь в подобном месте, Послушник?";
+			break;
+		case 5:
+			mes "Ты торговец,";
+			mes "так? Почему же ты";
+			mes "пришел в логово";
+			mes "Воров?!";
+			next;
+			mes "[Thief Guide]";
+			mes "Ты прям вынуждаешь нас";
+			mes "обокрасть тебя!";
+			mes "Давай, поспеши и";
+			mes "выматывайся отсюда~";
+			break;
+		case 8:
+			mes "О боже...";
+			mes "Я умираю?";
+			next;
+			mes "[Thief Guide]";
+			mes "Почему же ещё мог придти ко мне Прист? Наверно мне уже стоит начинать исповедоваться во всех моих грехах.";
+			close;
+		case 12:
+			mes "Разве ты уже не стал одним из нас?! Мужик, ты изменился. Теперь вы выглядишь реально опасно...";
+			close;
+		case 17:
+			mes "Мужик, Да ты совсем внезапно стал таким крутым! У тебя наверняка есть скиллы, о которых я могла бы только мечтать!";
+			close;
+		}
+		next;
+		mes "[Thief Guide]";
+		mes "*Вздох* Послушай, Тебе действительно нету никакой нужнды находиться в подобном месте. Иди куда шел.";
+		close;
+	}
+	if (job_thief_q == 3 && countitem(1069) > 0 || countitem(1070) > 0) {
+		mes "[Thief Guide]";
+		mes "Хммм";
+		mes "Ты собрал мухоморы";
+		mes "для испытания на Вора, верно?";
+		next;
+		mes "[Thief Guide]";
+		mes "Вон, поговори с тем парнем, что позади меня. Он проверит твои грибочки.";
+		close;
+	}
+	else if (job_thief_q == 3) {
+		mes "[Thief Guide]";
+		mes "Ну как тебе на";
+		mes "Ферме Мухоморов?";
+		mes "Было весело?";
+		next;
+		if (select("О да, было круто.:Это было ужасно.") == 1) {
+			mes "[Thief Guide]";
+			mes "Ха Ха! Это нормально. В нашей сфере работы тебе так или иначе придется марать свои руки.";
+			close;
+		}
+		mes "[Thief Guide]";
+		mes "Да что ты? Я тоже был там и я знаю, что это место не для чаепития. Тем не менее, быть вором это не гламурная и модная ночная жизнь.";
+		close;
+	}
+	if (job_thief_q == 2) {
+		mes "[Thief Guide]";
+		mes "Эй, ты что тут делаешь? Разве ты не должен собирать мухоморы? Или мне ещё раз тебе объяснить, что делать?";
+		next;
+		if  (select("Да, пожалуста.:Не, все нормально.") == 1) {
+			mes "[Thief Guide]";
+			mes "*Вздох*. Ладно, слушай внимательно";
+			next;
+			mes "[Thief Guide]";
+			mes "Такс, Чтобы пройти испытание ты должен стащить Мухоморы с фермы. Не волнуйся, тип, который владеет фермой заслуживает того, чтобы его грабанули.";
+			next;
+			mes "[Thief Guide]";
+			mes "Тем не менее, ты должен собрать 2 типа мухоморов: ^0000FFOrange Net Mushrooms^000000 и ^0000FFOrange Gooey Mushrooms^000000.";
+			next;
+			mes "[Thief Guide]";
+			mes "Будь осторожен, На ферме полно монстров, которые её охраняют. Так что тебе это не покажется прогулкой по парку.";
+			next;
+			mes "[Thief Guide]";
+			mes "Когда вернешься со сбора урожая, мы посчитаем количество грибочков, которые ты собрал.";
+			next;
+			mes "[Thief Guide]";
+			mes "Каждый Orange Net Mushroom даёт 3 очка, и ты получишь 1 очко с каждого Orange Gooey Mushroom. Чтобы пройти испытания, нужно набрать 25 очков.";
+			next;
+			mes "[Thief Guide]";
+			mes "Выходи из пирамиды и продолжай идти в восточном направлении. Там ты встретишь одного из наших людей между двумя колонами.";
+			next;
+			mes "[Thief Guide]";
+			mes "Поговори с ним, и он проведет тебя на ферму через секретный проход.";
+			next;
+			mes "[Thief Guide]";
+			mes "Такс, насколько я помню, его координаты '^FF0000141, 125^000000.' Напиши в строке чата ^3355FF/where^000000 + координаты что я тебе дала, и это место будет показано на миникарте сверху справа.";
+			close;
+		}
+		mes "[Thief Guide]";
+		mes "Эм. Мне показалось, что ты хотел мне сказать что-то важное.";
+		close;
+	}
+	mes "[Thief Guide]";
+	if (job_thief_q == 0) {
+		mes "Что привело тебя";
+		mes "в этот крысятник?";
+	}
+	else {
+		mes "Ооо...";
+		mes "Ты вернулся.";
+		mes "Уверен, что хочешь";
+		mes "попробывать ещё раз?";
+	}
+	next;
+	if (select("Эй, я пришел сюда стать Вором!:Ничего, я просто прогуливался.") == 1) {
+		if (job_thief_q == 0) {
+			mes "[Thief Guide]";
+			mes "Хм, мне нравится твоя уверенность. Однако, ты должен знать, что быть вором - это не жизнь в известности.";
+			next;
+			mes "[Thief Guide]";
+			mes "Все таки...";
+			mes "Ты действительно";
+			mes "хочешь быть";
+			mes "Вором?";
+			next;
+			switch(select("Конечно.:Не, я зря потратил время:Почему ты стала Воровкой?")) {
+			case 1:
+				mes "[Thief Guide]";
+				mes "Хорошо...";
+				break;
+			case 2:
+				mes "[Thief Guide]";
+				mes "Мда...";
+				mes "Понятно.";
+				break;
+			case 3:
+				mes "[Thief Guide]";
+				mes "Я...?";
+				mes "В то время у меня не было выбора. Укради или умри с голоду. Но я не собираюсь тут рассказывать историю своей жизни.";
+				break;
+			}
+			next;
+			mes "[Thief Guide]";
+			mes "Короче, ты хочешь";
+			mes "стать вором";
+			mes "или нет?";
+			next;
+			switch(select("Да, хочу.:Я очень боюсь быть Вором")) {
+			case 1:
+				mes "[Thief Guide]";
+				mes "Хорошо, скажи мне";
+				mes "свое имя.";
+				next;
+				mes "[Thief Guide]";
+				mes "" + strcharinfo(0) + "?";
+				mes "Что за имя такое " + strcharinfo(0) + "? Ладно, секундочку.";
+				set job_thief_q,1;
+				next;
+				mes "[Thief Guide]";
+				mes "Отлично, твоя регистрация завершена. Ты можешь начать испытание, если готов.";
+				next;
+				switch(select("Да, я готов.:Нет, ещё не готов.")) {
+				case 1:
+					break;
+				case 2:
+					mes "[Thief Guide]";
+					mes "Не готов?";
+					mes "Как ты можешь быть";
+					mes "не готов?!";
+					close;
+				}
+				break;
+			case 2:
+				mes "[Thief Guide]";
+				mes "Боишься?!?";
+				mes "ахахахаха!";
+				mes "О, боже...!";
+				mes "Вот умора!";
+				close;
+			}
+		}
+		else {
+			mes "[Thief Guide]";
+			mes "Ок...";
+			mes "Одну";
+			mes "секунду.";
+			next;
+		}
+		mes "[Thief Guide]";
+		mes "Твое имя...";
+		mes strcharinfo(0) + "? Хм, где же это? А, нашла. Посмотрим...";
+		next;
+		mes "[Thief Guide]";
+		if (getskilllv(1) < 9) {
+			mes "Разве это не мило? Я вижу, ты амбициозен, но для того, чтобы стать вором ты сначала должен поднять уровень Basic Skill до 9.";
+			close;
+		}
+		mes "Неплохо. Я тут глянула список уголовных дел и могу сказать, что у тебя довольно интересное прошлое. У тебя есть все нужные качества, чтобы быть Вором.";
+		next;
+		mes "[Thief Guide]";
+		mes "Я чувствую это, и сейчас я заявляю, что ты прошел собеседование. Хорошая работа!";
+		set job_thief_q,2;
+		next;
+		mes "[Thief Guide]";
+		mes "Теперь, твои настощие способности должны быть проверены. Ты что-нибудь знаешь об испытании?";
+		next;
+		switch(select("Да.:Нет, не знаю")) {
+		case 1:
+			mes "[Thief Guide]";
+			mes "Серьёзно? Ну это все упрощает.";
+			break;
+		case 2:
+			mes "[Thief Guide]";
+			mes "Ладно, я объясню тебе. Слушай внимательно. Этот тест определит, действительно ли ты готов стать Вором.";
+			next;
+			mes "[Thief Guide]";
+			mes "Ты проберешься на ферму к Shibu. Он худший по своему характеру торгаш в Мороке .";
+			next;
+			mes "[Thief Guide]";
+			mes "Такс, Чтобы пройти испытание ты должен стащить Мухоморы с фермы. Не волнуйся, тип, который владеет фермой заслуживает того, чтобы его грабанули.";
+			next;
+			mes "[Thief Guide]";
+			mes "Тем не менее, ты должен собрать 2 типа мухоморов: ^0000FFOrange Net Mushrooms^000000 и ^0000FFOrange Gooey Mushrooms^000000.";
+			next;
+			mes "[Thief Guide]";
+			mes "Будь осторожен, На ферме полно монстров, которые её охраняют. Так что тебе это не покажется прогулкой по парку.";
+			next;
+			mes "[Thief Guide]";
+			mes "Когда вернешься со сбора урожая, мы посчитаем количество грибочков, которые ты собрал.";
+			next;
+			mes "[Thief Guide]";
+			mes "Каждый Orange Net Mushroom даёт 3 очка, и ты получишь 1 очко с каждого Orange Gooey Mushroom. Чтобы пройти испытания, нужно набрать 25 очков.";
+			next;
+			mes "[Thief Guide]";
+			mes "Выходи из пирамиды и продолжай идти в восточном направлении. Там ты встретишь одного из наших людей между двумя колонами.";
+			next;
+			mes "[Thief Guide]";
+			mes "Поговори с ним, и он проведет тебя на ферму через секретный проход.";
+			next;
+			mes "[Thief Guide]";
+			mes "Такс, насколько я помню, его координаты '^FF0000141, 125^000000.' Напиши в строке чата ^3355FF/where^000000 + координаты что я тебе дала, и это место будет показано на миникарте сверху справа.";
+		}
+		next;
+		mes "[Thief Guide]";
+		mes "Не забудь подготовиться, перед тем, как пойти на ферму Мухоморов. Передвигайся настолько быстро, насколько можешь и постарайся не помереть, хорошо?";
+		close;
+	}
+	close;
+}
+
+moc_prydb1,42,133,2	script	Comrade	118,{
+	if (BaseJob == Job_Thief) {
+		mes "[Brad]";
+		mes "Сейчас здесь не происходит ничего интересного. Возвращайся, когда появятся новости, хорошо?";
+		close;
+	}
+	else if (BaseJob != Job_Novice && BaseJob != Job_Thief) {
+		mes "[Comrade]";
+		mes "Эм...";
+		mes "Ты не выглядишь";
+		mes "похожим на Вора.";
+		next;
+		mes "[Comrade]";
+		mes "Какого черта";
+		mes "ты тут делаешь?";
+		close;
+	}
+	if (job_thief_q == 0 || job_thief_q == 1) {
+		mes "[Comrade]";
+		mes "Чего тебе? Если хочешь стать Вором, поговори девчонкой позади меня.";
+		close;
+	}
+	else if (job_thief_q == 2) {
+		mes "[Comrade]";
+		mes "Ты прошел собеедование?";
+		mes "Так чего же ты ждешь?";
+		close;
+	}
+	else if (job_thief_q == 3) {
+		mes "[Comrade]";
+		mes "Аа, Guide говорила мне о тебе. Давай проверим твои мухоморчики...";
+		if (countitem(1069) == 0 && countitem(1070) == 0) {
+			next;
+			mes "[Comrade]";
+			mes "Что за черт...";
+			mes "У тебя вообще нет мухоморов! Возвращайся и достань их. По другому ты не пройдешь испытание и не станешь Вором!";
+			close;
+		}
+		next;
+		set .@thief_item1,countitem(1069) * 3;
+		set .@thief_item2,countitem(1070);
+		set .@total_thief,.@thief_item1 + .@thief_item2;
+		set .@money_thief,((.@thief_item1 * 5) + (.@thief_item2 * 2)) + 200;
+		mes "[Comrade]";
+		if (countitem(1069) != 0) {
+			mes "Для начала посчитаем Orange Net Mushrooms.";
+			mes "Хм, " + countitem(1069) + ".";
+		}
+		if (countitem(1070) != 0)
+			mes "Теперь проверим Orange Gooey Mushrooms. " + countitem(1070) + " штук.";
+		next;
+		mes "[Comrade]";
+		mes "Вычислим";
+		mes "общее количество...";
+		next;
+		mes "[Comrade]";
+		mes "Хммм. " + .@total_thief + " градусов, умноженное на скорость света, деленное на интеграл от Пи/2 до Пи + абсотное кол-во звезд на небе...";
+		next;
+		mes "[Comrade]";
+		mes "Круто!";
+		mes "Я сделал это.";
+		next;
+		mes "[Comrade]";
+		if (.@total_thief > 25) {
+			mes "Ты набрал больше";
+			mes "25 очков!";
+			mes "Восхитительно!";
+		}
+		else if (.@total_thief == 25) {
+			mes "Ровно 25 очков!";
+			mes "Ты сделал это! Засранец!";
+		}
+		else {
+			mes "Определенно меньше 25 необходимых очков. Ступай и набери больше грибочков!";
+			close;
+		}
+		next;
+		mes "[Comrade]";
+		mes strcharinfo(0) + "...";
+		mes "Ты прошел официальное испытание Вора. Теперь ты один из нас.";
+		if (countitem(1069) != 0) delitem 1069,countitem(1069); //Mushroom_Of_Thief_1
+		if (countitem(1070) != 0) delitem 1070,countitem(1070); //Mushroom_Of_Thief_2
+		callfunc "Job_Change",Job_Thief;
+		callfunc "F_ClearJobVar";
+		next;
+		mes "[Comrade]";
+		mes "Поздравляю с получение класса Thief! Отныне ты с честью представляешь Гильдию Воров.";
+		next;
+		mes "[Comrade]";
+		mes "Если ты наведешь позор на нашу гильдию, мы грохнем тебя. Я надеюсь, мы будем гордиться тобой.";
+		next;
+		mes "[Brad]";
+		mes "*Гм* Добро пожаловать в гильдию, брат! Я Brad и я присматриваю тут за награбленным добром.";
+		next;
+		mes "[Brad]";
+		mes "Держи небольшую награду. Потрать её как хочешь. Ладно, ещё увидимся~";
+		set zeny,zeny+.@money_thief;
+		close;
+	}
+}
+
+moc_ruins,141,125,3	script	Mr. Irrelevant	83,{
+	if (BaseJob == Job_Thief) {
+		mes "[Mr. Irrelevant]";
+		mes "Ооо, я вижу, ты теперь вор. Я знал, что ты присоединишься к нам.";
+		next;
+		mes "[Mr. Irrelevant]";
+		mes "Кража мухоморов теперь слишком просто занятие для тебя. Ты должен улучшать навыки и делать свою работу чисто.";
+		close;
+	}
+	else if (BaseJob != Job_Novice && BaseJob != Job_Thief) {
+		mes "[Mr. Irrelevant]";
+		switch(rand(4)) {
+		case 1:
+			mes "Я могу выпить литр Трояра.";
+			close;
+		case 2:
+			mes "Гони сюда Бабки!!!";
+			next;
+			mes "[Mr. Irrelevant]";
+			mes "быстрее.";
+			close;
+		case 3:
+			mes "ТЫ КОГО НАЗВАЛ ПСИХОМ?!?!";
+			close;
+		case 4:
+			mes "Мне нечего тебе сказать. Оставь меня одного";
+			close;
+		default:
+			mes "Сегодня хороший день, чтобы пойти с друзьями в пирамиду и порубить немного монстров.";
+			close;
+		}
+	}
+	if (job_thief_q == 3) {
+		mes "[Mr. Irrelevant]";
+		mes "Хахахаха~!";
+		mes "Ты все ещё";
+		mes "не прошел испытание?";
+		mes "Хорошо, я проведу тебя на ферму...";
+		close2;
+		switch(rand(5)) {
+		case 1: warp "job_thief1",228,106; end;
+		case 2: warp "job_thief1",38,50; end;
+		case 3: warp "job_thief1",66,331; end;
+		case 4: warp "job_thief1",196,331; end;
+		default: warp "job_thief1",309,234; end;
+		}
+	}
+	else if (job_thief_q == 2) {
+		mes "[Mr. Irrelevant]";
+		mes "Хмм...";
+		mes "Ты пришел пройти испытание, верно? Я вижу в твоих глазах, что ты не промах.";
+		next;
+		mes "[Mr. Irrelevant]";
+		mes "Тебя зовут " + strcharinfo(0) + "? Да, ты есть в списке. Хорошо, я проведу тебя на ферму , но я не гарантирую твою безопасность...";
+		close2;
+		set job_thief_q,3;
+		switch(rand(5)) {
+		case 1: warp "job_thief1",228,106; end;
+		case 2: warp "job_thief1",38,50; end;
+		case 3: warp "job_thief1",66,331; end;
+		case 4: warp "job_thief1",196,331; end;
+		default: warp "job_thief1",309,234; end;
+		}
+	}
+	else if (job_thief_q == 1) {
+		mes "[Mr. Irrelevant]";
+		mes "Какой-то странный запашок исходит от... Тебя. Что бы это могло быть?";
+		close;
+	}
+	mes "[Mr. Irrelevant]";
+	mes "Эй, Новичок! Почему бы тебе не присоединиться к Гильдии Воров? Вы, нубики, всегда преветствуемы.";
+	next;
+	mes "[Mr. Irrelevant]";
+	mes "Ты можешь получить больше информации в подземной комнате в центре локации Pyramid 1 BF.";
+	close;
+}
+
+// Monsters
+//============================================================
+job_thief1,0,0,0,0	monster	Orange Mushroom	1182,180,0,0,0
+job_thief1,0,0,0,0	monster	Fabre	1184,50,0,0,0
+job_thief1,0,0,0,0	monster	Chonchon	1183,50,0,0,0
+job_thief1,0,0,0,0	monster	Spore	1014,30,0,0,0
+
+//============================================================
+// mapflag
+//============================================================
+job_thief1	mapflag	nomemo
+job_thief1	mapflag	noteleport
+job_thief1	mapflag	nosave	SavePoint
+job_thief1	mapflag	nopenalty
+job_thief1	mapflag	nobranch
